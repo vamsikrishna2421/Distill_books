@@ -1,0 +1,86 @@
+{
+  "id": "thinking-in-bets",
+  "title": "Thinking in Bets",
+  "subtitle": "Making Smarter Decisions When You Don’t Have All the Facts",
+  "author": "Annie Duke",
+  "year": 2018,
+  "originalPages": 288,
+  "categoryId": "frameworks",
+  "difficulty": 2,
+  "syllabusOrder": 2,
+  "accent": "#0891B2",
+  "tagline": "Stop judging decisions by their outcomes — and start winning the long game.",
+  "whyRead": "Most decision failures aren't intelligence failures — they're attribution failures: crediting skill when you got lucky and blaming luck when you chose badly. Duke, a cognitive-psychology researcher turned World Series of Poker champion, gives you a working toolkit for deciding under uncertainty: calibrate beliefs as probabilities instead of certainties, audit outcomes honestly, build groups that keep you truthful, and use premortems and precommitment devices to protect decisions from your in-the-moment self. After reading, you will separate decision quality from outcome quality reflexively — the core skill every other framework in this track builds on.",
+  "map": {
+    "intro": "Life is poker, not chess. Chess is a game of complete information where the better player reliably wins; life hides most of its information and mixes skill with luck, so good decisions regularly produce bad outcomes and vice versa. Annie Duke's core claim is that we systematically confuse the two — she calls it **resulting** — and that reframing every decision as a *bet* is the corrective. A bet forces you to state your confidence, price the alternatives, and acknowledge what you don't know.\n\nThe book builds in three moves. Chapters 1–2 rewire how you hold beliefs: accept that outcomes are noisy signals, that beliefs form before evidence is vetted, and that asking \"wanna bet?\" recalibrates overconfidence into percentages. Chapter 3 tackles learning itself — outcomes only teach if you attribute them honestly to luck or skill, and self-serving bias corrupts exactly that step. Chapters 4–5 scale the fix socially: solitary minds rationalize, so you need a truthseeking group with explicit norms (Merton's CUDOS), institutionalized dissent, and rules for disagreeing productively. Chapter 6 supplies the time-travel tools — 10/10/10, Ulysses contracts, backcasting, premortems — that recruit your past and future selves into present decisions.\n\nThe payoff is not certainty. It is a small, compounding edge in judgment — which, over enough decisions, is the whole game.",
+    "howToUse": "Chapters 1–3 are the essential core — read them in order; everything else depends on separating decisions from outcomes and fielding results honestly. Chapters 4–5 matter most if you work in teams or lead one. Chapter 6 is the most immediately actionable — skip ahead to it if you want tools you can use today.",
+    "chapters": [
+      {
+        "number": 1,
+        "title": "Life Is Poker, Not Chess",
+        "minutes": 10,
+        "summary": "Seahawks coach Pete Carroll called a pass from the one-yard line with 26 seconds left in Super Bowl XLIX; it was intercepted, and headlines branded it the worst call in history. Duke's counter: the interception chance was roughly 1–2%, the call preserved options — it was a *good decision with a bad outcome*. Judging decisions by results is **resulting**, and it's the book's central error.\n\nChess offers complete information, so outcomes track decision quality. Life is poker: hidden information plus luck, which is why John von Neumann built game theory on poker, not chess. In such games, the link between decision and outcome is loose — a 76% favorite loses a quarter of the time, and losing doesn't make the bet \"wrong.\"\n\nKahneman's **System 1** (fast, reflexive) dominates real decisions; we can't simply will ourselves into deliberative **System 2** thinking, so we need habits and workarounds, not resolutions. The chapter's foundational move: treat \"I'm not sure\" as the most accurate answer available, not a confession of weakness. Embracing uncertainty — thinking in shades of probability rather than right/wrong — is the precondition for every tool that follows.",
+        "readIf": [
+          "You replay bad outcomes as proof you decided badly",
+          "You call decisions 'right' or 'wrong' based on how they landed",
+          "You judge colleagues by their results, not their reasoning"
+        ]
+      },
+      {
+        "number": 2,
+        "title": "Wanna Bet? Turning Beliefs into Probabilities",
+        "minutes": 10,
+        "summary": "We assume we form beliefs by hearing a claim, vetting it, then accepting it. Psychologist Daniel Gilbert's research shows the real order: we hear, instantly believe, and only sometimes get around to vetting. Once a belief lodges, **motivated reasoning** takes over — new information is processed to confirm it, not test it.\n\nIntelligence doesn't protect you; it arms the bias. Dan Kahan's studies found that *more* numerate people polarized *more* when interpreting identical data on a charged topic, and that people see bias readily in others but not themselves (**blind-spot bias**). This is also why fake news works: it fits what we already believe, and repetition alone increases believability.\n\nThe corrective is the book's title move. The challenge \"**Wanna bet?**\" triggers the vetting we skipped — with money at stake, you suddenly ask how you know what you claim to know. So express beliefs on a 0–100% confidence scale instead of true/false. Saying \"I'm 60% sure\" invites correction rather than defensiveness, turns updating into recalibration instead of admitting you were wrong, and reflects the deeper truth: every decision is a bet on one version of your future against the alternatives you decline.",
+        "readIf": [
+          "You rarely change your mind once you've stated a position",
+          "You've shared a headline before checking it",
+          "You'd flinch if someone put money on your last confident claim"
+        ]
+      },
+      {
+        "number": 3,
+        "title": "Bet to Learn: Fielding Outcomes Honestly",
+        "minutes": 10,
+        "summary": "Experience only improves you if you attribute outcomes correctly. Every result must be **fielded** — sorted into the luck bucket or the skill bucket — and that sorting is itself a bet made under uncertainty. **Self-serving bias** rigs it: we credit skill for wins and blame luck for losses. Poker great Phil Hellmuth blaming \"luck\" for every loss is the caricature; Duke admits she did the same for years, which meant her losses taught her nothing.\n\nWith *other people's* outcomes the bias flips — their wins were lucky, their losses were incompetence — because we grade ourselves by comparison and their failure feels like our gain. Both distortions destroy the learning loop, and research (Stanovich and others) shows smarter people are no less prone.\n\nThe fixes: treat every fielding decision as a bet you would have to defend; ask \"would I have made the same mistake in their spot?\" before judging others; and rewire the habit loop (cue–routine–reward) so that being *accurate* about credit and blame — not feeling good about yourself — delivers the reward. The payoff compounds: even a slightly better outcome-sorting rate than your competitors is a decisive long-run edge.",
+        "readIf": [
+          "Your wins feel earned but your losses feel unfair",
+          "You secretly enjoy watching a rival stumble",
+          "You keep repeating a mistake you can't quite name"
+        ]
+      },
+      {
+        "number": 4,
+        "title": "The Buddy System: Building a Truthseeking Group",
+        "minutes": 9,
+        "summary": "You cannot debias yourself alone — but others can see your blind spots. Mercier and Sperber's argumentative theory of reasoning holds that reasoning evolved for group argument: individuals are biased advocates but sharp evaluators of *other people's* claims. The catch is that groups only help if they're chartered for accuracy; by default they become echo chambers that reward confirmation (Sunstein's work on group polarization).\n\nDuke credits her poker education to Erik Seidel's circle, which enforced one rule: no bad-beat stories. Complaining about luck teaches nothing; the group only engaged on strategy and decisions. That's the model — a few people, explicitly agreed norms, accountability for reasoning rather than results.\n\nFor norms, Duke borrows sociologist Robert Merton's **CUDOS**: **Communism** (share all the data, especially the unflattering details you'd rather omit), **Universalism** (evaluate the message independent of the messenger), **Disinterestedness** (keep conflicts of interest out — don't reveal how things turned out before asking for analysis, since outcome-blind evaluation is uncontaminated), and **Organized Skepticism** (dissent is a duty, not rudeness). Once formed, the group works even in absentia: merely *expecting* to justify a decision to them improves it.",
+        "readIf": [
+          "Your friends and colleagues mostly validate your takes",
+          "You lead a team that agrees with you suspiciously often",
+          "Your post-mortems turn into blame sessions or venting"
+        ]
+      },
+      {
+        "number": 5,
+        "title": "Dissent to Win: Engineering Productive Disagreement",
+        "minutes": 9,
+        "summary": "Philip Tetlock and Jennifer Lerner distinguish **confirmatory thought** — one-sided advocacy for what you already believe — from **exploratory thought**, the evenhanded weighing of alternatives. Their key finding: people shift toward exploratory thought when they're accountable to an audience whose views they *don't know* in advance. Truthseeking groups should engineer exactly that condition.\n\nInstitutions have long done this deliberately: the Vatican's devil's advocate argued against every canonization for centuries; the CIA runs **red teams** to attack its own analyses; after the Yom Kippur surprise, Israel adopted a \"tenth man\" whose job is to disagree when the other nine agree. If dissent is someone's assigned role, it stops being personal.\n\nOutside the group, you can't demand truthseeking — so Duke gives rules for smuggling it in: express your own uncertainty first, which makes disagreement collaborative; lead with assent, building on points of agreement with \"and\" rather than \"but\"; ask whether the person wants comfort or feedback before offering analysis; and steer toward the future — what to do next — rather than relitigating blame for the past, because nobody's ego owns the future yet.",
+        "readIf": [
+          "Your meetings reach consensus fast and unravel later",
+          "Giving honest feedback tends to blow up on you",
+          "Nobody on your team plays the skeptic"
+        ]
+      },
+      {
+        "number": 6,
+        "title": "Adventures in Mental Time Travel",
+        "minutes": 11,
+        "summary": "In-the-moment decisions overweight the present self — **temporal discounting**, captured by Jerry Seinfeld's Night Jerry, who stays up late and dumps the cost on Morning Jerry. The remedy is recruiting your past and future selves. Suzy Welch's **10/10/10** asks: how will I feel about this in 10 minutes, 10 months, 10 years? Zooming out also tames **tilt** — poker's term for emotion hijacking judgment — the way a terrible trading day looks catastrophic on the daily chart but is a blip on the yearly one. Moving regret *in front* of a decision is cheap; feeling it after is useless.\n\nWhen willpower won't hold, use **Ulysses contracts**: precommitments that raise barriers against your worse self (poker pros leaving bankrolls home) or lower barriers for your better self (automatic retirement contributions). A **decision swear jar** flags phrases like \"I'm so unlucky\" as signals to slow down.\n\nFor big choices, run reconnaissance on the future: **scenario planning** maps possible outcomes with probabilities; **backcasting** imagines success and works backward to the route; Gary Klein's **premortem** imagines failure and lists the causes — prospective hindsight boosts identifying reasons for outcomes by roughly 30% (Mitchell, Russo, Pennington). Mapped futures also defuse hindsight bias when results arrive.",
+        "readIf": [
+          "You make choices at night that morning-you regrets",
+          "One setback can wreck the rest of your day's decisions",
+          "Your plans assume success and never rehearse failure"
+        ]
+      }
+    ]
+  }
+}

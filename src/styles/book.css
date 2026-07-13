@@ -1,0 +1,411 @@
+/* ------------------------------------------------------------------ */
+/* Book page — header, stats, the two-step strip, and the Map          */
+/* ------------------------------------------------------------------ */
+
+.bookpage {
+  padding-bottom: 90px;
+}
+
+/* --- Header --------------------------------------------------------- */
+
+.book-head {
+  display: grid;
+  grid-template-columns: 230px 1fr;
+  gap: 48px;
+  padding-top: 56px;
+  align-items: start;
+}
+
+.book-head-cover {
+  font-size: 15px;
+  position: sticky;
+  top: 84px;
+}
+
+.book-head-chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.chip-cat {
+  border-color: color-mix(in oklab, var(--brand) 40%, var(--line));
+  color: var(--brand);
+}
+
+.chip-progress {
+  border-color: color-mix(in oklab, var(--ok) 45%, var(--line));
+  color: var(--ok);
+}
+
+.book-head-info h1 {
+  font-size: clamp(1.9rem, 4vw, 2.8rem);
+  margin-top: 16px;
+}
+
+.book-head-subtitle {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.15rem;
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+.book-head-byline {
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin-top: 12px;
+}
+
+.book-head-tagline {
+  font-family: var(--serif);
+  font-size: 1.18rem;
+  font-style: italic;
+  color: var(--brand-strong);
+  margin-top: 20px;
+}
+
+.book-head-why {
+  margin-top: 14px;
+  color: var(--muted);
+  max-width: 560px;
+}
+
+/* --- Stat bar --------------------------------------------------------- */
+
+.statbar {
+  margin-top: 44px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.stat {
+  padding: 22px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.stat + .stat {
+  border-left: 1px solid var(--line);
+}
+
+.stat-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.11em;
+  color: var(--muted);
+}
+
+.stat strong {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+}
+
+.stat-accent strong {
+  color: var(--brand);
+}
+
+.stat-sub {
+  font-size: 0.83rem;
+  color: var(--muted);
+}
+
+/* --- Two-step strip ----------------------------------------------------- */
+
+.howto {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.howto-step {
+  display: flex;
+  gap: 14px;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  opacity: 0.65;
+}
+
+.howto-step.active {
+  opacity: 1;
+  background: var(--surface);
+  border-color: color-mix(in oklab, var(--brand) 45%, var(--line));
+}
+
+.howto-step.done {
+  opacity: 1;
+}
+
+.howto-num {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--brand);
+  color: var(--brand);
+  font-weight: 700;
+  font-size: 0.85rem;
+  display: grid;
+  place-items: center;
+}
+
+.howto-step.done .howto-num {
+  background: var(--ok);
+  border-color: var(--ok);
+  color: #fff;
+}
+
+.howto-step strong {
+  font-size: 0.95rem;
+}
+
+.howto-step p {
+  font-size: 0.84rem;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+/* --- The Map -------------------------------------------------------------- */
+
+.map {
+  margin-top: 72px;
+  max-width: 760px;
+}
+
+.map-title {
+  font-size: 2rem;
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+}
+
+.map-min {
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--brand);
+}
+
+.map-intro {
+  margin-top: 22px;
+  font-family: var(--serif);
+  font-size: 1.13rem;
+  line-height: 1.75;
+}
+
+.map-howto {
+  margin-top: 24px;
+  padding: 16px 20px;
+  background: var(--surface);
+  border-left: 3px solid var(--brand);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-size: 0.92rem;
+}
+
+.map-howto > span {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.11em;
+  color: var(--brand);
+  margin-bottom: 6px;
+}
+
+.map-list {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+/* --- Map chapter card -------------------------------------------------------- */
+
+.map-ch {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 26px 28px;
+  box-shadow: var(--shadow);
+}
+
+.map-ch.is-read {
+  border-color: color-mix(in oklab, var(--ok) 35%, var(--line));
+}
+
+.map-ch-head {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.map-ch-num {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: color-mix(in oklab, var(--brand) 14%, var(--surface));
+  color: var(--brand);
+  font-weight: 700;
+  font-size: 0.95rem;
+  display: grid;
+  place-items: center;
+}
+
+.map-ch.is-read .map-ch-num {
+  background: var(--ok);
+  color: #fff;
+}
+
+.map-ch-titles h3 {
+  font-size: 1.22rem;
+}
+
+.map-ch-min {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.map-ch-summary {
+  margin-top: 16px;
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  line-height: 1.72;
+}
+
+.readif {
+  margin-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.readif-label {
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-right: 2px;
+}
+
+.map-ch-foot {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.distilling {
+  font-size: 0.88rem;
+  color: var(--muted);
+  font-style: italic;
+}
+
+/* --- End of map / next book ---------------------------------------------------- */
+
+.map-done {
+  margin-top: 40px;
+  padding: 26px 28px;
+  text-align: center;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.map-done-msg {
+  color: var(--ok);
+  font-weight: 600;
+}
+
+.next-book {
+  margin-top: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 22px 28px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  max-width: 760px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.next-book:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.next-book-kicker {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.11em;
+  color: var(--brand);
+}
+
+.next-book strong {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  display: block;
+  margin-top: 4px;
+}
+
+.next-book-author {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.next-book-cover {
+  width: 64px;
+  flex-shrink: 0;
+  font-size: 6px;
+}
+
+@media (max-width: 720px) {
+  .book-head {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    padding-top: 32px;
+  }
+
+  .book-head-cover {
+    width: 150px;
+    font-size: 10px;
+    position: static;
+  }
+
+  .statbar {
+    grid-template-columns: 1fr;
+  }
+
+  .stat + .stat {
+    border-left: none;
+    border-top: 1px solid var(--line);
+  }
+
+  .howto {
+    grid-template-columns: 1fr;
+  }
+
+  .map-ch {
+    padding: 20px;
+  }
+}

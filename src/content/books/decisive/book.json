@@ -1,0 +1,108 @@
+{
+  "id": "decisive",
+  "title": "Decisive",
+  "subtitle": "How to Make Better Choices in Life and Work",
+  "author": "Chip Heath & Dan Heath",
+  "year": 2013,
+  "originalPages": 320,
+  "categoryId": "frameworks",
+  "difficulty": 1,
+  "syllabusOrder": 1,
+  "accent": "#059669",
+  "tagline": "A four-step shield against the biases that quietly wreck your biggest decisions.",
+  "whyRead": "Most books on judgment diagnose your biases and leave you stuck with them. Decisive is the rare one that hands you an operating procedure: the WRAP process, a checklist you can actually run before a job change, a hire, a purchase, or a product bet. After reading, you will be able to name which of the four villains is corrupting a given decision and reach for the specific tool — vanishing options, premortem, 10/10/10, tripwire — that neutralizes it.",
+  "map": {
+    "intro": "The quality of your decisions depends far less on analysis than on process — and most people have no process at all. When Dan Lovallo and Olivier Sibony studied 1,048 business decisions, *how* teams decided mattered about **six times more** than how deeply they analyzed. Gut instinct fails on unfamiliar choices; pros-and-cons lists fail because they feed biased inputs into a neat format.\n\nThe Heaths organize the book around four **villains** of decision making: **narrow framing** (you consider too few options), **confirmation bias** (you gather self-serving evidence), **short-term emotion** (you decide while agitated or attached), and **overconfidence** (you assume you know how the future will unfold).\n\nAgainst them they build the **WRAP process**: **W**iden your options, **R**eality-test your assumptions, **A**ttain distance before deciding, and **P**repare to be wrong. Each step is a set of concrete techniques backed by named research — multitracking, disconfirming questions, base rates, ooching, premortems, tripwires.\n\nChapter 1 introduces the villains and the framework. Chapters 2–3 cover widening options, 4–5 cover reality-testing (plus small experiments), 6 covers emotional distance and core priorities, and 7–8 cover preparing for error, setting tripwires, and why a trusted process — not certainty — is what makes people decisive.",
+    "howToUse": "Chapter 1 is essential for everyone — it frames the whole system. If your choices die from too few options, prioritize 2–3. If you fall in love with your own conclusions, go to 4–5. Chapter 6 is for emotionally loaded decisions; 7–8 matter most when being wrong is expensive.",
+    "chapters": [
+      {
+        "number": 1,
+        "title": "The Four Villains — and the WRAP Antidote",
+        "minutes": 10,
+        "summary": "Quaker CEO William Smithburg, fresh off his Gatorade triumph, bought Snapple for $1.8 billion largely on instinct; three years later Quaker unloaded it for $300 million. Fiascos like this share a root cause: not bad luck or bad analysis, but a biased *process*.\n\nThe **four villains**: **narrow framing** — defining choices too narrowly, missing options outside the spotlight; **confirmation bias** — collecting evidence that flatters what you already want; **short-term emotion** — letting temporary feelings drive permanent choices; and **overconfidence** — certainty about a future you cannot actually predict. Kahneman's spotlight metaphor captures the trap — \"what you see is all there is\" — and Benjamin Franklin's pros-and-cons \"moral algebra\" cannot fix it, because biased minds generate biased lists.\n\nThe evidence for process: Paul Nutt found only 29% of organizational decisions considered more than one alternative, and Dan Lovallo and Olivier Sibony's study of 1,048 business decisions showed process mattered six times more than analysis.\n\nThe antidote is **WRAP**: **Widen your options**, **Reality-test your assumptions**, **Attain distance before deciding**, **Prepare to be wrong** — one countermeasure per villain, unpacked in the rest of the book.",
+        "readIf": [
+          "You trust your gut more than any process",
+          "Your pros-and-cons lists never settle anything",
+          "You want the map of the whole framework first"
+        ]
+      },
+      {
+        "number": 2,
+        "title": "Widen Your Options: Escape 'Whether or Not'",
+        "minutes": 9,
+        "summary": "The most common decision trap is the **whether-or-not decision** — treating a choice as a referendum on one option. Baruch Fischhoff's study of teenagers found roughly 65% of their decisions had no real alternatives (\"Should I go to the party or not?\"), and adults are barely better: Paul Nutt found whether-or-not business decisions failed 52% of the time long-term, versus 32% for decisions with multiple alternatives. Hearing \"whether or not\" should trigger an alarm.\n\nTwo tools force the frame open. The **vanishing options test**: imagine a genie deletes every option currently on the table — what do you do now? Managers stuck on \"fire Anna or not\" suddenly generate coaching plans, role changes, and restructures that were available all along.\n\nSecond, surface **opportunity cost** — what the same money, time, or attention could buy instead. In Shane Frederick's experiment, shoppers choosing whether to buy a video were reminded that not buying meant \"keeping the money for other purchases\"; that trivial nudge cut purchases from 75% to 55%. Comparing an option against its real alternatives, not against nothing, is the cheapest upgrade in decision making.",
+        "readIf": [
+          "You keep framing choices as 'should I or shouldn't I'",
+          "You commit to the first decent option you find",
+          "You forget what else the money or time could buy"
+        ]
+      },
+      {
+        "number": 3,
+        "title": "Multitrack — and Find Someone Who's Solved Your Problem",
+        "minutes": 11,
+        "summary": "**Multitracking** means developing options simultaneously, not sequentially — AND, not OR. In Steven Dow's experiment, designers who created banner ads in parallel produced higher-performing ads than those iterating one at a time: comparison sharpens judgment, and with multiple options in play, feedback stings less because your ego isn't welded to a single idea. Kathleen Eisenhardt found Silicon Valley executives who weighed several alternatives at once decided *faster*, with less politicking. One or two extra real options is enough — decision paralysis (as in Iyengar and Lepper's famous 24-jam study) kicks in at far larger menus. Beware **sham options** ginned up to make a favorite look good, and toggle between a **prevention focus** (avoid loss) and **promotion focus** (pursue gain) — Ranjay Gulati's recession research found firms blending offense and defense outperformed.\n\nWhen you can't generate options, steal them: someone has solved your problem. Look at internal **bright spots** (Kaiser Permanente attacked sepsis with practices already proven to work), at competitors (Sam Walton built Walmart partly by copying rivals' innovations like centralized checkout), and **ladder up** through increasingly distant analogies — Kevin Dunbar found top science labs ran on analogy. For recurring decisions, codify prompts into reusable **playlists**.",
+        "readIf": [
+          "You compare candidates one at a time",
+          "You reinvent solutions others already found",
+          "You face the same type of decision repeatedly"
+        ]
+      },
+      {
+        "number": 4,
+        "title": "Reality-Test: Consider the Opposite",
+        "minutes": 10,
+        "summary": "Confirmation bias is the villain that lets you feel rigorous while stacking the deck. A meta-analysis by William Hart and colleagues, covering over 8,000 participants, found people are more than twice as likely to seek information that supports their existing view. Tom Gilovich's diagnosis: when we want something to be true we ask \"Can I believe this?\"; when we don't, \"Must I believe this?\" — and we usually find what the question was designed to find.\n\nThe fix is engineered disagreement. The Vatican institutionalized a **devil's advocate** to argue against canonizations; GM's Alfred Sloan postponed a unanimous decision until his team could develop genuine disagreement; the Pentagon uses \"murder boards\" to attack proposals. If dissent won't arise naturally, appoint it.\n\nAsk **disconfirming questions** — ones that could prove you wrong. In one study, buyers who asked iPod sellers pointed questions (\"What problems does it have?\") got honest disclosures that open-ended chat never surfaced; probing matters most when the other side has reason to shade the truth. Doctors avoid anchoring by deliberately assuming their diagnosis is wrong and asking what else fits. And Roger Martin's question — \"What would have to be true for this option to be right?\" — turns adversaries into joint investigators instead of debaters.",
+        "readIf": [
+          "You research to confirm what you already believe",
+          "Your team agrees with you suspiciously often",
+          "You never ask questions that could prove you wrong"
+        ]
+      },
+      {
+        "number": 5,
+        "title": "Zoom Out, Zoom In — Then Ooch",
+        "minutes": 11,
+        "summary": "To predict how your choice will turn out, distrust the **inside view** — your vivid, optimistic sense of your own case — and take the **outside view**: the **base rates** of people who've made this choice before. Kahneman tells on himself: his textbook team estimated two more years of work; the base rate for such projects was seven to ten years with a 40% abandonment rate. They took eight. Ask experts too — they're poor at point predictions but excellent at base rates. Brian Zikmund-Fisher, facing a risky bone-marrow transplant, decided by hunting survival statistics rather than reassurances.\n\nThen **zoom in** for a **close-up**: go see the reality firsthand, as in Toyota's *genchi genbutsu* (\"go and see for yourself\"). Averages plus texture beat glossy summaries and your own daydreams.\n\nWhen honest prediction is impossible, stop predicting and **ooch**: run a small, cheap experiment before committing. Intuit's Scott Cook champions \"leadership by experiment\" — a modest trial of a text-message crop-price service for Indian farmers (Fasal) validated a business no debate could have settled. Shadow a nurse before nursing school; give a candidate a work sample, since interviews predict performance poorly. Caveat: ooching is procrastination when the decision truly demands commitment or the evidence is already in.",
+        "readIf": [
+          "You assume your case is the exception to the odds",
+          "You commit big before testing small",
+          "You trust confident forecasts over base rates"
+        ]
+      },
+      {
+        "number": 6,
+        "title": "Attain Distance: 10/10/10 and Core Priorities",
+        "minutes": 10,
+        "summary": "Short-term emotion doesn't announce itself; it masquerades as conviction. In 1985, with Intel bleeding cash in memory chips, Andy Grove asked Gordon Moore: \"If the board brought in a new CEO, what would he do?\" Get out of memories, obviously — so they walked out the door, walked back in, and did it. Distance dissolved the emotion and history that had paralyzed them.\n\nSuzy Welch's **10/10/10** builds that distance on demand: how will I feel about this in 10 minutes, 10 months, 10 years? The subtler enemies are the **mere exposure effect** (Robert Zajonc: we prefer whatever is familiar) and **loss aversion** (losses hurt roughly twice as much as equivalent gains feel good) — together they manufacture a powerful status quo bias that makes the familiar feel safe rather than merely familiar. The single best question: **\"What would I tell my best friend to do?\"** Advice to others is cleaner because it strips out our situational noise.\n\nWhen a decision still agonizes, the conflict is usually between **core priorities**. Interplast's board fight over visiting surgeons versus local doctors dissolved once they named the real customer: the patient. Enshrine your priorities, write a Jim Collins-style **stop-doing list**, and defend calendar time — urgent trivia will otherwise crowd out what you claim matters most.",
+        "readIf": [
+          "You make big calls while emotions are hot",
+          "You stick with the familiar because it feels safe",
+          "You give friends better advice than you give yourself"
+        ]
+      },
+      {
+        "number": 7,
+        "title": "Prepare to Be Wrong: Bookend the Future",
+        "minutes": 10,
+        "summary": "We are wildly overconfident forecasters: in studies comparing diagnoses to autopsies, physicians who were \"completely certain\" were wrong about 40% of the time. Since you can't predict the future, prepare for a *range* of futures — **bookend** it, planning for both the ugly low end and the surprising high end instead of a single point estimate.\n\nFor the low bookend, run Gary Klein's **premortem**: \"It's a year from now; our decision failed spectacularly — why?\" This prospective hindsight works: Mitchell, Russo, and Pennington found it boosts the number of reasons people generate by roughly 30%. For the high bookend, run a **preparade**: what if this succeeds beyond all expectation — are we ready? Minnetonka's Robert Taylor, launching Softsoap, bought up the national supply of plastic pumps, locking out copycats for over a year.\n\nBuild in **safety factors** the way engineers do — elevator cables are built about eleven times stronger than needed; software teams pad schedules with buffers. Pad your own estimates the same way.\n\nFinally, vaccinate against predictable pain: John Wanous's work on **realistic job previews** shows that honestly warning recruits about a job's downsides *reduces* turnover — a small dose of negative truth inoculates against later shock.",
+        "readIf": [
+          "Your plans assume the forecast is right",
+          "You've been blindsided by a 'sure thing'",
+          "You never rehearse failure before committing"
+        ]
+      },
+      {
+        "number": 8,
+        "title": "Set Tripwires — and Trust the Process",
+        "minutes": 10,
+        "summary": "Many bad outcomes come not from bad decisions but from *no* decision — autopilot. Kodak drifted past decades of digital-photography signals because no moment ever forced a reckoning. A **tripwire** is a pre-set trigger that snaps you awake: a date, a metric, a budget line. Van Halen's David Lee Roth buried a no-brown-M&Ms clause in contracts — one brown M&M backstage meant the venue hadn't read the safety-critical rider, triggering a full inspection. Zappos pays new hires to quit after training, converting drift into a conscious choice to stay.\n\nDeadlines and **partitions** work the same way: in Amar Cheema and Dilip Soman's study, laborers saved more when wages arrived divided into envelopes — each partition creates a decision point. Entrepreneurs can tranche funding (\"if we burn this envelope without traction, we stop\"). Tripwires can also be patterns: hospitals empower nurses to summon rapid-response teams on specific warning signs.\n\nThe close: **trust the process**. Research on **procedural justice** shows people accept even unfavorable outcomes when the process was fair — real voice, genuine consideration, honest explanation. Bargainers honor deals they feel were fairly struck. Decisiveness doesn't come from certainty; it comes from knowing you widened, reality-tested, distanced, and prepared — the full WRAP loop, each tool aimed at its villain.",
+        "readIf": [
+          "You drift on autopilot past decisions you should revisit",
+          "Sunk costs keep dragging you forward",
+          "You want the whole WRAP toolkit assembled in one place"
+        ]
+      }
+    ]
+  }
+}

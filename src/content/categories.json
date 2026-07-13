@@ -1,0 +1,26 @@
+[
+  {
+    "id": "foundations",
+    "name": "Foundations of Clear Thinking",
+    "order": 1,
+    "description": "Build the base: mental models, intellectual humility, and the habits that make every later book land harder."
+  },
+  {
+    "id": "biases",
+    "name": "Know Your Biases",
+    "order": 2,
+    "description": "Your brain ships with bugs. Learn the systematic errors in human judgment — and how to catch them in the act."
+  },
+  {
+    "id": "frameworks",
+    "name": "Decision Frameworks",
+    "order": 3,
+    "description": "Turn insight into process: repeatable frameworks for deciding well under uncertainty, from WRAP to computer science."
+  },
+  {
+    "id": "mastery",
+    "name": "Probabilistic & Strategic Mastery",
+    "order": 4,
+    "description": "The advanced course: think in probabilities, survive randomness, and build a latticework of worldly wisdom."
+  }
+]

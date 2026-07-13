@@ -1,0 +1,108 @@
+{
+  "id": "think-again",
+  "title": "Think Again",
+  "subtitle": "The Power of Knowing What You Don’t Know",
+  "author": "Adam Grant",
+  "year": 2021,
+  "originalPages": 320,
+  "categoryId": "foundations",
+  "difficulty": 1,
+  "syllabusOrder": 2,
+  "accent": "#7C3AED",
+  "tagline": "Master the skill of changing your mind — and of gently changing everyone else's.",
+  "whyRead": "Most thinking books teach you how to reason better; this one teaches you when to abandon reasoning that no longer fits the facts. Grant turns rethinking from a character trait into a trainable skill, backed by named studies rather than platitudes. After reading, you'll be able to spot when you're preaching instead of testing, argue in ways that actually change minds (including your own), and run periodic checkups on beliefs, careers, and plans before sunk costs trap you.",
+  "map": {
+    "intro": "Grant's core claim: in a fast-changing world, the ability to *rethink and unlearn* matters more than raw intelligence. We default to three mental modes — **preaching** our beliefs, **prosecuting** other people's, and **politicking** for approval — when we should be operating like **scientists**: treating opinions as hypotheses and hunting for reasons we might be wrong.\n\nThe book runs that idea through three expanding circles. **Part I (individual rethinking)** builds the internal toolkit: calibrating confidence between armchair-quarterback arrogance and impostor paralysis, learning to enjoy being wrong by detaching identity from beliefs, and using task conflict — not relationship conflict — to sharpen your own thinking.\n\n**Part II (interpersonal rethinking)** flips outward: how champion debaters, expert negotiators, and motivational interviewers open other people's minds by asking questions and listening rather than piling on arguments, and how even entrenched prejudice softens when people confront the arbitrariness of their loyalties.\n\n**Part III (collective rethinking)** scales up: escaping binary bias in public debates, teaching students to question textbooks, building learning cultures with psychological safety at work, and applying rethinking to your own career and definition of success — scheduling life checkups so grit doesn't harden into escalation of commitment.\n\nEach distilled chapter below maps to one to two original chapters; together they cover the full book, prologue and epilogue included.",
+    "howToUse": "Chapters 1-3 are the foundation everyone should read — they define the scientist mindset, confident humility, and identity detachment that everything else builds on. Chapter 5 is the highest-leverage skills chapter if you persuade for a living. Chapters 4, 6, and 7 are situational (teams, polarized topics, teaching); chapter 8 matters most at career or organizational inflection points.",
+    "chapters": [
+      {
+        "number": 1,
+        "title": "Preacher, Prosecutor, Politician — or Scientist?",
+        "minutes": 11,
+        "summary": "When our beliefs are challenged we slip into three modes named by psychologist **Phil Tetlock**: the **preacher** defending sacred views, the **prosecutor** attacking others' reasoning, and the **politician** campaigning for approval. All three protect existing beliefs. The alternative is **scientist mode**: treat opinions as hypotheses, run experiments, and update. In Arnaldo Camuffo's randomized study of Italian startup founders, those taught to think scientifically earned dramatically more revenue and pivoted twice as often — they killed bad ideas faster.\n\nThe cost of not rethinking is the through-line. Mike Lazaridis co-invented the BlackBerry, then refused to rethink the keyboard and closed ecosystem as the iPhone rose; BlackBerry fell from roughly half the US smartphone market to under 1%. In the 1949 **Mann Gulch fire**, smokejumpers died fleeing with heavy tools they couldn't unlearn to drop, while foreman Wagner Dodge survived by inventing an escape fire on the spot.\n\nWe also cling to first answers: the **first-instinct fallacy**. Counting eraser marks on exams, researchers found most answer changes go from wrong to right — yet students fear revising. Takeaway: build the habit of asking \"what evidence would change my mind?\"",
+        "readIf": [
+          "You defend positions harder the more they're attacked",
+          "Your industry is shifting under your feet",
+          "You trust your first instinct on everything"
+        ]
+      },
+      {
+        "number": 2,
+        "title": "Confident Humility: Between Armchair Quarterback and Impostor",
+        "minutes": 9,
+        "summary": "Confidence and competence are different axes, and we routinely miscalibrate. The **Dunning-Kruger effect** shows the least skilled overestimate themselves most — in the original studies, bottom-quartile performers on logic and grammar tests believed they'd outscored most peers. A little knowledge is the danger zone: novices climb **Mount Stupid**, where slight familiarity breeds outsized certainty. That's **armchair quarterback syndrome** — confidence exceeding competence. Its mirror is **impostor syndrome**, competence exceeding confidence, embodied by Halla Tómasdóttir, who nearly didn't run for Iceland's presidency in 2016 despite being qualified — and finished a strong second.\n\nThe target is **confident humility**: believing in your ability to learn while doubting your current answers. Humility isn't low self-regard; it's being grounded about what you don't know. Crucially, impostor feelings can help: **Basima Tewfik** found medical trainees with more impostor thoughts were rated as better with patients — doubt made them better listeners and harder workers.\n\nPractical move: doubt the tool, not the self. Uncertainty about *methods* motivates rethinking; uncertainty about *worth* paralyzes. Seek out what Grant calls the sweet spot where you're confident enough to act and humble enough to question how.",
+        "readIf": [
+          "You feel like a fraud despite a strong track record",
+          "You've watched confident know-nothings dominate meetings",
+          "You avoid new challenges until you feel 100% ready"
+        ]
+      },
+      {
+        "number": 3,
+        "title": "The Joy of Being Wrong",
+        "minutes": 10,
+        "summary": "Why does being wrong hurt? Because of the **totalitarian ego** — an inner dictator that filters evidence to protect our self-image, illustrated by Henry Murray's Harvard study in which students subjected to withering critiques of their worldviews mostly rationalized rather than reconsidered. The fix is two detachments: separate your **present from your past self** (you're allowed to outgrow old views), and separate **your opinions from your identity** — define yourself by what you *value* (curiosity, integrity, learning), not what you currently *believe*.\n\nGrant's evidence comes from **superforecasters** in Tetlock's tournaments. Jean-Pierre Beugoms outpredicted experts on the 2016 election not by being smarter but by updating faster and treating being wrong as a signal, not a wound. The best forecasters changed their minds more often per question. Daniel Kahneman models the attitude: discovering he's wrong delights him, because \"I'm now less wrong than before\" — genuinely new knowledge.\n\nTactics: keep a list of beliefs you've revised, seek disconfirming information deliberately, and when proven wrong, say so with humor rather than shame. People who can laugh at their errors rethink faster and are trusted more, not less.",
+        "readIf": [
+          "Admitting mistakes feels like losing status",
+          "You still defend opinions you privately doubt",
+          "You make forecasts or bets for a living"
+        ]
+      },
+      {
+        "number": 4,
+        "title": "The Good Fight Club: Constructive Conflict",
+        "minutes": 9,
+        "summary": "Conflict comes in two flavors, per organizational scholar **Karen Jehn**: **relationship conflict** (personal, emotional friction) and **task conflict** (clashes over ideas). Studies across hundreds of teams show relationship conflict corrodes performance, while moderate task conflict *improves* it — especially for creative, non-routine work. The highest-performing groups aren't harmony machines; they fight early and often about substance while keeping it impersonal.\n\nThe Wright brothers are the model: Wilbur and Orville argued ferociously for weeks over propeller design, and the shouting produced a breakthrough neither held at the start — each discovered he was partly wrong. At Pixar, Brad Bird deliberately recruited frustrated **\"pirates\"** to challenge The Incredibles' constraints, delivering the studio's then-biggest hit on aggressive targets.\n\nWho fights well? **Disagreeable givers** — people with a gruff exterior who challenge you *for your benefit* — make the best critics; agreeable people often withhold the friction teams need. To keep conflict task-shaped: frame disputes as debates, not battles; argue *how* rather than *why* (asking \"how would that work?\" surfaces gaps); and ask \"what evidence would change your mind?\" Model that your goal is accuracy, not victory, and challenge stops feeling like attack.",
+        "readIf": [
+          "Your team is pleasant but produces bland work",
+          "Disagreements at work turn personal fast",
+          "You bite your tongue to keep the peace"
+        ]
+      },
+      {
+        "number": 5,
+        "title": "Dances with Foes: Debates, Negotiation, and Motivational Interviewing",
+        "minutes": 12,
+        "summary": "Persuasion is a dance, not a war. World-class debater **Harish Natarajan** beat IBM's Project Debater — a machine with instant access to vast evidence — by finding common ground, making a few strong points instead of many, and steering the audience's reasoning rather than bludgeoning it. **Neil Rackham's** studies of expert negotiators found the same pattern: compared with average negotiators, experts spent more time on shared ground, offered *fewer* arguments (weak reasons dilute strong ones), asked far more questions, and avoided defend-attack spirals.\n\nFor hardened resistance, arguments fail entirely; questions work. **Motivational interviewing** (Miller and Rollnick) opens minds through open-ended questions, **reflective listening**, and affirming the person's autonomy and ability to change — eliciting their own **change talk** instead of triggering **sustain talk**. Neonatologist **Arnaud Gagneur** used it with vaccine-hesitant mothers like Marie-Hélène; in his trials, a single nonjudgmental conversation significantly raised infants' vaccination rates. Ugandan negotiator **Betty Bigombe** used listening to bring warlord Joseph Kony to peace talks.\n\nThe unifying rule: people rarely argue themselves out of a view you pushed on them, but readily rethink conclusions they feel they reached freely. Cede control of the conclusion to gain influence over the process.",
+        "readIf": [
+          "You keep 'winning' arguments without changing anyone's behavior",
+          "You negotiate, sell, or pitch regularly",
+          "Someone you love holds a belief you find dangerous"
+        ]
+      },
+      {
+        "number": 6,
+        "title": "Diminishing Prejudice: Rethinking Us vs. Them",
+        "minutes": 9,
+        "summary": "Group hatred often rests on accidents of geography and habit, and it weakens when people confront that arbitrariness. Grant uses the Yankees-Red Sox rivalry as a lab: fans literally withhold help from someone in a rival's jersey. Rivalries form through proximity, similarity, and repeated competition — we define ourselves *against* the out-group, and stereotypes then justify the hostility after the fact.\n\nTwo interventions stand out. First, **counterfactual thinking**: in experiments Grant ran with colleagues, asking fans to reflect on \"how would you feel about this team if you'd been born in that city?\" made the rivalry feel like luck rather than truth, reducing willingness to insult or harm rivals. Generic \"the rivalry is silly\" messages did nothing; people had to generate the counterfactual themselves. Second, **individualized contact**: Black musician **Daryl Davis** befriended KKK members one at a time, asking questions like \"How can you hate me when you don't even know me?\" — and roughly 200 members eventually handed him their robes.\n\nCaveat: the burden of dialogue shouldn't fall on victims, and contact alone isn't sufficient. What scales is prompting people to question the origins of their attitudes — stereotypes rarely survive an honest audit of where they came from.",
+        "readIf": [
+          "You want tools for family members with entrenched biases",
+          "You lead groups with in-group/out-group friction",
+          "You suspect some of your own loyalties are just habit"
+        ]
+      },
+      {
+        "number": 7,
+        "title": "Rethinking at Scale: Charged Topics and Classrooms",
+        "minutes": 10,
+        "summary": "Public discourse collapses complex issues into two camps — **binary bias**. The antidote is **complexifying**: showing the full spectrum of perspectives. In Peter T. Coleman's difficult-conversations lab, partisans who first read an article framing abortion as a complex dilemma had far more productive conversations than those who read a balanced but two-sided version. On climate, the \"believers vs. deniers\" frame hides that surveys identify **six distinct audiences** from alarmed to dismissive; coverage acknowledging nuance invites rethinking, while false balance and forced binaries entrench positions. Practical moves: include **caveats and contingencies**, cite ranges not points, and admit mixed feelings — expressing calibrated uncertainty makes communicators *more* persuasive, not less.\n\nThe same logic transforms education. Milwaukee teacher **Erin McCarthy** assigns eighth graders passages from outdated textbooks so they learn that knowledge evolves and sources deserve interrogation; students then write their own textbook chapters. In physics classrooms, **Deslauriers and colleagues** found students in **active-learning** sessions scored higher on tests than lecture students — yet *felt* they learned less, because rethinking is effortful. Grant's prescription: teach fewer conclusions and more revision — have students do multiple drafts, question \"best practices,\" and treat every lesson as provisional.",
+        "readIf": [
+          "You write, teach, or communicate science and policy",
+          "Every online debate you see has exactly two sides",
+          "You want kids who question sources, not memorize them"
+        ]
+      },
+      {
+        "number": 8,
+        "title": "Rethinking Work and Life: Learning Cultures and Checkups",
+        "minutes": 11,
+        "summary": "Organizations default to **performance cultures** that reward being right and punish doubt — so people hide errors. NASA's Columbia disaster followed this script: foam strikes had become \"normal,\" and a culture of proving rather than improving suppressed engineers' concerns; astronaut-turned-administrator Ellen Ochoa later helped rebuild norms of questioning. The alternative is a **learning culture**, which needs two ingredients: **psychological safety** — Amy Edmondson found the best hospital teams *reported* more errors, because they felt safe admitting them — and **process accountability**, judging how decisions were made, not just outcomes. Safety without accountability breeds complacency; accountability without safety breeds anxiety.\n\nThe same rethinking applies to your own life. Grit has a dark side: **escalation of commitment**, doubling down on failing paths to justify sunk costs — like Grant's friend Ryan, who ground through medical training toward a career he no longer wanted. **Identity foreclosure** — settling on \"what I'll be\" too early — locks it in. The fix is a twice-yearly **career checkup**: scheduled questions about whether your work still fits who you've become, treating plans as hypotheses. Finally, rethink success itself: chasing happiness undermines it; meaning, relationships, and \"psychological flexibility\" outperform passion-following. Values over identity, impact over image — and keep a to-be-rethought list.",
+        "readIf": [
+          "You lead a team where bad news travels slowly",
+          "You've stayed on a path mainly because you've come this far",
+          "Your five-year plan was written by a younger you"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,119 @@
+{
+  "id": "algorithms-to-live-by",
+  "title": "Algorithms to Live By",
+  "subtitle": "The Computer Science of Human Decisions",
+  "author": "Brian Christian & Tom Griffiths",
+  "year": 2016,
+  "originalPages": 368,
+  "categoryId": "frameworks",
+  "difficulty": 3,
+  "syllabusOrder": 3,
+  "accent": "#4F46E5",
+  "tagline": "Steal the math computers use to decide — when to stop, commit, quit, or gamble.",
+  "whyRead": "Most decision books give you psychology; this one gives you provably optimal (or provably good-enough) procedures for everyday dilemmas: when to stop searching for an apartment, when to try a new restaurant versus a favorite, what to do when your to-do list exceeds your day, how to predict from one data point. Christian and Griffiths translate sixty years of computer science into rules you can actually execute — and, just as valuable, into permission to stop agonizing when a problem is mathematically hard for everyone, even machines.",
+  "map": {
+    "intro": "The book's wager is that human problems — hiring, dating, parking, tidying, scheduling, negotiating — are computational problems, and computer science has spent decades finding the best possible ways to solve them under the same constraints we face: limited time, limited information, an uncertain future. Where a provably optimal strategy exists, the authors hand it to you (stop looking after 37% of your search; use **Least Recently Used** to decide what to keep close; do the shortest task first). Where no tractable optimum exists — and much of life is formally intractable — they show what algorithm designers actually do: relax the constraints, embrace randomness, settle for approximations with known error bounds, and stop computing when more thinking costs more than it's worth.\n\nThe chapters form an arc. The first two tackle decisions under uncertainty about options (optimal stopping, explore/exploit). The middle chapters cover managing what you already have: ordering it (sorting), keeping it accessible (caching), and sequencing it in time (scheduling). Then come chapters on inference and its limits — predicting from thin data (Bayes) and the danger of thinking too hard (overfitting) — followed by tactics for impossible problems (relaxation and randomness). The finale scales from one mind to many: how to communicate over unreliable channels (networking) and how to act when everyone else is optimizing too (game theory). The closing ethic, **computational kindness**, argues we should design our requests and institutions to lower one another's cognitive load.",
+    "howToUse": "Chapters 1, 2, and 5 are the most immediately actionable — read them regardless of your work. Chapter 6 (Bayes) and 7 (Overfitting) matter most if you make predictions or plans. Chapters 3, 4, and 8 are situational: organization, memory, and hard-problem tactics. Chapter 9 is for anyone who negotiates, designs systems, or lives with other people — so, everyone, eventually.",
+    "chapters": [
+      {
+        "number": 1,
+        "title": "Optimal Stopping: The 37% Rule",
+        "minutes": 10,
+        "summary": "The **secretary problem** asks: interviewing candidates one at a time, no going back, how do you maximize the chance of picking the best? The answer is **Look-Then-Leap**: reject the first 37% (precisely 1/e) of applicants, then take the first one better than everyone seen so far. This succeeds 37% of the time — the best any strategy can do — and the same fraction applies to time: apartment hunting for a month means committing to the first place after day 11 that beats all prior ones. Variants shift the threshold: if proposals can be rejected (50% chance), start leaping at 25%; if rejected candidates can be recalled, look longer (61%). With **full information** — an objective percentile score, like typing speed — the **Threshold Rule** applies: accept anyone above a threshold that drops as options run out, lifting success to 58%. Selling a house or seeking a job becomes a threshold problem set by the cost of waiting; parking becomes one governed by occupancy rates (at 99% occupancy, take a spot almost anywhere). Kepler's methodical courtship of eleven candidates illustrates the pain of recall. The meta-lesson: most people stop too early; when an optimal rule exists, commitment is not recklessness but math.",
+        "readIf": [
+          "You keep browsing listings long after finding a good one",
+          "You wonder whether the next candidate, house, or partner might be better",
+          "You want a defensible rule for when to commit"
+        ]
+      },
+      {
+        "number": 2,
+        "title": "Explore/Exploit: New Favorite or Old Reliable",
+        "minutes": 11,
+        "summary": "Try a new restaurant or return to the favorite? This is the **multi-armed bandit** problem: balancing **exploration** (gathering information) against **exploitation** (using what you know). The crucial variable is the **interval** — how long you'll keep drawing on what you learn. Explore early, exploit late: a new city merits experimentation; your last week there does not. The **Gittins index** gives a provably optimal answer when future payoffs are discounted, and it quantifies the 'win-stay' intuition — an untested option can be worth more than a known 7-out-of-9 winner, because information has value. A simpler, robust family is **Upper Confidence Bound** algorithms: choose the option with the highest plausible ceiling, not the highest average — 'optimism in the face of uncertainty.' These guarantee **minimal regret**, which grows only logarithmically over time. Applications run from **A/B testing** (and the ethics of randomized clinical trials, e.g. the ECMO controversy, where adaptive designs like Marvin Zelen's play-the-winner rule could save lives during the trial) to why Hollywood exploits sequels. Finally, Laura Carstensen's research reframes aging: the elderly's shrinking social circles aren't decline but rational late-interval exploitation of the best-known relationships.",
+        "readIf": [
+          "You default to the same restaurants, tools, or collaborators",
+          "You run A/B tests or experiments with real costs",
+          "You feel guilty about either novelty-seeking or rut-dwelling"
+        ]
+      },
+      {
+        "number": 3,
+        "title": "Sorting: Order, Effort, and When to Skip Both",
+        "minutes": 10,
+        "summary": "Sorting is where computer science learned to measure effort. **Big-O notation** grades algorithms by how cost scales: **O(n)** linear, **O(n²)** quadratic, **O(n log n)** in between. **Bubble sort** and insertion sort are intuitive but O(n²) — doubling your bookshelf quadruples the work. **Mergesort** (von Neumann) hits the theoretical best for comparison sorting, O(n log n), by merging pre-sorted stacks; **bucket sort** beats even that when rough categories suffice, which is why libraries and mail systems group before ordering. The core trade-off: **sorting is only worth it if you search often enough to repay it** — an unsorted inbox you search rarely is fine, and 'err on the side of messiness' is often optimal. Sports illuminate the rest: single-elimination tournaments are informationally sloppy, round-robins expensive; a ranking is really a full sort built from pairwise comparisons. Animal **pecking orders** are sorts paid for in blood — and races beat fights because a marathon sorts everyone at once via a benchmark (a **cardinal** measure) instead of O(n²) head-to-head bouts (**ordinal** comparisons). Displacing comparison with measurement is how you get order without combat.",
+        "readIf": [
+          "You alphabetize, tidy, or organize more than you retrieve",
+          "You design rankings, tournaments, or review processes",
+          "You suspect your filing system costs more than it saves"
+        ]
+      },
+      {
+        "number": 4,
+        "title": "Caching: Forgetting as a Feature",
+        "minutes": 9,
+        "summary": "Computers keep a small, fast memory in front of a big, slow one — the **cache**, an idea from Maurice Wilkes made concrete in IBM's 1962 supercomputers. The eviction question — what do you discard when the cache fills? — has a clairvoyant optimum (**Bélády's algorithm**: evict what you'll need again furthest in the future) and a superb practical stand-in: **LRU, Least Recently Used**. Because of **temporal locality**, what you used recently predicts what you'll use next; LRU consistently crushes evicting at random or by FIFO. Applied at home: the pile of recently worn clothes isn't mess, it's a valid cache; Yukio Noguchi's **filing system** — always reinsert a used file at the left end of the box — is provably LRU-optimal, meaning a self-organizing heap beats alphabetization. Geography matters too: keep things where they're used (Amazon's warehouses and CDNs put popular items near demand). The chapter's deepest turn is John Anderson's research showing human memory mirrors environmental statistics: word and event frequencies follow the same recency curves as cache hits, so forgetting is not failure but **tuning to reality**. Aging minds may be less broken than full — search slows because the library grew.",
+        "readIf": [
+          "You feel guilty about piles, tabs, and cluttered desks",
+          "You are designing storage, from closets to CDNs",
+          "You worry your memory is getting worse"
+        ]
+      },
+      {
+        "number": 5,
+        "title": "Scheduling: What to Do, in What Order",
+        "minutes": 11,
+        "summary": "Single-machine scheduling starts with a blunt truth: fix your metric first, because different goals demand different orders. Minimize maximum lateness? **Earliest Due Date** — just do things in deadline order. Minimize the number of things late? **Moore's algorithm**: run EDD, and when something will miss, throw out the biggest task so far. Minimize total time items sit undone? **Shortest Processing Time** — always do the quickest task first, or weighted by importance, divide importance by duration and work down (a rebuke to 'eat the frog'). Complications bite fast: precedence constraints can make scheduling **NP-hard**, and **priority inversion** — a low-priority task holding a resource a high-priority task needs — froze the Mars Pathfinder in 1997 until engineers patched in **priority inheritance**. Preemption enables responsiveness but costs **context switches**, and past a point the machine does nothing but switch: **thrashing**. Human fixes are the computer's fixes: **interrupt coalescing** — batch your email checks, office hours, and notifications; establish a minimum uninterrupted work quantum; when overloaded, stop reprioritizing and just execute, because in a thrash, doing tasks in the wrong order beats doing nothing while you deliberate.",
+        "readIf": [
+          "Your to-do list exceeds your day, every day",
+          "Interruptions shred your focus and you never finish anything",
+          "You argue about productivity systems without agreeing on the goal"
+        ]
+      },
+      {
+        "number": 6,
+        "title": "Bayes's Rule: Predicting from Almost Nothing",
+        "minutes": 11,
+        "summary": "How long will something last, given only how long it's lasted so far? **Bayes's rule** — beliefs updated by evidence, weighted by **priors** — makes single-datapoint prediction possible. **Laplace's Law** handles small samples: after w successes in n tries, estimate probability (w+1)/(n+2), so one win in one try implies two-thirds, not certainty. J. Richard Gott's **Copernican principle** assumes you arrive at no special moment: your best guess is that anything will last as long again as it already has — his 1969 Berlin Wall prediction. But that's just Bayes with an uninformative prior; real priors come in three families with three optimal rules. **Power-law** quantities (movie grosses, wealth, city sizes): use the **multiplicative rule** — predict a constant multiple of the current value; the longer something's lasted, the longer it'll last. **Normal** quantities (lifespans): use the **average rule** — predict the mean, adjusted once you pass it. **Erlang** quantities (memoryless waits, political terms): use the **additive rule** — always expect a constant amount more. Tom Griffiths' experiments show people intuitively predict near-optimally when they have good priors — which is why tabloid news and skewed media diets are epistemically corrosive, and why the marshmallow test may measure a child's prior about adult reliability, not willpower.",
+        "readIf": [
+          "You must forecast from one observation or tiny samples",
+          "You want to know when 'it'll last as long as it has' actually holds",
+          "You're curious what news consumption does to your judgment"
+        ]
+      },
+      {
+        "number": 7,
+        "title": "Overfitting: When to Think Less",
+        "minutes": 9,
+        "summary": "A model that fits its data perfectly often predicts terribly: **overfitting** means mistaking noise for signal, and more thinking, factors, or data-massaging can make judgment worse. A nine-factor polynomial 'explains' every point and fails on the next one; taste buds overfit an ancestral food environment, and metrics-driven organizations overfit their KPIs (teaching to the test, police chasing arrest counts). Detection: **cross-validation** — hold data back and test against it; a model that nails training data but flunks held-out points is memorizing, not learning. Prevention: **regularization**, penalizing complexity so only strong factors survive — the **Lasso** drives weak factors to exactly zero. Evolution, heuristics, and habits act as regularizers: Gerd Gigerenzer's work shows simple equal-weight rules often out-predict multiple regression when data is scarce, and Darwin's marriage decision — a short pro/con list — was appropriately crude for the evidence he had. **Early stopping** converts time into a complexity knob: stop refining while your model is still simple. The rule of thumb: the more uncertain and noisy your data, the earlier you should stop and the simpler you should think. When Charles Darwin needs only a list, so do you.",
+        "readIf": [
+          "You add factors to decisions until they feel 'rigorous'",
+          "Your organization optimizes metrics that miss the point",
+          "You over-plan for futures that never arrive"
+        ]
+      },
+      {
+        "number": 8,
+        "title": "Relaxation and Randomness: Solving the Unsolvable",
+        "minutes": 10,
+        "summary": "Many real problems — the **traveling salesman problem**, seating charts, scheduling with constraints — are **intractable**: no algorithm can find the true optimum in reasonable time, so perfectionism is formally hopeless. Algorithm designers respond with **relaxation**: solve an easier version, then adapt. **Constraint Relaxation** removes a rule (plan as if you couldn't fail, then reintroduce reality); **continuous relaxation** lets discrete either/or choices become fractions, solves, then rounds — yielding solutions provably within a known factor of optimal; **Lagrangian relaxation** converts hard constraints into costs, letting you break a rule for a price (missing one deadline to save five). The second weapon is **randomness**. **Monte Carlo** methods (Ulam, from solitaire) replace exhaustive calculation with sampling; the **Miller-Rabin** test certifies primes probabilistically, securing modern cryptography; **Bloom filters** trade a small false-positive rate for huge speed. Against local optima, **hill climbing** gets stuck, so add **jitter** (random shakes), random restarts, or accept occasional downhill moves. **Simulated annealing** (Kirkpatrick and Gelatt at IBM) systematizes this: start with high 'temperature' — wild experimentation — and cool toward pure exploitation. Practical creativity translation: when stuck, randomize — a shuffled playlist, Brian Eno's Oblique Strategies, a temporary relaxed budget.",
+        "readIf": [
+          "Perfectionism paralyzes your planning",
+          "You're stuck at a 'pretty good' solution and can't improve",
+          "You face constraint-tangled problems like scheduling or routing"
+        ]
+      },
+      {
+        "number": 9,
+        "title": "Networking and Game Theory: Living Among Other Optimizers",
+        "minutes": 12,
+        "summary": "Networks teach coordination without guarantees. **Packet switching** (Baran, Davies) replaced dedicated circuits with resilient message-passing; since packets vanish, TCP uses acknowledgments and the **byzantine generals problem** shows perfect certainty over unreliable channels is impossible. When transmissions collide, **exponential backoff** — wait 2x longer after each failure — tames congestion, and doubles as a humane policy for flaky friends and relapsing addicts: forgive, but demand exponentially less. TCP's **AIMD** (additive increase, multiplicative decrease) sawtooth suggests careers should probe upward gently and cut back sharply. **Bufferbloat** — oversized queues that ruin latency — is your inbox: past a point, buffering doesn't smooth load, it just delays everything; sometimes dropping packets (saying no) is the kindest signal. Game theory scales this to strategy: a **Nash equilibrium** always exists (but may be intractable to find and lousy for everyone, as in the tragedy of the commons); the **price of anarchy** measures how much selfishness costs — surprisingly only 33% in traffic routing. When equilibria are bad, don't preach — change the game: **mechanism design**, from enforced vacation policies to the **Vickrey auction**, where truthful bidding is provably optimal (the **revelation principle**). The book closes with **computational kindness**: state preferences plainly, offer constrained choices, and design systems that spare others the search.",
+        "readIf": [
+          "You manage flaky collaborators or unreliable systems",
+          "Your inbox and commitments are one giant buffer",
+          "You negotiate, design incentives, or set policies for groups"
+        ]
+      }
+    ]
+  }
+}

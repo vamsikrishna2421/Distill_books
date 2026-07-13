@@ -1,0 +1,445 @@
+/* ------------------------------------------------------------------ */
+/* Reader — Stage 2. Three local themes, generous serif typography.    */
+/* ------------------------------------------------------------------ */
+
+.reader {
+  --rbg: #faf6ec;
+  --rsurface: #fffdf6;
+  --rink: #26221a;
+  --rmuted: #7b7261;
+  --rline: #e6dfcc;
+  --raccent: #b45309;
+  --rok: #15803d;
+  background: var(--rbg);
+  color: var(--rink);
+  min-height: 100vh;
+}
+
+.reader[data-rtheme='sepia'] {
+  --rbg: #f2e7cf;
+  --rsurface: #f8f0dd;
+  --rink: #43351f;
+  --rmuted: #8a7a5c;
+  --rline: #ddcfae;
+  --raccent: #9a4a08;
+}
+
+.reader[data-rtheme='dark'] {
+  --rbg: #16130f;
+  --rsurface: #1f1b15;
+  --rink: #e3dccd;
+  --rmuted: #9c917c;
+  --rline: #322c23;
+  --raccent: #e08c2e;
+  --rok: #4ade80;
+}
+
+/* --- Chrome ----------------------------------------------------------- */
+
+.rdr-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: var(--raccent);
+  z-index: 60;
+  transition: width 0.1s linear;
+}
+
+.rdr-top {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 20px;
+  background: color-mix(in oklab, var(--rbg) 85%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--rline);
+}
+
+.rdr-back {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--rmuted);
+  white-space: nowrap;
+}
+
+.rdr-back:hover {
+  color: var(--raccent);
+}
+
+.rdr-mid {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.25;
+}
+
+.rdr-book {
+  font-family: var(--serif);
+  font-size: 0.9rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.rdr-pos {
+  font-size: 0.72rem;
+  color: var(--rmuted);
+}
+
+.rdr-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rdr-nav {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--rline);
+  display: grid;
+  place-items: center;
+  font-size: 0.95rem;
+  color: var(--rmuted);
+}
+
+.rdr-nav:hover {
+  color: var(--rink);
+  border-color: var(--rmuted);
+}
+
+.rdr-nav.off {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.rdr-aa {
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid var(--rline);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--rmuted);
+}
+
+.rdr-aa:hover,
+.rdr-aa.on {
+  color: var(--raccent);
+  border-color: var(--raccent);
+}
+
+/* --- Settings panel ----------------------------------------------------- */
+
+.rdr-settings {
+  position: fixed;
+  top: 64px;
+  right: 20px;
+  z-index: 55;
+  width: 280px;
+  background: var(--rsurface);
+  border: 1px solid var(--rline);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.rdr-set-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--rmuted);
+}
+
+.seg {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid var(--rline);
+  border-radius: 999px;
+  padding: 3px;
+}
+
+.seg button {
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--rmuted);
+}
+
+.seg button.on,
+.seg button:hover {
+  background: color-mix(in oklab, var(--raccent) 14%, transparent);
+  color: var(--raccent);
+}
+
+.seg-val {
+  font-size: 0.78rem;
+  min-width: 42px;
+  text-align: center;
+  color: var(--rink);
+}
+
+.swatches {
+  display: flex;
+  gap: 8px;
+}
+
+.swatch {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 2px solid var(--rline);
+}
+
+.swatch.on {
+  border-color: var(--raccent);
+}
+
+.sw-paper {
+  background: #faf6ec;
+}
+
+.sw-sepia {
+  background: #f2e7cf;
+}
+
+.sw-dark {
+  background: #16130f;
+}
+
+/* --- Page ----------------------------------------------------------------- */
+
+.rdr-page {
+  max-width: calc(43rem * var(--wscale, 1));
+  margin: 0 auto;
+  padding: 120px 24px 80px;
+  font-family: var(--serif);
+  font-size: calc(1.19rem * var(--font-scale, 1));
+  line-height: 1.78;
+}
+
+.ch-kicker {
+  font-family: var(--sans);
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--raccent);
+}
+
+.ch-title {
+  font-size: 2.3em;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  margin-top: 14px;
+  font-weight: 700;
+}
+
+/* --- Key ideas / in practice ------------------------------------------------ */
+
+.key-ideas,
+.in-practice {
+  margin: 2.4em 0;
+  padding: 1.2em 1.4em;
+  background: var(--rsurface);
+  border: 1px solid var(--rline);
+  border-left: 3px solid var(--raccent);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-family: var(--sans);
+  font-size: 0.78em;
+  line-height: 1.6;
+}
+
+.in-practice {
+  border-left-color: var(--rok);
+}
+
+.key-ideas h2,
+.in-practice h2 {
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  color: var(--raccent);
+  margin: 0 0 0.9em;
+}
+
+.in-practice h2 {
+  color: var(--rok);
+}
+
+.key-ideas ul,
+.in-practice ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65em;
+}
+
+.key-ideas li,
+.in-practice li {
+  padding-left: 1.5em;
+  position: relative;
+}
+
+.key-ideas li::before {
+  content: '◆';
+  position: absolute;
+  left: 0;
+  font-size: 0.7em;
+  top: 0.35em;
+  color: var(--raccent);
+}
+
+.in-practice li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--rok);
+  font-weight: 700;
+}
+
+/* --- Body typography ---------------------------------------------------------- */
+
+.ch-body {
+  margin-top: 2.2em;
+}
+
+.ch-body h2 {
+  font-family: var(--serif);
+  font-size: 1.32em;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  margin: 2em 0 0.7em;
+}
+
+.ch-body h3 {
+  font-size: 1.1em;
+  margin: 1.6em 0 0.5em;
+}
+
+.ch-body p {
+  margin: 0 0 1.05em;
+}
+
+.ch-body strong {
+  color: var(--raccent);
+  font-weight: 700;
+}
+
+.reader[data-rtheme='dark'] .ch-body strong {
+  color: var(--raccent);
+}
+
+.ch-body ul,
+.ch-body ol {
+  margin: 0 0 1.05em;
+  padding-left: 1.4em;
+}
+
+.ch-body li {
+  margin-bottom: 0.45em;
+}
+
+.ch-body blockquote {
+  margin: 1.4em 0;
+  padding: 0.2em 0 0.2em 1.2em;
+  border-left: 3px solid var(--rline);
+  font-style: italic;
+  color: var(--rmuted);
+}
+
+.ch-body h2:first-child {
+  margin-top: 0;
+}
+
+/* --- End of chapter --------------------------------------------------------------- */
+
+.ch-end {
+  margin-top: 4em;
+  padding-top: 2.5em;
+  border-top: 1px solid var(--rline);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  font-family: var(--sans);
+}
+
+.ch-end .btn-primary {
+  background: var(--raccent);
+  max-width: 100%;
+  text-align: center;
+}
+
+.ch-end-back {
+  font-size: 0.85rem;
+  color: var(--rmuted);
+}
+
+.ch-end-back:hover {
+  color: var(--raccent);
+}
+
+/* --- Loading / missing states ------------------------------------------------------- */
+
+.rdr-state {
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  text-align: center;
+  padding: 120px 24px 60px;
+  color: var(--rmuted);
+}
+
+.rdr-state h1 {
+  font-size: 1.6rem;
+  color: var(--rink);
+}
+
+.rdr-state .btn-primary {
+  background: var(--raccent);
+}
+
+@media (max-width: 560px) {
+  .rdr-page {
+    padding-top: 100px;
+    font-size: calc(1.08rem * var(--font-scale, 1));
+  }
+
+  .rdr-book {
+    display: none;
+  }
+
+  .rdr-settings {
+    right: 12px;
+    left: 12px;
+    width: auto;
+  }
+}

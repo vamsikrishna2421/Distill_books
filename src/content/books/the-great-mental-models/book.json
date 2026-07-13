@@ -1,0 +1,108 @@
+{
+  "id": "the-great-mental-models",
+  "title": "The Great Mental Models",
+  "subtitle": "General Thinking Concepts",
+  "author": "Shane Parrish & Rhiannon Beaubien",
+  "year": 2019,
+  "originalPages": 216,
+  "categoryId": "foundations",
+  "difficulty": 1,
+  "syllabusOrder": 1,
+  "accent": "#0F766E",
+  "tagline": "Nine thinking tools that catch your errors before reality charges you for them.",
+  "whyRead": "Most bad decisions come from viewing problems through a single lens. This book installs nine general-purpose lenses — drawn from physics, biology, math, and philosophy — that expose blind spots before they cost you. It is the cleanest starting point for building Charlie Munger's 'latticework of mental models': after reading, you will define problems from first principles, anticipate second-order consequences, update beliefs like a Bayesian, and kill bad options by inversion instead of learning every lesson through painful personal experience.",
+  "map": {
+    "intro": "The book's core claim: the quality of your decisions depends on the quality and variety of the **mental models** you bring to a problem — and most of us carry too few, drawn from one discipline, so we hammer every problem with the same tool. Worse, three barriers keep us from noticing our errors: we lack the right perspective, we protect our ego from feedback, and we are often too distant from the consequences of our choices to learn from them.\n\nThe remedy is a **latticework** of time-tested, cross-disciplinary models, and this first volume supplies the nine most general ones. They fall into a natural sequence. Two models discipline how you see: *The Map Is Not the Territory* (all representations are flawed reductions) and *Circle of Competence* (know exactly where your knowledge ends). Three discipline how you generate ideas: *First Principles Thinking*, *Thought Experiments*, and *Second-Order Thinking*. One disciplines how you weigh uncertainty: *Probabilistic Thinking*, including Bayesian updating and fat tails. Three are fast filters for everyday judgment: *Inversion*, *Occam's Razor*, and *Hanlon's Razor*.\n\nThe opening chapter makes the case for the whole project — why understanding must be tested against reality, and why learning from others' mistakes beats tuition paid in your own. The remaining chapters each teach one or more models: definition, mechanics, vivid historical cases, and failure modes.",
+    "howToUse": "Read Chapter 1 first — it explains why the latticework works and how to practice it. Chapters 2, 3, 6, and 7 (maps, competence, second-order effects, probability) are essential for every decision-maker. Chapters 4 and 5 matter most when you create or innovate; Chapter 8's three razors are quick wins you can apply the same day.",
+    "chapters": [
+      {
+        "number": 1,
+        "title": "Acquiring Wisdom: Why Mental Models Matter",
+        "minutes": 9,
+        "summary": "A **mental model** is a compressed representation of how something works — chunked knowledge you use to reason, predict, and decide. Your thinking is only as good as your repertoire: a carpenter's toolbox with only a hammer produces hammered solutions. The fix is **Charlie Munger's latticework** — a broad set of models from many disciplines, hung together so they check and reinforce one another.\n\nThree barriers keep flawed thinking alive. First, **perspective**: like the blind men each touching one part of the elephant, we mistake our partial view for the whole. Second, **ego**: we defend beliefs to protect our self-image, resisting the feedback that would update them. Third, **distance from consequences**: modern life buffers us from the results of our decisions, so the feedback loop that builds skill never closes.\n\nThe chapter's standard for knowledge is unforgiving: understanding must survive contact with reality, not just sound good in your head. And the cheapest tuition is other people's: history and biography let you absorb lessons from mistakes you never have to make. The rest of the book delivers nine models chosen for maximum generality.",
+        "readIf": [
+          "You keep making the same category of mistake in new costumes",
+          "You want Munger's 'latticework' explained concretely",
+          "Your expertise is deep but suspiciously narrow"
+        ]
+      },
+      {
+        "number": 2,
+        "title": "The Map Is Not the Territory",
+        "minutes": 9,
+        "summary": "**Alfred Korzybski's** 1931 dictum: a map is not the territory it describes — every model, financial statement, org chart, or stereotype is a *reduction* of reality, valuable precisely because it leaves things out. Trouble starts when we forget the reduction and treat the map as the terrain.\n\nThree cautions govern map use. Maps can only reflect **a snapshot in time** — territories change while maps stay printed. Maps embed **their maker's perspective, purpose, and blind spots** — ask who drew it and why. And maps can *shape* the territory: when planners rebuild cities to match tidy models, real neighborhoods suffer — **Jane Jacobs'** critique of top-down urban planning is the chapter's centerpiece example, alongside the **2008 financial crisis**, where risk models like Value-at-Risk assured banks that mortgage bets were safe until the territory disagreed.\n\nThe takeaway is not to abandon maps — navigation without them is impossible — but to hold them loosely: verify against the ground, update when reality diverges, and stay alert to what the map, by design, cannot show. Even Newton's physics turned out to be a map that relativity redrew.",
+        "readIf": [
+          "You trust dashboards, metrics, or models more than what you see on the ground",
+          "A plan that looked perfect on paper just failed in practice",
+          "You rely on experts' summaries of domains you never touch directly"
+        ]
+      },
+      {
+        "number": 3,
+        "title": "Circle of Competence",
+        "minutes": 8,
+        "summary": "Popularized by **Warren Buffett** (1996 shareholder letter) and Charlie Munger: within your **circle of competence**, you know both the material *and* what you don't know; outside it, you don't even know what questions to ask. Buffett's point was that the circle's *size* matters far less than knowing its **perimeter** — most disasters come from confidently operating just past the boundary.\n\nThe chapter's key contrast is the **lifer vs. the stranger**: a lifelong local knows a town's unwritten dynamics; a visitor with a guidebook has vocabulary without understanding. Real competence takes years of practice plus honest feedback.\n\nBuilding and keeping a circle requires three things: **curiosity and willingness to learn** (from experience and from others), **honest self-monitoring** — keep a decision journal recording what you expected and why, so outcomes can audit your reasoning — and **external feedback**, since ego reliably flatters us about our edges.\n\nWhen you must act outside your circle, use a three-part protocol: learn at least the basics of the domain, consult people whose circle covers it (asking detailed questions, not delegating the thinking), and lean on broad mental models to compensate for missing specifics.",
+        "readIf": [
+          "You've lost money or credibility in a domain you 'basically understood'",
+          "You want a practical test for when to trust your own judgment",
+          "You hire or consult experts and need to evaluate their claims"
+        ]
+      },
+      {
+        "number": 4,
+        "title": "First Principles Thinking",
+        "minutes": 10,
+        "summary": "**First principles thinking** means decomposing a situation into the foundational elements you know are true — and reasoning up from those, rather than from convention, analogy, or 'how it's always been done.' First principles aren't absolute truths; they are the bedrock *relative to your problem*, the parts that survive interrogation.\n\nTwo techniques do the digging. **Socratic questioning**: clarify your thinking (why do I believe this?), challenge assumptions, demand evidence, seek alternative perspectives, examine consequences, and then question the original question. And the **Five Whys**: ask 'why' repeatedly until you hit something falsifiable or foundational — if you land on 'because that's just how it is,' you've found convention masquerading as truth.\n\nThe cautionary contrast is **Richard Feynman's 'cargo cult'**: islanders who rebuilt runways and bamboo headsets expecting planes to land — perfect imitation of form with zero grasp of function. Copying best practices without understanding *why* they work is cargo-cult reasoning.\n\nThe payoff is creative room: if meat is really just a specific arrangement of proteins and fats, then **cultured meat** grown without animals becomes thinkable. Reasoning from analogy can only remix the past; reasoning from first principles can replace it.",
+        "readIf": [
+          "You inherit processes nobody can justify beyond 'that's how we do it'",
+          "You need genuinely new options, not variations on competitors",
+          "You suspect your industry's best practices are cargo cults"
+        ]
+      },
+      {
+        "number": 5,
+        "title": "Thought Experiments",
+        "minutes": 9,
+        "summary": "A **thought experiment** is a disciplined use of imagination to investigate questions reality won't let you test — too dangerous, too expensive, or physically impossible. Done rigorously (pose a question, gather background, form a hypothesis, run it mentally, compare against expectations, refine), it is the scientific method with the lab in your head.\n\nThree uses dominate. **Imagining physical impossibilities**: **Galileo** never needed the Tower of Pisa — he showed by pure logic that heavy and light objects must fall at the same rate, since chaining them together yields contradictions otherwise; **Einstein** chased a beam of light in his mind toward relativity. **Re-imagining history**: counterfactuals ('what if this decision had gone the other way?') reveal which causes actually mattered — but beware, history is a chaotic system, so single-variable rewinds are suggestive, never conclusive. **Intuiting the non-intuitive**: **John Rawls' veil of ignorance** asks you to design society without knowing which position you'd occupy in it — instantly exposing which rules are fair and which merely favor you.\n\nThe practical use: mentally simulate decisions and their downstream worlds before committing, so cheap imagined failures replace expensive real ones.",
+        "readIf": [
+          "You face decisions you can't A/B test or undo",
+          "You want to pressure-test fairness, strategy, or risk before acting",
+          "You replay decisions long after making them"
+        ]
+      },
+      {
+        "number": 6,
+        "title": "Second-Order Thinking",
+        "minutes": 9,
+        "summary": "First-order thinking asks 'what happens next?' **Second-order thinking** asks 'and then what?' — tracing effects of effects. Ecologist **Garrett Hardin** compressed it: in a connected system you can never merely do one thing. The chapter's flagship case: routine **antibiotics in livestock** — first-order effect, cheaper meat; second-order effect, resistant bacteria that threaten the drugs' usefulness for everyone.\n\nTwo prime applications: **anticipating consequence chains** before acting, and **prioritizing long-run interests over immediate gains** — the person who keeps inconvenient promises trades first-order pain for the second-order asset of trust, which compounds.\n\nTwo guardrails prevent misuse. **Chesterton's Fence**: never tear down a fence until you know why it was put up — existing arrangements often encode second-order reasoning you can't see; and don't let consequence-chasing collapse into the **slippery slope fallacy**, paralyzing action with ever-less-probable hypotheticals. Effects two and three steps out deserve weight; effects ten steps out are usually noise.\n\nBecause most people stop at first-order effects, thinking one step further is a durable edge: the crowd competes over the obvious while you position for what the obvious causes.",
+        "readIf": [
+          "Your fixes keep creating new problems",
+          "You trade long-term trust for short-term wins more than you'd like",
+          "You set incentives, policies, or KPIs for other people"
+        ]
+      },
+      {
+        "number": 7,
+        "title": "Probabilistic Thinking: Bayes, Fat Tails, and Asymmetry",
+        "minutes": 11,
+        "summary": "Since certainty is rarely available, skill means estimating likelihoods well. The chapter opens with **Vera Atkins**, the WWII Special Operations Executive officer who recruited and deployed spies into occupied France on fragmentary information — life-and-death decisions made entirely in probabilities.\n\nThree concepts carry the chapter. **Bayesian thinking** (after Thomas Bayes): treat your existing knowledge as **priors** and update them incrementally as evidence arrives — a scary headline about rising crime means little until integrated with the base rate it deviates from. **Fat-tailed curves**: height follows a bell curve, where extremes are impossible (no 12-foot humans), but wealth, wars, and market crashes live in **fat tails**, where extreme events are rare-but-realistic and dominate outcomes — so never import bell-curve intuitions into fat-tailed domains; position yourself to survive or benefit from the tails rather than pretending to predict them. **Asymmetry**: audit your **metaprobability** — the probability your probability estimates are any good; investors who claim 25% returns reliably err on one side, and unlikely events with catastrophic downside deserve outsized caution.\n\nThe stance to adopt: act decisively on incomplete information, keep updating, and let the size of your bets reflect both the odds and the skew of the payoffs.",
+        "readIf": [
+          "You make bets — investments, hires, launches — under real uncertainty",
+          "News and anecdotes move your beliefs more than base rates do",
+          "You've been blindsided by a 'once-in-a-century' event"
+        ]
+      },
+      {
+        "number": 8,
+        "title": "Three Razors: Inversion, Occam, and Hanlon",
+        "minutes": 10,
+        "summary": "Three fast filters close the book. **Inversion** — mathematician **Carl Jacobi's** habit, 'invert, always invert' — approaches problems backward: instead of asking how to succeed, ask what guarantees failure and avoid it, or assume the desired outcome and reason back to what must be true. **Edward Bernays** marketed cigarettes to women in the 1920s not by asking 'how do I sell more?' but 'what currently prevents women from smoking publicly?' — then dismantled the taboo ('torches of freedom'). Munger's version: avoiding stupidity is easier than seeking brilliance; often subtracting errors beats adding genius.\n\n**Occam's Razor** (William of Ockham): among competing explanations, prefer the one with the fewest assumptions — each added assumption multiplies the ways you can be wrong. Hoofbeats are horses before zebras. The razor is a probability heuristic, not a law: some phenomena are irreducibly complex, and simplicity that ignores evidence is just laziness.\n\n**Hanlon's Razor**: never attribute to malice what incompetence or accident explains. We over-detect intent — the **conjunction fallacy** (Kahneman and Tversky's Linda problem) shows we find vivid, elaborate stories *more* plausible than simple ones. Assuming malice ends thinking; assuming error keeps options and relationships open.",
+        "readIf": [
+          "Your goals list says what to do but never what to stop doing",
+          "You build elaborate theories when boring explanations would do",
+          "You read hostile intent into what was probably a mistake"
+        ]
+      }
+    ]
+  }
+}

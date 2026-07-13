@@ -1,0 +1,75 @@
+{
+  "timestamp": "2026-07-13T05:44:06.993Z",
+  "mode": "headless",
+  "workerType": "optimize",
+  "model": "sonnet",
+  "durationMs": 85864,
+  "executionId": "optimize_1783921361129_4uvt15",
+  "success": true,
+  "findings": {
+    "sections": [
+      {
+        "title": "Performance Analysis: Distill (book_shorts)",
+        "content": "\nThis is a static-content app (books/chapters bundled via `import.meta.glob`), so classic \"N+1 query\" issues don't apply literally — but the same *pattern* (repeated linear work that should be a single indexed lookup) shows up in a few places, plus real React over-subscription issues.\n\n",
+        "level": 2
+      },
+      {
+        "title": "1. \"N+1\"-equivalent: linear scans repeated in loops",
+        "content": "\n`categoryOf()` does `categories.find(...)` — O(n) — and gets called once per book, inside loops, on every render/search:\n\n```ts\n// src/lib/content.ts\nexport function categoryOf(book: Book): Category | undefined {\n  return categories.find((c) => c.id === book.categoryId)   // called per-book, per-render\n}\n```\n`searchBooks()` calls it inside `.map()` over every book, on every keystroke. A `catOrder` Map already exists for sort order — add a sibling Map for lookup:\n\n```ts\nconst categoriesById = new Map(categories.map((c) => [c.id, c]))\nexport function categoryOf(book: Book): Category | undefined {\n  return categoriesById.get(book.categoryId)\n}\n```\n\n",
+        "level": 3
+      },
+      {
+        "title": "2. Unnecessary React re-renders",
+        "content": "\n**Biggest issue** — `BookCard` in `Library.tsx` subscribes to the *entire* progress store per card:\n\n```tsx\nfunction BookCard({ book, step }: { book: Book; step?: number }) {\n  const all = useAllProgress()          // ← whole store\n  const progress = all[book.id]\n  ...\n```\n\n`useStore`/`useSyncExternalStore` has no selector — it re-renders on *any* state change. Result: marking one chapter read in one book re-renders **every** `BookCard` on the page, not just the affected one. `progress.ts` already has a scoped `useBookProgress(bookId)` (used correctly in `BookMap.tsx`/`Reader.tsx`) — use it here too:\n\n```tsx\nfunction BookCard({ book, step }: { book: Book; step?: number }) {\n  const progress = useBookProgress(book.id)   // still whole-store subscribe, but consistent + sanitized\n```\n\nThat alone fixes a latent bug (raw `all[book.id]` skips `sanitize()`, so a malformed localStorage entry could crash `completionPct`). For the deeper fix — actually scoping re-renders per book — `store.ts`'s `useStore` needs a selector variant with cached-snapshot equality (otherwise `useSyncExternalStore` still re-renders since a new object is returned each call):\n\n```ts\n// store.ts\nexport function useStoreSelector<T extends object, S>(\n  store: Store<T>,\n  selector: (s: T) => S,\n  equal: (a: S, b: S) => boolean = Object.is,\n): S {\n  const cache = useRef<S>()\n  const getSnapshot = () => {\n    const next = selector(store.get())\n    if (cache.current === undefined || !equal(cache.current, next)) cache.current = next\n    return cache.current\n  }\n  return useSyncExternalStore(store.subscribe, getSnapshot, getSnapshot)\n}\n```\nThen `useBookProgress` becomes truly scoped, and a progress update to Book A no longer re-renders Book B/C/D's cards. Worth doing once the library grows past a handful of books.\n\n",
+        "level": 3
+      },
+      {
+        "title": "3. Caching opportunities",
+        "content": "\n**`bookStats(book)`** re-derives word counts (regex splits over every chapter summary) on *every call* — and it's called per `BookCard`, in `ContinueStrip`, in `BookMap`, and in `Library`'s totals. Since `books` are static module-level data, this never changes at runtime — cache it once:\n\n```ts\n// content.ts\nconst statsCache = new Map<string, BookStats>()\nexport function bookStats(b: Book): BookStats {\n  const cached = statsCache.get(b.id)\n  if (cached) return cached\n  const stats = computeBookStats(b)   // existing logic, renamed\n  statsCache.set(b.id, stats)\n  return stats\n}\n```\n\n**`loadChapter`** re-fetches and re-parses markdown (via `marked`) every time a chapter is opened, even if the user already visited it this session (e.g., navigating back via browser or reopening from the map):\n\n```ts\n// content.ts\nconst chapterCache = new Map<string, Chapter>()\nexport async function loadChapter(bookId: string, n: number): Promise<Chapter | null> {\n  const key = `${bookId}#${n}`\n  const cached = chapterCache.get(key)\n  if (cached) return cached\n  const loader = chapterIndex.get(bookId)?.get(n)\n  if (!loader) return null\n  const raw = await loader()\n  // ...existing parsing...\n  chapterCache.set(key, chapter)\n  return chapter\n}\n```\nThis also avoids double-parsing when React StrictMode double-invokes effects in dev.\n\n",
+        "level": 3
+      },
+      {
+        "title": "4. Memory leaks",
+        "content": "\nNo real leaks found — event listeners are consistently cleaned up (`Reader.tsx` scroll/keydown, `Library.tsx` `/`-focus keydown), and the `alive` flag pattern in `Reader.tsx`'s chapter-load effect correctly guards against setting state after unmount. Minor inefficiency rather than a leak: the `keydown` listener in `Reader.tsx` re-registers on every `[book, n, navigate, showSettings]` change — harmless since add/remove are paired, but could be stabilized with refs if it shows up in profiling.\n\n",
+        "level": 3
+      },
+      {
+        "title": "5. Redundant computations",
+        "content": "- `searchBooks(query)` recomputes `categoryOf(b)` and rebuilds `strong`/`mid`/`weak` strings for **every** book on **every** keystroke, with no debounce. Fine at current scale (dozens of books); if the library grows, debounce the input (~150ms) before calling `searchBooks`.\n- `countWords` splits on `/\\s+/` repeatedly for the same static strings (map intro/chapter summaries) — subsumed by the `bookStats` cache above.\n\n**Priority order**: #3 (bookStats/chapter cache) is the highest value-for-effort fix — zero risk, pure win since content is static. #2 (BookCard's `useAllProgress`) matters most once you have more than a few books on screen. #1 is a trivial Map swap.",
+        "level": 3
+      }
+    ],
+    "codeBlocks": [
+      {
+        "language": "ts",
+        "code": "// src/lib/content.ts\nexport function categoryOf(book: Book): Category | undefined {\n  return categories.find((c) => c.id === book.categoryId)   // called per-book, per-render\n}"
+      },
+      {
+        "language": "ts",
+        "code": "const categoriesById = new Map(categories.map((c) => [c.id, c]))\nexport function categoryOf(book: Book): Category | undefined {\n  return categoriesById.get(book.categoryId)\n}"
+      },
+      {
+        "language": "tsx",
+        "code": "function BookCard({ book, step }: { book: Book; step?: number }) {\n  const all = useAllProgress()          // ← whole store\n  const progress = all[book.id]\n  ..."
+      },
+      {
+        "language": "tsx",
+        "code": "function BookCard({ book, step }: { book: Book; step?: number }) {\n  const progress = useBookProgress(book.id)   // still whole-store subscribe, but consistent + sanitized"
+      },
+      {
+        "language": "ts",
+        "code": "// store.ts\nexport function useStoreSelector<T extends object, S>(\n  store: Store<T>,\n  selector: (s: T) => S,\n  equal: (a: S, b: S) => boolean = Object.is,\n): S {\n  const cache = useRef<S>()\n  const getSnapshot = () => {\n    const next = selector(store.get())\n    if (cache.current === undefined || !equal(cache.current, next)) cache.current = next\n    return cache.current\n  }\n  return useSyncExternalStore(store.subscribe, getSnapshot, getSnapshot)\n}"
+      },
+      {
+        "language": "ts",
+        "code": "// content.ts\nconst statsCache = new Map<string, BookStats>()\nexport function bookStats(b: Book): BookStats {\n  const cached = statsCache.get(b.id)\n  if (cached) return cached\n  const stats = computeBookStats(b)   // existing logic, renamed\n  statsCache.set(b.id, stats)\n  return stats\n}"
+      },
+      {
+        "language": "ts",
+        "code": "// content.ts\nconst chapterCache = new Map<string, Chapter>()\nexport async function loadChapter(bookId: string, n: number): Promise<Chapter | null> {\n  const key = `${bookId}#${n}`\n  const cached = chapterCache.get(key)\n  if (cached) return cached\n  const loader = chapterIndex.get(bookId)?.get(n)\n  if (!loader) return null\n  const raw = await loader()\n  // ...existing parsing...\n  chapterCache.set(key, chapter)\n  return chapter\n}"
+      }
+    ]
+  },
+  "rawOutputPreview": "## Performance Analysis: Distill (book_shorts)\n\nThis is a static-content app (books/chapters bundled via `import.meta.glob`), so classic \"N+1 query\" issues don't apply literally — but the same *pattern* (repeated linear work that should be a single indexed lookup) shows up in a few places, plus real React over-subscription issues.\n\n### 1. \"N+1\"-equivalent: linear scans repeated in loops\n\n`categoryOf()` does `categories.find(...)` — O(n) — and gets called once per book, inside loops, on every render/search:\n\n```ts\n// src/lib/content.ts\nexport function categoryOf(book: Book): Category | undefined {\n  return categories.find((c) => c.id === book.categoryId)   // called per-book, per-render\n}\n```\n`searchBooks()` calls it inside `.map()` over every book, on every keystroke. A `catOrder` Map already exists for sort order — add a sibling Map for lookup:\n\n```ts\nconst categoriesById = new Map(categories.map((c) => [c.id, c]))\nexport function categoryOf(book: Book): Category | undefined {\n  return categoriesById.get(book.categoryId)\n}\n```\n\n### 2. Unnecessary React re-renders\n\n**Biggest issue** — `BookCard` in `Library.tsx` subscribes to the *entire* progress store per card:\n\n```tsx\nfunction BookCard({ book, step }: { book: Book; step?: number }) {\n  const all = useAllProgress()          // ← whole store\n  const progress = all[book.id]\n  ...\n```\n\n`useStore`/`useSyncExternalStore` has no selector — it re-renders on *any* state change. Result: marking one chapter read in one book re-renders **every** `BookCard` on the page, not just the affected one. `progress.ts` already has a scoped `useBookProgress(bookId)` (used correctly in `BookMap.tsx`/`Reader.tsx`) — use it here too:\n\n```tsx\nfunction BookCard({ book, step }: { book: Book; step?: number }) {\n  const progress = useBookProgress(book.id)   // still whole-store subscribe, but consistent + sanitized\n```\n\nThat alone fixes a latent bug (raw `all[book.id]` skips `sanitize()`, so a malformed localStorage entry could crash `completi",
+  "rawOutputLength": 5469
+}

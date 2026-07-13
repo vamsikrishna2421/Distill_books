@@ -1,0 +1,108 @@
+{
+  "id": "predictably-irrational",
+  "title": "Predictably Irrational",
+  "subtitle": "The Hidden Forces That Shape Our Decisions",
+  "author": "Dan Ariely",
+  "year": 2008,
+  "originalPages": 304,
+  "categoryId": "biases",
+  "difficulty": 1,
+  "syllabusOrder": 2,
+  "accent": "#DB2777",
+  "tagline": "Your bad decisions follow patterns — learn the eight forces so you can design around them.",
+  "whyRead": "This is the foundational lab-experiment tour of behavioral economics: Ariely does not just claim we are irrational, he shows the exact conditions that trigger each error, with named experiments and numbers. After reading, you will recognize decoy pricing, anchoring, the FREE! trap, and placebo pricing in the wild — and you will know the counter-moves: force fresh comparisons, question your first anchors, precommit against your future self, and keep money away from relationships.",
+  "map": {
+    "intro": "Standard economics assumes we weigh costs and benefits rationally. Ariely's core claim, built from a decade of controlled experiments at MIT, Duke, and Berkeley, is that we are not only irrational but **predictably irrational** — we make the same mistakes, in the same directions, under the same conditions, every time. That predictability is the good news: systematic errors can be anticipated and designed around.\n\nThe book is a catalogue of these repeatable forces. We never judge value in absolutes, only by comparison (relativity), and our first exposure to a price imprints on us and anchors everything after (arbitrary coherence). The word FREE! short-circuits cost-benefit math entirely. We live simultaneously in a warm social world and a cold market world, and mixing their rules is expensive. We wildly mispredict how we will behave when aroused, angry, or tempted, and we procrastinate unless we bind our future selves. We overvalue what we own, cling to dying options, experience what we expect to experience — expensive painkillers literally work better — and we all cheat a little, more so the further we get from actual cash.\n\nEach chapter pairs the experimental evidence with practical defenses. The through-line: if the errors are predictable, then better decisions come not from willpower but from restructuring the situations in which we decide.",
+    "howToUse": "Chapters 1, 2, and 7 are the core toolkit — comparison traps, anchors, and expectation effects touch every purchase you make. Chapter 4 is essential if you manage people or set prices. Chapter 5 matters most for anyone fighting procrastination or risky impulses. Chapters 3, 6, and 8 are shorter, situational reads: shopping, decluttering decisions, and designing honest systems.",
+    "chapters": [
+      {
+        "number": 1,
+        "title": "Everything Is Relative: How Comparisons Steer Your Choices",
+        "minutes": 9,
+        "summary": "Humans have no internal value meter. We judge everything relative to what sits next to it, and marketers exploit this with the **decoy effect**: adding a clearly inferior version of option A makes A beat option B. The Economist offered web-only for $59, print-only for $125, and print-plus-web for $125; with the useless print-only decoy, 84% of Ariely's students chose the $125 bundle. Remove the decoy and 68% chose the cheap web subscription instead.\n\nThe same asymmetric-dominance trick shows up everywhere: Williams-Sonoma only sold bread machines once it added a bigger, pricier model beside the first; in Ariely's photo experiment, adding a slightly distorted version of one face made the undistorted original the most-chosen date. We reliably pick the option that has an easy, flattering comparison — and avoid options that resist comparison.\n\nRelativity also poisons happiness: salary satisfaction depends on what your brother-in-law or your colleagues earn, not the absolute number — which is why salary disclosure and ever-expanding reference points (bigger house, richer peers) keep satisfaction on a treadmill. Defense: control your own comparison set. Narrow your circles of comparison, compare against your actual alternatives rather than the menu someone built for you, and beware any option that exists mainly to make another look good.",
+        "readIf": [
+          "You suspect pricing menus are manipulating you",
+          "You earn more than ever but feel poorer than your peers",
+          "You design pricing tiers or product lineups"
+        ]
+      },
+      {
+        "number": 2,
+        "title": "Anchors and Arbitrary Coherence: The Fallacy of Supply and Demand",
+        "minutes": 10,
+        "summary": "Like Konrad Lorenz's goslings imprinting on the first moving object they see, we **imprint** on the first price we encounter for a product — the **anchor** — and it shapes our willingness to pay for years. Ariely calls the result **arbitrary coherence**: initial prices can be completely arbitrary, yet once set, they make all our subsequent valuations look orderly and self-consistent.\n\nThe signature experiment: MIT students wrote the last two digits of their Social Security number, then bid on wine, chocolate, and keyboards. Students with high digits bid 60-120% more than low-digit students — a random number anchored real bids. Anchoring even flips pleasure and pain: asked whether they would pay to hear Ariely recite Whitman, or demand payment to listen, students coherently priced the experience in whichever direction the first framing suggested (the **Tom Sawyer effect**). Salvador Assael made worthless black pearls precious by anchoring them in a Harry Winston window among diamonds.\n\nWe also anchor on our own past behavior — **self-herding** — repeating yesterday's Starbucks purchase because it is evidence of what we like, which is how Howard Schultz detached coffee from Dunkin' Donuts prices with a deliberately un-comparable atmosphere. Since anchors break the link between supply, demand, and true utility, defense means auditing habits: question long-running consumption loops and ask what a purchase is worth to you today, ignoring what you first paid.",
+        "readIf": [
+          "You have loyal habits you have never re-examined",
+          "You negotiate prices or salaries",
+          "You wonder why you happily pay $5 for coffee"
+        ]
+      },
+      {
+        "number": 3,
+        "title": "The Cost of Zero Cost: Why FREE! Makes Us Irrational",
+        "minutes": 8,
+        "summary": "Zero is not just another price — it is an emotional hot button. When Ariely sold Lindt truffles for 15 cents against Hershey's Kisses for 1 cent, 73% took the truffle, the rational choice given quality. Drop both prices by one cent — truffle 14 cents, Kiss FREE! — and preferences flipped: 69% grabbed the Kiss, though the price gap was identical. The **zero-price effect** exists because paid transactions carry possible loss, while FREE! feels risk-free; we overreact to that certainty.\n\nThe trap is choosing an inferior free thing over a better cheap thing: taking a FREE! $10 gift card instead of paying $7 for a $20 card, queueing for free ice cream worth less than the wait, hoarding free trinkets. Amazon's free-shipping threshold made cart sizes jump worldwide — except in France, where a 1-franc shipping fee killed the effect until it too went to zero. AOL's switch to flat-rate (feels-free) pricing buried its servers overnight.\n\nZero also distorts effort and time, not just money. The flip side: FREE! is a powerful policy lever — make preventive screenings, vaccinations, or electric-car incentives fully free rather than nearly free, and uptake jumps disproportionately. Defense: whenever FREE! appears, reintroduce the hidden costs — time, storage, the better option foregone — and compare net value, not price tags.",
+        "readIf": [
+          "You buy extra items to unlock free shipping",
+          "Your drawers hold free stuff you never use",
+          "You design promotions or public-health incentives"
+        ]
+      },
+      {
+        "number": 4,
+        "title": "Two Worlds of Rules: Social Norms vs. Market Norms",
+        "minutes": 10,
+        "summary": "We operate under two incompatible rulebooks. **Social norms** govern favors, family, and community — warm, reciprocal, no immediate payback expected. **Market norms** govern wages and prices — sharp-edged, calculated, you get what you pay for. Money instantly shifts an exchange from the first world to the second, and the shift is hard to reverse.\n\nIn Ariely's circle-dragging experiment, people paid $5 worked hard, people paid 50 cents slacked, but people asked to help as a favor worked hardest of all — until the favor was framed with a cheap gift whose price was mentioned, which snapped them back to market calculation. AARP found lawyers who refused $30 an hour to help needy retirees happily worked for free: a low price insults; no price invokes social duty. In the famous **Israeli daycare study**, fining late parents increased lateness — the fine converted guilt into a fair market price — and lateness stayed high even after the fine was removed. Social norms, once crowded out, rarely return.\n\nImplications: never offer cash gifts where relationships matter; companies invoking family values (then charging bounce fees) breed betrayal; open-source labor and burning-man economies run on social norms that money would destroy. Ariely argues social norms are cheaper and more motivating than pay for firms, education, and civic life — but only if you never break them.",
+        "readIf": [
+          "You manage people and wonder why bonuses backfire",
+          "You have soured a friendship by offering to pay",
+          "You set fines, fees, or loyalty programs"
+        ]
+      },
+      {
+        "number": 5,
+        "title": "Hot States and Broken Promises: Arousal, Procrastination, and Self-Control",
+        "minutes": 11,
+        "summary": "Your cool, deliberate self is a terrible forecaster of your hot self. Ariely and George Loewenstein had Berkeley men answer questions twice — calm, and while sexually aroused. In the hot state, predicted willingness to act rose dramatically: interest in odd or risky sexual behaviors nearly doubled, and willingness to skip a condom or press past a partner's hesitation climbed steeply. The same people, different person. This **hot-cold empathy gap** means safe-sex education, drug policy, and driving rules fail when designed only for cool-state decision-makers; the answer is to decide before the hot state (carry protection, remove temptation, pre-set rules for teens).\n\nProcrastination is the everyday version: we abandon long-term plans for present comfort. In Ariely's class-deadline experiment, students given evenly spaced, externally dictated deadlines got the best grades; those with no deadlines did worst; students who could self-impose deadlines fell between — and those who spaced their own deadlines wisely matched the top group. The lesson: **precommitment** works, and authoritarian structure works even better than freedom.\n\nApplications: automatic payroll savings, self-imposed credit limits (Ariely's proposed self-control credit card that pre-caps spending by category), bundling dreaded tasks with pleasures, and simplifying compliance — Ford cut maintenance into simple mileage bundles and health care could do likewise. Bind your future self while you are still sane.",
+        "readIf": [
+          "You make resolutions and reliably break them",
+          "You want deadlines that actually get things done",
+          "You trust yourself to stay rational under temptation"
+        ]
+      },
+      {
+        "number": 6,
+        "title": "The High Price of Ownership and the Doors We Keep Open",
+        "minutes": 10,
+        "summary": "Owning something inflates its value to you. In the Duke basketball ticket study, students who won tickets in the lottery demanded around $2,400 to sell, while losers would pay only about $170 — a 14x gap for the same seats. This **endowment effect** rides on three quirks: we fall in love with what we have, we focus on what we would lose rather than gain (loss aversion), and we assume buyers see the transaction through our eyes. Effort deepens it — the more work you invest, the more you overvalue the result — and **virtual ownership** means merely imagining possession triggers it, which is why trial periods, money-back guarantees, and escalating auction bids hook us before we own anything.\n\nThe companion error is option-clinging. In Ariely's door-clicking game, players earned money by clicking inside rooms, but wasted profitable clicks rushing back to keep unused doors from vanishing — even when door values were fully known, even when reopening was cheap. We cannot tolerate watching options close, so we spread ourselves across careers, gadgets, and relationships, burning resources on doors we will never walk through. Chinese general Xiang Yu burned his own boats and cooking pots to focus his troops.\n\nDefense: price your possessions as a non-owner would, and consciously close doors — the small dying options cost more in attention than they will ever pay.",
+        "readIf": [
+          "You price your used stuff higher than any buyer will",
+          "You keep every option open and finish none",
+          "Free trials somehow always become purchases"
+        ]
+      },
+      {
+        "number": 7,
+        "title": "You Get What You Expect: Expectations, Price, and the Placebo Effect",
+        "minutes": 11,
+        "summary": "Expectations do not just bias reports of experience — they change the experience itself. In the **MIT Brew** experiment, students preferred beer secretly laced with balsamic vinegar in blind tastings; told about the vinegar beforehand, they hated it, but told after tasting, they liked it fine. Knowledge delivered in advance rewires perception, not just judgment. Coffee served amid elegant trappings tastes better and commands higher prices; Coke beats Pepsi when the brand is visible because, as Read Montague's fMRI work showed, the label activates memory-and-association areas in the brain's frontal cortex. Expectations also power stereotypes: Asian-American women primed with their ethnicity outperformed on math tests, primed with gender they underperformed — same women, different activated expectation. This is why rival fans watching the same play see different fouls, and why blind presentation (masking the brand, the origin, the price) is the honest test.\n\nPrice is the strongest expectation of all. Ariely's fake painkiller **Veladone-Rx** relieved pain for nearly all participants at $2.50 a dose, but far fewer when discounted to 10 cents. Discounted SoBe drinks produced measurably worse puzzle performance than full-priced ones. Even sham arthroscopic knee surgery (Bruce Moseley's placebo-surgery trial) matched the real operation. Expensive medicine literally works better — a genuine dilemma for generic drugs, discount pricing, and medical ethics.",
+        "readIf": [
+          "You reach for the branded painkiller over the generic",
+          "You market anything whose value is experienced",
+          "You want to know if discounting damages your product"
+        ]
+      },
+      {
+        "number": 8,
+        "title": "The Fudge Factor: Honesty, Cheating, and the Behavioral Economics Payoff",
+        "minutes": 12,
+        "summary": "Almost everyone cheats — but only a little. When Ariely let students self-grade tests with cash per correct answer, scores jumped whether or not the answer sheets were shredded: people cheated the same small amount regardless of detection risk. We maintain an internal honesty account, cheating just enough to profit while still seeing ourselves as good — the **fudge factor**. Moral reminders shrink it to zero: students asked to recall the Ten Commandments, or to sign a (nonexistent) MIT honor code, did not cheat at all. Ethics oaths work at the moment of temptation, not as annual training. The stakes are lopsided: employee theft and fraud cost hundreds of billions yearly, dwarfing street robbery.\n\nDistance from cash multiplies dishonesty. Dorm-fridge Cokes vanished within days while plates of dollar bills went untouched, and cheating roughly doubled when the same test paid in tokens exchanged for cash seconds later. Stock options, expense accounts, and a cashless economy all widen this moral wiggle room — a warning Enron proved.\n\nAriely closes with the Carolina Brewery beer study: ordering aloud, Americans pick needlessly varied beers to signal uniqueness and enjoy them less (Hong Kong diners conform instead). The book's final claim: because our irrationalities are systematic, smart defaults, precommitments, and honest-by-design systems are behavioral economics' genuine free lunch.",
+        "readIf": [
+          "You believe you would never cheat",
+          "You handle expense reports, tokens, or stock options",
+          "You want the book's closing argument in one place"
+        ]
+      }
+    ]
+  }
+}

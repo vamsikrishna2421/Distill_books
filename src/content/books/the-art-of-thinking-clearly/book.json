@@ -1,0 +1,108 @@
+{
+  "id": "the-art-of-thinking-clearly",
+  "title": "The Art of Thinking Clearly",
+  "subtitle": "",
+  "author": "Rolf Dobelli",
+  "year": 2013,
+  "originalPages": 384,
+  "categoryId": "biases",
+  "difficulty": 1,
+  "syllabusOrder": 3,
+  "accent": "#DC2626",
+  "tagline": "Ninety-nine named thinking errors — spot them fast, before they cost you money or years.",
+  "whyRead": "Dobelli did the cataloguing work for you: he compressed decades of behavioral economics and social psychology into 99 short, named errors, each with the study behind it and the situation where it strikes. Where Kahneman explains the machinery, this book is the field guide — after reading it you will be able to name the bias operating in a meeting, a sales pitch, or your own head, and apply a specific counter-move on the spot.",
+  "map": {
+    "intro": "Dobelli's core claim is deliberately modest: we cannot think our way to brilliance, but we can systematically subtract stupidity. Evolution built our brains for quick survival judgments in small groups on the savannah, not for probability, markets, or media — so we carry predictable, repeatable **systematic errors** that fire in the same situations every time. Because the errors are predictable, they are avoidable: name the bias, know its trigger, and apply a counter-rule.\n\nThe original book is 99 standalone two-page chapters in no particular order. This distillation regroups them into eight themes so the errors reinforce each other: how crowds hijack your judgment (herd errors), how money warps it (sunk costs, losses, incentives), why probability is invisible to intuition, how you deceive yourself about your own competence, how stories and memory rewrite reality, how choice environments and framing steer you, when action and inaction each mislead, and finally the ego errors — capped by Dobelli's closing philosophy of **via negativa**: good decisions come from a checklist of what *not* to do.\n\nEvery bias is named, and the flagship studies — Asch, Milgram, the Linda problem, Tetlock's forecasters, the Israeli parole judges, the goalkeeper study — are kept with their numbers. Read it as an inoculation schedule: one exposure per error, immunity for life.",
+    "howToUse": "Chapters 4 (self-deception) and 5 (story and memory errors) are the core — they run under everything else, so read them whatever your goal. Investors and negotiators need 2 and 3; managers and marketers 1 and 6; planners and founders 7. Chapter 8 carries Dobelli's closing advice and works as a finale for everyone.",
+    "chapters": [
+      {
+        "number": 1,
+        "title": "The Herd Inside Your Head",
+        "minutes": 11,
+        "summary": "Five errors make other people the biggest distortion field on your judgment. **Social proof** — the urge to act like the crowd — showed up in Solomon Asch's line experiments, where roughly a third of subjects denied plain evidence to match confederates; canned laughter and 'bestseller' labels exploit the same reflex. **Groupthink**, Irving Janis's diagnosis of the Bay of Pigs fiasco, is social proof inside a team: smart people self-censor doubts to protect consensus, so someone must be assigned to dissent. **Authority bias** peaks in Stanley Milgram's obedience studies, where ordinary people delivered what they believed were 450-volt shocks on an experimenter's say-so; airlines fought it with crew resource management, training juniors to challenge captains. **Reciprocity** — gifts create debts — powers Hare Krishna flowers, free samples, and vendor dinners; refuse the favor or return it fast. **Liking bias** means we buy from people who seem to like us (Tupperware parties, mirrored compliments): judge deals as if the seller were unlikeable.\n\nIn brief: **social loafing** — Ringelmann's rope-pulling studies showed individual effort falls as group size grows, so demand individually visible contributions and beware 'shared' responsibility.",
+        "readIf": [
+          "You've agreed in meetings while privately disagreeing",
+          "You buy from salespeople you like",
+          "You lead a team that reaches consensus suspiciously fast"
+        ]
+      },
+      {
+        "number": 2,
+        "title": "How Money Warps Judgment",
+        "minutes": 11,
+        "summary": "Money decisions fail in patterned ways. The **sunk cost fallacy** — honoring irrecoverable past investment, as Britain and France did by finishing the doomed Concorde — is beaten by one question: knowing what I know now, would I start this today? **Loss aversion** is the engine underneath: losses hurt roughly twice as much as equivalent gains please, which explains why we hold losing stocks and why 'don't lose $50' beats 'save $50' in messaging. The **endowment effect** compounds it — in Kahneman's mug experiments sellers demanded about double what buyers offered, and Dan Ariely found Duke students valued won basketball tickets at $2,400 against buyers' $170. Never fall in love with what you own. **Incentive super-response tendency** warns that people optimize for the incentive, not the intent: Hanoi's bounty on rat tails got rats farmed; hourly-billing lawyers work slowly. Check the incentive before trusting the advice. The **house-money effect** makes windfalls feel like play money we gamble recklessly.\n\nIn brief: **motivation crowding** — a Haifa daycare's late fee *increased* lateness by converting duty into a price; and the **hedonic treadmill** — lottery winners revert to baseline happiness within months, so buying joy needs experiences, not stuff.",
+        "readIf": [
+          "You've held a losing investment 'until it comes back'",
+          "You finish projects because you've already spent so much",
+          "You design bonuses, fees, or incentives for others"
+        ]
+      },
+      {
+        "number": 3,
+        "title": "Why You Can't Do Probability",
+        "minutes": 11,
+        "summary": "Intuition is numb to likelihood. **Base-rate neglect**: told a slim man reads Mozart, we guess professor, ignoring that truck drivers vastly outnumber professors — always start from the background frequency ('when you hear hoofbeats, think horses, not zebras'). The **gambler's fallacy** is the belief that chance self-corrects: at Monte Carlo in 1913 black hit over twenty times running while gamblers lost millions betting red; independent events have no memory. **Neglect of probability** means we react to a risk's magnitude, not its odds — experiments show people will pay nearly as much to avoid a 1% chance of electric shock as a 99% chance — which is why terrorism scares more than diabetes. The **conjunction fallacy**, from Tversky and Kahneman's Linda problem, makes a detailed story ('feminist bank teller') feel more probable than its plainer superset; plausibility is not probability. **Exponential growth blindness**: a paper folded fifty times would reach toward the sun, and 5% inflation halves your money in about fourteen years — divide 70 by the growth rate to get doubling time.\n\nIn brief: the **clustering illusion** (faces on Mars — randomness makes streaks), **regression to mean** (extreme results drift back regardless of your intervention), and **ambiguity aversion** (Ellsberg's paradox: we irrationally prefer known odds to unknown ones).",
+        "readIf": [
+          "You bet, invest, or assess risks for a living",
+          "Streaks and 'due' outcomes feel meaningful to you",
+          "Compound interest still surprises you"
+        ]
+      },
+      {
+        "number": 4,
+        "title": "Lies You Tell Yourself",
+        "minutes": 12,
+        "summary": "The deepest errors defend your self-image. **Confirmation bias** — Dobelli's 'mother of all misconceptions' — makes us welcome confirming evidence and filter out the rest; in Peter Wason's 2-4-6 task, subjects tested only rules they already believed. Darwin's counter-habit: write down disconfirming observations immediately, before your mind deletes them. **Overconfidence** is measurable — people's 98%-confidence intervals miss the true value about 40% of the time, 84% of French men rate themselves above-average lovers, and experts are *more* overconfident than laypeople. The **illusion of control**: Jenkins and Ward showed subjects convinced they controlled lights that flashed randomly; gamblers throw dice harder for high numbers; many crosswalk and thermostat buttons are placebos. The **self-serving bias** attributes successes to skill and failures to circumstance — students credit themselves for A's and blame unfair tests for F's; ask a candid friend for your real flaws. The **forecast illusion**: Philip Tetlock analyzed 82,361 expert predictions and found them barely better than chance — the more famous the forecaster, the worse.\n\nIn brief: the **introspection illusion** — self-observation is confabulation, so trust your track record over your feelings — and **not-invented-here syndrome**, our inflated love of our own ideas.",
+        "readIf": [
+          "You research to confirm, not to test",
+          "Your plans assume the optimistic scenario",
+          "You consume expert forecasts"
+        ]
+      },
+      {
+        "number": 5,
+        "title": "Stories, Memory, and the Meaning Machine",
+        "minutes": 12,
+        "summary": "Your brain is a sense-making organ that prefers a coherent story to an accurate one. **Survivorship bias** opens Dobelli's book: we see the successful bands, authors, and startups because failures are buried invisibly — so success rates look wildly higher than they are. Visit the graveyard: study the failures before copying the winners. **Story bias** compresses messy reality into tidy narratives with heroes and causes; be suspicious of any explanation that feels satisfying. **Hindsight bias** makes the past look inevitable — after 2008, everyone 'knew' the crash was coming; diary studies show our predictions were nothing of the sort. Keep written predictions to audit yourself. The **availability heuristic** substitutes ease of recall for frequency: plane crashes feel deadlier than diabetes because they're vivid. **False causality** reads correlation as cause — storks 'deliver' babies because rural areas have more of both. The **halo effect**, documented by Thorndike in WWI officer ratings, lets one trait (beauty, a rising stock price) color every judgment — Cisco was hailed as brilliant at everything until the price fell.\n\nIn brief: **falsification of history** (memories are rewritten — flashbulb memories of 9/11 mutate within years), **primacy and recency effects** (position in a sequence sways grading and hiring), the **sleeper effect** (we forget a message's dubious source but keep the message), and **association bias** (don't shoot the messenger).",
+        "readIf": [
+          "You reverse-engineer lessons from success stories",
+          "News shapes your sense of what's risky",
+          "You trust your memory of how decisions were made"
+        ]
+      },
+      {
+        "number": 6,
+        "title": "The Choice Architecture Trap",
+        "minutes": 11,
+        "summary": "How options are presented decides more than the options themselves. The **paradox of choice**: in Sheena Iyengar and Mark Lepper's jam study, a 24-flavor table drew crowds but converted 3% of tasters, while 6 flavors converted 30% — abundance paralyzes and breeds regret, so define 'good enough' criteria before you shop. **Decision fatigue**: Shai Danziger's study of Israeli parole judges found favorable rulings near 65% after food breaks, falling toward zero before them — willpower is a depletable battery, so make important decisions early and never negotiate tired. The **scarcity error**: in Stephen Worchel's experiment, identical cookies from a jar of two were rated tastier than from a jar of ten; 'only 3 left' is a lever, so judge items on price and value alone. **Framing** — Tversky and Kahneman's disease problem shows people flip choices when identical outcomes are worded as lives saved versus lives lost; '98% fat-free' sells what '1% fat' cannot. **Anchoring**: a spun wheel of fortune shifted estimates of African UN membership, and even professional appraisers tracked arbitrary listing prices.\n\nIn brief: the **contrast effect** ('reduced from $100' makes $70 feel cheap; percentages hide absolute costs), the **affect heuristic** (a one-second like/dislike verdict drives your risk-benefit math — Slovic), and the **default effect** (organ-donation rates track the opt-in/opt-out checkbox, not values).",
+        "readIf": [
+          "You face endless options and decide worse for it",
+          "You make big calls late in exhausting days",
+          "You negotiate prices or design offers"
+        ]
+      },
+      {
+        "number": 7,
+        "title": "Doing, Waiting, and Overplanning",
+        "minutes": 11,
+        "summary": "We err in both directions — compulsive action and comfortable inaction. **Action bias**: Michael Bar-Eli's penalty-kick study found kicks spread evenly left, center, and right, yet goalkeepers almost always dive — standing still stops more center shots but *looks* passive. New, unclear situations trigger the itch to do something; often the best move is Buffett's: \"inactivity strikes us as intelligent behavior.\" **Omission bias** is the mirror error: harm through inaction feels more acceptable than harm through action, so parents refuse a vaccine that kills 5 in 10,000 to avoid a disease that kills 10 in 10,000. Judge outcomes, not activity levels. **Procrastination**: Dan Ariely's MIT deadline experiments showed students with externally imposed, evenly spaced deadlines outperformed those with none — self-set deadlines helped but less; import your deadlines and remove distractions. The **planning fallacy**: the Sydney Opera House was budgeted at $7 million for 1963 and opened in 1973 at $102 million; Kahneman's fix is the outside view — base your estimate on similar past projects, not your scenario. **Zero-risk bias**: Zeckhauser's Russian-roulette thought experiment shows we pay irrationally more to remove the *last* unit of risk than an equal middle slice.\n\nIn brief: **information bias** (extra data past a threshold worsens decisions), **alternative blindness** (compare against your next-best option, never in isolation), **hyperbolic discounting** (we torch long-term value for 'right now'), and the **news illusion** (daily news is sugar for the mind — Dobelli quit entirely).",
+        "readIf": [
+          "Your projects reliably run over time and budget",
+          "You feel pressure to 'do something' in a crisis",
+          "You chronically defer the important task"
+        ]
+      },
+      {
+        "number": 8,
+        "title": "Ego, Envy, and Knowing Your Limits",
+        "minutes": 12,
+        "summary": "The final cluster attacks identity itself. **Chauffeur knowledge**, from the story of Max Planck's chauffeur delivering his lecture from memory, distinguishes real understanding from polished recitation — test people (and yourself) with questions one level deeper than the script. Its antidote is the **circle of competence**: Buffett's rule that its size matters far less than knowing its boundary — operate ruthlessly inside it, say 'I don't know' outside it. **Envy** is the most pointless emotion because it targets peers — Aristotle noted potters envy potters — and social media industrializes it; compare yourself only to your past self. **In-group out-group bias**: Henri Tajfel's minimal-group experiments showed that assigning strangers to groups by coin flip instantly produced favoritism — pseudo-kinship is why teams, tribes, and nations distort judgment. **Effort justification**: Aronson and Mills found students who endured a harsh initiation rated a dull group more highly — we inflate the value of whatever we suffered for (the IKEA effect in miniature).\n\nIn brief: **fear of regret** (dread of future self-blame drives conformity and 'last chance' purchases), and **social comparison bias** (we hire people who won't outshine us; hire better).\n\nDobelli closes with **via negativa**: like Michelangelo carving away everything that wasn't David, clear thinking is subtraction — you get wise not by chasing brilliance but by systematically eliminating these errors.",
+        "readIf": [
+          "You can talk fluently about things you half-understand",
+          "Other people's wins genuinely sting",
+          "You want the book's bottom-line operating philosophy"
+        ]
+      }
+    ]
+  }
+}
