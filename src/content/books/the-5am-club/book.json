@@ -1,0 +1,86 @@
+{
+  "id": "the-5am-club",
+  "title": "The 5 AM Club",
+  "subtitle": "Own Your Morning. Elevate Your Life.",
+  "author": "Robin Sharma",
+  "year": 2018,
+  "originalPages": 336,
+  "categoryId": "growth",
+  "difficulty": 1,
+  "syllabusOrder": 1,
+  "accent": "#65A30D",
+  "tagline": "Own the first hour before the world wakes, and you quietly win the whole day.",
+  "whyRead": "Most productivity advice piles tactics onto an already-crowded day. Sharma argues the opposite: protect one undisturbed hour at dawn, before demands and devices hijack your attention, and everything downstream improves. This distills his 5 AM Method out of its parable wrapper into a usable system — the 20/20/20 morning formula, the four inner empires worth training, and the habit science that makes rising early actually stick. Read it if your mornings feel stolen and you want them back.",
+  "map": {
+    "intro": "The 5 AM Club arrives as a parable: a jaded entrepreneur and a burned-out artist meet an eccentric billionaire — himself once broke and broken — who whisks them from a self-help seminar to beaches in Mauritius and rooftops in Rome, teaching them how the world's highest performers build their mornings. That story frame is the last you'll hear of it here. Underneath the plot sits a coherent method, and that method is what this map lays out.\n\nSharma's core claim is simple and old: the way you start your day sets the trajectory of the day, and the way you spend your days becomes your life. The hour between 5 and 6 AM — what he calls the **Victory Hour** — is uniquely valuable because it is quiet, uninterrupted, and yours before anyone else can lay a claim on it. His argument leans on real research (willpower's morning freshness, exercise's effect on the brain, the timeline of habit formation) and, in places, stretches past what that research can bear. This map flags both.\n\nThe six chapters move from why (the case for dawn), through what (the four inner empires and the 20/20/20 formula), to how (installing the habit, ten focus tactics, and the recovery cycles that keep it sustainable). You don't need to read them in order, though Chapters 3 and 4 are the practical heart. Start wherever your resistance is loudest.",
+    "howToUse": "Skim all six summaries, then read the two or three that name your actual problem — scattered focus, no energy, mornings that vanish. Chapter 4 (the 20/20/20 formula) is the one to act on first; Chapter 3 tells you how to make it survive the hard early weeks. Treat the rest as depth you can return to once the habit holds.",
+    "chapters": [
+      {
+        "number": 1,
+        "title": "Why 5 AM — The Victory Hour",
+        "minutes": 9,
+        "summary": "Sharma's foundational move is to reframe the early morning as an asset rather than a sacrifice. The hour from 5 to 6 AM — the **Victory Hour** — is defended on three grounds. First, solitude: before messages, family, and news arrive, you get a stretch of undistracted attention that is nearly impossible to buy later in the day. Second, biology: he invokes research on willpower as a finite, depleting resource (Roy Baumeister's work) to argue that self-control is freshest at dawn and eroded by every decision and interruption that follows. Third, focus: he casts distraction as the great thief of the era, quietly stealing the deep work that greatness requires. The chapter's central promise is that owning this single hour compounds — a disciplined start radiates into the rest of the day, and repeated daily, into a life. It also concedes the obvious cost (you must sleep earlier) and previews the objection the book keeps answering: that willpower alone won't get you out of bed, which is why later chapters supply a system rather than a pep talk.",
+        "readIf": [
+          "Your best hours are gone before you sit down to real work",
+          "You start each day reacting to other people's demands",
+          "You suspect distraction is quietly eroding your potential"
+        ]
+      },
+      {
+        "number": 2,
+        "title": "The Four Interior Empires",
+        "minutes": 10,
+        "summary": "Most self-improvement, Sharma argues, fails because it trains only the mind — positive thinking, goal-setting, mindset — while ignoring the other systems that actually drive performance. He proposes four interior empires to develop in parallel. **Mindset** is your psychology: beliefs, focus, and thinking habits. **Heartset** is your emotional life; buried resentment and unfelt feeling, he claims, sabotage even a disciplined mind, so emotional cleaning matters as much as clear thinking. **Healthset** is the body: fitness, sleep, and energy, on the logic that peak mental output rides on physical vitality, and an ailing body drags down a brilliant mind. **Soulset** is spirituality in a broad sense — reconnecting with values, purpose, and a quieter interior beneath the noise of achievement. The key idea is balance and integration: strengthening one empire while neglecting the others produces a lopsided, fragile kind of success. This four-part model is the scaffolding for the whole method — the 20/20/20 morning routine in Chapter 4 is essentially a daily workout that touches all four empires at once.",
+        "readIf": [
+          "You've tried mindset fixes that never held",
+          "You're successful on paper but running on empty",
+          "You want a fuller definition of growth than productivity"
+        ]
+      },
+      {
+        "number": 3,
+        "title": "The Habit Installation Protocol",
+        "minutes": 9,
+        "summary": "Willpower gets you started; a system makes it last. Sharma's habit-formation model rests on research from Phillippa Lally's team at University College London, popularly summarized as the **66-day** figure for a behavior to become automatic. The map flags the caveat he glosses over: 66 days was the average in a small study, with individuals ranging from 18 to 254 days depending on the habit and the person. He splits the journey into three phases. **Destruction** (roughly the first weeks) is the tearing-down of the old pattern — the hardest, most uncomfortable stretch, where most people quit. **Installation** is the awkward middle, where the new routine is in place but still effortful and messy. **Integration** is the payoff, where the behavior runs on autopilot and finally feels natural — the automaticity point. He captures the arc with a memorable idea: change is hard at the start, chaotic in the middle, and beautiful by the end. The practical lesson is to expect the discomfort, budget for the messy middle, and refuse to read early difficulty as evidence of failure.",
+        "readIf": [
+          "You've started 5 AM before and quit by week two",
+          "You mistake early discomfort for proof it won't work",
+          "You want realistic timelines, not more motivation"
+        ]
+      },
+      {
+        "number": 4,
+        "title": "The 20/20/20 Formula",
+        "minutes": 10,
+        "summary": "This is the operational heart of the book: exactly what to do between 5:00 and 6:00 AM, split into three twenty-minute pockets. **Pocket One — Move (5:00–5:20):** intense exercise that makes you sweat. Sharma leans on the neuroscience of exercise, citing **BDNF** (brain-derived neurotrophic factor, which supports learning and neural growth), the metabolizing of the stress hormone cortisol, and a lift in dopamine — the point being to prime brain and mood, not just burn calories. **Pocket Two — Reflect (5:20–5:40):** quiet contemplation through journaling, meditation, prayer, or planning, to process emotion and set intention while the mind is calm. **Pocket Three — Grow (5:40–6:00):** deliberate learning — reading, audio, or study of your craft — to compound knowledge daily. Together the three pockets exercise the four empires from Chapter 2 in a single hour. The chapter's strength is its concreteness; its weakness, which the map notes, is treating a fixed hour and 5 AM specifically as universally optimal, when chronotype and life circumstances legitimately vary.",
+        "readIf": [
+          "You want the exact minute-by-minute routine",
+          "You've heard of morning routines but never a repeatable formula",
+          "You want to know why exercise-first is the claim"
+        ]
+      },
+      {
+        "number": 5,
+        "title": "The 10 Tactics of Lifelong Genius",
+        "minutes": 11,
+        "summary": "Beyond the morning hour, Sharma offers ten tactics for protecting focus and sustaining elite output across the day. Highlights: the **Tight Bubble of Total Focus**, deliberately sealing yourself off from digital interruption during deep work; the **90/90/1 Rule** — for the next 90 days, spend the first 90 minutes of work on your single most important project; the **60/10 Method** — work in 60-minute blocks, then refuel for 10; and the **Daily 5**, writing down five small targets each morning to accumulate steady progress. Others cover physical and mental maintenance: the **Second Wind Workout** (a second, evening bout of exercise), the **2 Massage Protocol** (regular bodywork as recovery, not luxury), **Traffic University** (turning commutes into learning time via audio), the **Dream Team** (delegating so genius isn't spent on trivia), the **Weekly Design System** (a fixed planning ritual to architect the week ahead), and the **60 Minute Student** (a daily hour of learning). The chapter's value is as a menu — not all ten fit every life, but several are worth installing. The map treats them as options, not commandments.",
+        "readIf": [
+          "Your mornings are handled but your days still leak focus",
+          "You want concrete focus tactics, not theory",
+          "You keep starting your workday on shallow tasks"
+        ]
+      },
+      {
+        "number": 6,
+        "title": "The Twin Cycles of Elite Performance",
+        "minutes": 9,
+        "summary": "The book's final move corrects the workaholic misreading of everything before it: elite performance is not relentless output but a deliberate oscillation between two states. The **High Excellence Cycle** is the period of intense work and full expenditure. The **Deep Refueling Cycle** is the equally necessary period of rest and recovery — and Sharma's insistence is that rest is not the opposite of productivity but a component of it; you grow during recovery the way a muscle does after training, not during. Practically, this means guarding sleep with real discipline: an earlier bedtime (the non-negotiable cost of rising at 5), a wind-down **pre-sleep ritual**, darkness, no screens, and a cool room. He also widens the frame at the close, tying the whole method to legacy — the argument that self-mastery is ultimately in service of contribution, and that the nobility of a life lies in what you give and whom you help, not what you accumulate. The map notes this as the emotional payoff that keeps the discipline from curdling into mere hustle.",
+        "readIf": [
+          "You burn out every time you get disciplined",
+          "You treat rest as laziness and pay for it",
+          "You want the routine to serve a life, not consume it"
+        ]
+      }
+    ]
+  }
+}

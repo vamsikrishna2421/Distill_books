@@ -1,52 +1,64 @@
 {
-  "timestamp": "2026-07-13T05:49:38.014Z",
+  "timestamp": "2026-07-14T05:27:41.889Z",
   "mode": "headless",
   "workerType": "audit",
   "model": "haiku",
-  "durationMs": 40403,
-  "executionId": "audit_1783921737611_3f9lnp",
+  "durationMs": 60734,
+  "executionId": "audit_1784006801155_w9w9f0",
   "success": true,
   "findings": {
     "vulnerabilities": [
       {
         "severity": "high",
         "file": "src/lib/markdown.tsx",
-        "line": 17,
-        "description": "XSS vulnerability: dangerouslySetInnerHTML renders unsanitized HTML from marked.parse(). The 'marked' library does not escape HTML by default, allowing script injection through markdown content.",
-        "category": "xss"
+        "line": 6,
+        "description": "XSS vulnerability: mdToHtml() uses marked.parse() without HTML sanitization, then the output is injected via dangerouslySetInnerHTML in Reader.tsx and other components. While current static markdown content is safe, any future dynamic content or user input could be exploited."
       },
       {
         "severity": "high",
+        "file": "src/pages/Reader.tsx",
+        "line": 217,
+        "description": "Unsafe HTML injection: dangerouslySetInnerHTML renders chapter.bodyHtml from mdToHtml() without sanitization. If markdown parsing is ever extended to accept user input, this becomes a direct XSS vector."
+      },
+      {
+        "severity": "medium",
         "file": "src/lib/store.ts",
-        "line": 17,
-        "description": "Prototype Pollution vulnerability: Object spread merging ({ ...fallback, ...parsed }) can inject malicious prototype properties (__proto__, constructor, prototype) from localStorage JSON, potentially compromising application behavior.",
-        "category": "prototype-pollution"
+        "line": 19,
+        "description": "Unvalidated localStorage key parameter: If createLocalStore() is called with user-controlled keys, could access unintended localStorage entries. No validation on key format."
       },
       {
         "severity": "medium",
         "file": ".claude/helpers/memory.js",
-        "line": 32,
-        "description": "No input validation: Keys and values are stored directly without sanitization. If malicious data is stored, it could be exploited when loaded and used in other parts of the codebase.",
-        "category": "input-validation"
+        "line": 27,
+        "description": "No input validation before JSON.stringify: saveMemory() writes arbitrary data to disk without validation. If key/value come from untrusted sources, could write malicious JSON."
       },
       {
         "severity": "low",
-        "file": "src/lib/progress.ts",
-        "line": 27,
-        "description": "Limited sanitization scope: While sanitize() validates structure, it doesn't protect against all potential prototype pollution vectors in arrays or nested objects.",
-        "category": "input-validation"
+        "file": "vite.config.ts",
+        "line": 1,
+        "description": "Missing Content Security Policy: No CSP headers configured to prevent XSS. Should set via Vite plugin or server config."
+      },
+      {
+        "severity": "low",
+        "file": "package.json",
+        "line": 11,
+        "description": "Permissive dependency version ranges: Using caret (^) version ranges allows automatic updates. Consider using exact versions or tilde (~) for security-critical dependencies like marked."
       }
     ],
-    "riskScore": 72,
+    "riskScore": 42,
     "recommendations": [
-      "HIGH PRIORITY: Add HTML sanitization to markdown rendering. Use DOMPurify or configure marked with an extension that escapes HTML: `marked.use({ breaks: true }); marked.setOptions({ pedantic: false, gfm: true, hooks: { preprocess: (markdown) => sanitize(markdown) } })`",
-      "HIGH PRIORITY: Fix prototype pollution in store.ts. Use Object.assign() with null prototype or use a safe merge utility: `const safe = Object.create(null); Object.assign(safe, fallback, parsed);`",
-      "MEDIUM PRIORITY: Add input validation to memory.js. Validate keys match a whitelist pattern (e.g., alphanumeric + underscore) before storing: `if (!/^[a-z0-9_]+$/i.test(key)) throw new Error('Invalid key')`",
-      "MEDIUM PRIORITY: Upgrade 'marked' dependency and verify it's configured to not render raw HTML. Add a test that verifies markdown with script tags renders as text, not executable code.",
-      "LOW PRIORITY: Extend sanitize() in progress.ts to handle nested objects recursively and validate all array elements are of expected type.",
-      "LOW PRIORITY: Audit all localStorage reads in the codebase to ensure they use the sanitize() function consistently."
+      "CRITICAL: Install and use DOMPurify or @sanitize-html to sanitize marked output. Example: import DOMPurify from 'dompurify'; export function mdToHtml(src: string): string { return DOMPurify.sanitize(marked.parse(src)); }",
+      "Replace dangerouslySetInnerHTML with a safe markdown component or use React portals with sanitized content.",
+      "Add Content Security Policy headers to mitigate XSS (set script-src, img-src, style-src directives).",
+      "Validate localStorage keys in store.ts to use an allowlist of expected keys.",
+      "Add input validation in memory.js and session.js before writing/parsing JSON data.",
+      "Lock critical dependencies to exact versions (marked, react, react-dom) instead of caret ranges.",
+      "Add a pre-commit hook to scan for dangerouslySetInnerHTML usage.",
+      "No hardcoded secrets found, but ensure .env files are gitignored and never committed.",
+      "Consider adding a security scanning tool (e.g., npm audit, Snyk) to CI/CD pipeline.",
+      "Current static-file-only content load is safe, but document that mdToHtml() should NEVER accept user input without sanitization."
     ]
   },
-  "rawOutputPreview": "Based on my security analysis of the codebase, here's the comprehensive report:\n\n```json\n{\n  \"vulnerabilities\": [\n    {\n      \"severity\": \"high\",\n      \"file\": \"src/lib/markdown.tsx\",\n      \"line\": 17,\n      \"description\": \"XSS vulnerability: dangerouslySetInnerHTML renders unsanitized HTML from marked.parse(). The 'marked' library does not escape HTML by default, allowing script injection through markdown content.\",\n      \"category\": \"xss\"\n    },\n    {\n      \"severity\": \"high\",\n      \"file\": \"src/lib/store.ts\",\n      \"line\": 17,\n      \"description\": \"Prototype Pollution vulnerability: Object spread merging ({ ...fallback, ...parsed }) can inject malicious prototype properties (__proto__, constructor, prototype) from localStorage JSON, potentially compromising application behavior.\",\n      \"category\": \"prototype-pollution\"\n    },\n    {\n      \"severity\": \"medium\",\n      \"file\": \".claude/helpers/memory.js\",\n      \"line\": 32,\n      \"description\": \"No input validation: Keys and values are stored directly without sanitization. If malicious data is stored, it could be exploited when loaded and used in other parts of the codebase.\",\n      \"category\": \"input-validation\"\n    },\n    {\n      \"severity\": \"low\",\n      \"file\": \"src/lib/progress.ts\",\n      \"line\": 27,\n      \"description\": \"Limited sanitization scope: While sanitize() validates structure, it doesn't protect against all potential prototype pollution vectors in arrays or nested objects.\",\n      \"category\": \"input-validation\"\n    }\n  ],\n  \"riskScore\": 72,\n  \"recommendations\": [\n    \"HIGH PRIORITY: Add HTML sanitization to markdown rendering. Use DOMPurify or configure marked with an extension that escapes HTML: `marked.use({ breaks: true }); marked.setOptions({ pedantic: false, gfm: true, hooks: { preprocess: (markdown) => sanitize(markdown) } })`\",\n    \"HIGH PRIORITY: Fix prototype pollution in store.ts. Use Object.assign() with null prototype or use a safe merge utility: `const safe = Object.create(null); Object.ass",
-  "rawOutputLength": 3812
+  "rawOutputPreview": "Based on my analysis of the codebase, here's the comprehensive security report:\n\n```json\n{\n  \"vulnerabilities\": [\n    {\n      \"severity\": \"high\",\n      \"file\": \"src/lib/markdown.tsx\",\n      \"line\": 6,\n      \"description\": \"XSS vulnerability: mdToHtml() uses marked.parse() without HTML sanitization, then the output is injected via dangerouslySetInnerHTML in Reader.tsx and other components. While current static markdown content is safe, any future dynamic content or user input could be exploited.\"\n    },\n    {\n      \"severity\": \"high\",\n      \"file\": \"src/pages/Reader.tsx\",\n      \"line\": 217,\n      \"description\": \"Unsafe HTML injection: dangerouslySetInnerHTML renders chapter.bodyHtml from mdToHtml() without sanitization. If markdown parsing is ever extended to accept user input, this becomes a direct XSS vector.\"\n    },\n    {\n      \"severity\": \"medium\",\n      \"file\": \"src/lib/store.ts\",\n      \"line\": 19,\n      \"description\": \"Unvalidated localStorage key parameter: If createLocalStore() is called with user-controlled keys, could access unintended localStorage entries. No validation on key format.\"\n    },\n    {\n      \"severity\": \"medium\",\n      \"file\": \".claude/helpers/memory.js\",\n      \"line\": 27,\n      \"description\": \"No input validation before JSON.stringify: saveMemory() writes arbitrary data to disk without validation. If key/value come from untrusted sources, could write malicious JSON.\"\n    },\n    {\n      \"severity\": \"low\",\n      \"file\": \"vite.config.ts\",\n      \"line\": 1,\n      \"description\": \"Missing Content Security Policy: No CSP headers configured to prevent XSS. Should set via Vite plugin or server config.\"\n    },\n    {\n      \"severity\": \"low\",\n      \"file\": \"package.json\",\n      \"line\": 11,\n      \"description\": \"Permissive dependency version ranges: Using caret (^) version ranges allows automatic updates. Consider using exact versions or tilde (~) for security-critical dependencies like marked.\"\n    }\n  ],\n  \"riskScore\": 42,\n  \"recommendations\": [\n    \"CRI",
+  "rawOutputLength": 3893
 }

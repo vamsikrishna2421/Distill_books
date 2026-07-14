@@ -1,0 +1,97 @@
+{
+  "id": "the-alchemist",
+  "title": "The Alchemist",
+  "subtitle": "",
+  "author": "Paulo Coelho",
+  "year": 1988,
+  "originalPages": 197,
+  "categoryId": "wisdom",
+  "difficulty": 1,
+  "syllabusOrder": 2,
+  "accent": "#CA8A04",
+  "tagline": "A shepherd crosses the desert for buried gold and learns the treasure was home all along.",
+  "whyRead": "It is the most-read fable of modern self-belief, translated into more languages than almost any living author's work. In a single evening you absorb a complete philosophy of purpose: the idea of a calling you are meant to pursue, the fear that talks you out of it, and the small daily omens that point the way. Short, plain, and quietly radical, it hands you a vocabulary for wanting your own life.",
+  "map": {
+    "intro": "A young Andalusian shepherd keeps dreaming of treasure hidden at the Egyptian pyramids. On the strength of that dream he sells his flock, crosses to North Africa, is robbed, rebuilds, joins a caravan across the Sahara, falls in love at an oasis, apprentices himself to an alchemist, and finally digs where the dream told him to — only to discover the last, ironic turn of the map.\n\nColeho could have written an essay arguing that you should chase your calling. Instead he wrote a **fable**, and the choice is the point. An argument invites you to agree or object; a story asks you to travel. By walking beside Santiago while he doubts, quits, restarts, and risks everything, you feel the cost of a dream rather than merely nodding at the idea of one. The desert, the omens, the recurring characters become a shared language the book can lean on.\n\nThe teaching underneath is deliberately simple, almost proverb-plain: everyone is born with something they are meant to do, most people bury it, and the whole apparatus of the world — luck, love, coincidence, fear — is really feedback on whether you are moving toward it or away. Read as literal metaphysics it overreaches. Read as a fable about attention and nerve, it has kept tens of millions of readers company for a reason.",
+    "howToUse": "Read the seven stages in order to live the journey the way it is meant to land — the ending only pays off if you walk there. If you want the philosophy stripped of plot, jump straight to Chapter 7, which assembles every coined term and weighs the fair criticisms against what survives them.",
+    "chapters": [
+      {
+        "number": 1,
+        "title": "The Shepherd and the Dream",
+        "minutes": 9,
+        "summary": "Santiago, a shepherd who once trained for the priesthood but chose the road, keeps having the same dream: a child promises him treasure at the Egyptian pyramids. A gypsy dream-reader takes his answer on credit and tells him to go. Then a mysterious old man, Melchizedek, who claims to be a king, names the thing Santiago has been circling — his **Personal Legend**, the one path he was born to walk — and warns that most people abandon it. He introduces **beginner's luck**: the world spoils you at the start to lure you onward. Santiago sells his sheep and sails for Africa.\n\nThis stage teaches how a calling actually announces itself — not as thunder but as a repeated tug easy to explain away. It also frames the central wager of the book: that naming your dream out loud, and paying to act on it, is the moment ordinary life becomes a quest. The cost is real; Santiago gives up a comfortable, loved life for an idea.",
+        "readIf": [
+          "You feel a pull you keep talking yourself out of",
+          "You want the origin of the 'Personal Legend' idea",
+          "You wonder why starting something new feels charmed at first"
+        ]
+      },
+      {
+        "number": 2,
+        "title": "Tangier: Robbed and Rebuilt",
+        "minutes": 10,
+        "summary": "Hours after landing, a friendly stranger robs Santiago of every coin. Stranded, humiliated, unable to speak the language, he nearly turns back. Instead he takes work polishing glass for a **crystal merchant**. The merchant is kind but haunted: he has dreamed all his life of the pilgrimage to Mecca, yet keeps it as a dream precisely because achieving it would leave him nothing to live for. Over roughly a year Santiago quietly grows the shop with small, practical improvements and earns enough to go home rich — or go on.\n\nThe merchant is the book's cautionary mirror: a decent man who mistook keeping a dream safe for keeping it alive. His fear is comfortable, which is what makes it deadly. Santiago's stretch of ordinary labor teaches that a Personal Legend is not all omens and wonder; most of it is patient, unglamorous work, and the real test is whether you still want the dream once you could afford to abandon it.",
+        "readIf": [
+          "You've been knocked back and thought about quitting",
+          "You keep a dream 'safe' by never acting on it",
+          "You suspect meaning lives in ordinary work, not just peak moments"
+        ]
+      },
+      {
+        "number": 3,
+        "title": "The Caravan and the Englishman",
+        "minutes": 9,
+        "summary": "Santiago joins a caravan crossing the Sahara toward an oasis, and later Egypt. His companion is an **Englishman** hunting for a legendary alchemist, buried in books that promise the secret of turning lead to gold. The two embody rival ways of knowing: the Englishman studies the world through texts; Santiago reads it through observation — camels, wind, the moods of the caravan, silence. Neither is mocked, but the desert clearly favors the one who watches.\n\nAlchemy enters as the book's master metaphor. The literal goal — perfecting base metal into gold — stands for perfecting a base self into its truest form. The **Soul of the World** and the **Language of the World** are introduced: the claim that all things share one origin and communicate through omens legible to anyone paying attention. This stage teaches that wisdom you can only recite is thinner than wisdom you can perceive, and that the journey itself, not the arrival, is doing the refining.",
+        "readIf": [
+          "You learn better by doing than by reading about it",
+          "You want the meaning behind the book's title",
+          "You've mistaken collecting knowledge for having it"
+        ]
+      },
+      {
+        "number": 4,
+        "title": "The Oasis: Love and Omens",
+        "minutes": 10,
+        "summary": "At the Al-Fayoum oasis Santiago meets **Fatima**, a desert woman, and falls fully in love. The crisis is immediate: does love mean staying, or does a true love free you to finish your Legend? Fatima answers by refusing to be a cage — she tells him to go, trusting that a dream chased is what makes him worth waiting for. Then Santiago reads an **omen** in two hawks fighting overhead, senses a coming attack on the neutral oasis, and warns the tribal chieftains. His vision proves right; he is made a counselor and rewarded, and there he meets the **alchemist** at last.\n\nThis stage teaches the book's most demanding lesson about love: that real love supports the beloved's calling rather than substituting for it, and that staying out of fear would poison the very thing you stayed for. It also shows omens turned to action — reading a sign is worthless unless you dare to act on what you read, at real risk of being wrong.",
+        "readIf": [
+          "You fear a dream and a relationship can't coexist",
+          "You want to see an 'omen' actually acted upon",
+          "You've stayed somewhere out of fear and called it love"
+        ]
+      },
+      {
+        "number": 5,
+        "title": "The Desert Teacher",
+        "minutes": 10,
+        "summary": "The alchemist takes Santiago on as a student and strips his beliefs down. The core instruction: learn to listen to your **heart**, which is treacherous and frightened but knows the way, and make peace with it rather than silencing it. The pivotal teaching is about fear itself — that the dread of suffering is a heavier burden than any suffering that actually arrives, and that a heart afraid of pain will torment you more than the world ever does. Their journey is nearly ended by war; captured at a military camp, Santiago must vouch for powers he isn't sure he has.\n\nThis stage teaches emotional courage as a discrete skill. The obstacle is no longer robbers or money but the inner voice that catastrophizes to keep you home. The alchemist's method is not to promise safety — he keeps leading Santiago into danger — but to reframe the fear: you are more alive moving toward your Legend in peril than dying slowly in comfort.",
+        "readIf": [
+          "Your worst suffering happens in advance, in your head",
+          "You want a practical way to work with fear",
+          "You quiet your gut because it frightens you"
+        ]
+      },
+      {
+        "number": 6,
+        "title": "Becoming the Wind",
+        "minutes": 11,
+        "summary": "The final ordeal: to survive, Santiago must prove himself by turning into the wind. Alone before hostile warriors, he speaks in turn to the desert, the wind, the sun, and finally to the **Hand That Wrote All** — the source behind the Soul of the World — asking each for help and finding that all things, being one, can conspire toward a single sincere desire. The transformation happens; he is freed. Reaching the pyramids at last, he digs where the dream promised treasure — and finds nothing but a beating from thieves. Their leader mockingly reveals his own recurring dream: treasure buried under a certain sycamore in a ruined church in Spain — the exact place Santiago began.\n\nThe twist is the whole design. The treasure was always at home; the entire journey was the price of being able to see it. This stage teaches that the value of a quest is not the prize but who you become while chasing it — and that the answer you cross the world for is often waiting where you started, invisible until you've earned the eyes to find it.",
+        "readIf": [
+          "You want the payoff the whole fable is built toward",
+          "You suspect the point of a journey isn't the destination",
+          "You love an ending that reframes everything before it"
+        ]
+      },
+      {
+        "number": 7,
+        "title": "The Ideas of the Fable",
+        "minutes": 9,
+        "summary": "The story stripped down to its toolkit. This stage lays out every coined term in one place — **Personal Legend**, the **Soul of the World**, **maktub** (it is written), **omens**, **beginner's luck**, the **Language of the World** — and the four obstacles the book says stand between a person and their calling: being told the dream is impossible, fear of wounding those we love, terror of the defeats along the way, and fear of actually getting what we wanted. It explains why the treasure had to be at home for the fable to mean what it means.\n\nThen it turns critic. The book's most quoted promise — that wanting something enlists the whole universe in your favor — is examined honestly for survivorship bias: we hear from the Santiagos who found gold, never from those who followed a dream off a cliff. This stage separates the metaphysics that overreaches from the psychology that holds: attention, nerve, and the willingness to act on faint signals are real advantages, whatever the universe is or isn't doing.",
+        "readIf": [
+          "You want the philosophy without the plot",
+          "You're skeptical of 'the universe conspires' and want it tested",
+          "You want the four obstacles named so you can spot yours"
+        ]
+      }
+    ]
+  }
+}

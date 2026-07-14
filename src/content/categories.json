@@ -22,5 +22,17 @@
     "name": "Probabilistic & Strategic Mastery",
     "order": 4,
     "description": "The advanced course: think in probabilities, survive randomness, and build a latticework of worldly wisdom."
+  },
+  {
+    "id": "wisdom",
+    "name": "Timeless Wisdom & Purpose",
+    "order": 5,
+    "description": "Ancient counsel and modern fables on how to live, act, and find your path."
+  },
+  {
+    "id": "growth",
+    "name": "Habits, Energy & Influence",
+    "order": 6,
+    "description": "Engineer your mornings, install habits that stick — and see the hooks that products set for your attention."
   }
 ]

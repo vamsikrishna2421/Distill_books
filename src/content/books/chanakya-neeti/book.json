@@ -1,0 +1,97 @@
+{
+  "id": "chanakya-neeti",
+  "title": "Chanakya Neeti",
+  "subtitle": "The Aphorisms of Chanakya",
+  "author": "Chanakya (Kautilya)",
+  "year": -300,
+  "originalPages": 176,
+  "categoryId": "wisdom",
+  "difficulty": 1,
+  "syllabusOrder": 1,
+  "accent": "#7C2D12",
+  "tagline": "The kingmaker's field manual for wealth, power, and surviving people.",
+  "whyRead": "Chanakya installed an empire and wrote the ancient world's coldest playbook for how power actually works. These aphorisms strip away comfort: people act from self-interest, trust must be tested, and preparation beats talent. In a few dense lines each, he tells you how to earn money, choose company, raise a family, advise the powerful, and outlast a bad season. It is practical wisdom with no flattery and a very long shelf life.",
+  "map": {
+    "intro": "Chanakya — also called Kautilya and Vishnugupta — was the strategist who toppled the Nanda dynasty and set a penniless young man named Chandragupta Maurya on the throne of a subcontinent-spanning empire around 320 BCE. Tradition credits him with the **Arthashastra**, the ancient world's most unsentimental manual of statecraft, economics, and espionage. **Chanakya Neeti** is the pocket edition of that mind: a few hundred aphorisms (nīti sutras) distilled from a lifetime spent close to power, where a misjudged friend or an unguarded secret could cost a kingdom.\n\nThe worldview is bracing. Chanakya assumes people act from self-interest, that the world rewards strength and preparation over virtue-signaling, and that sentiment untested by evidence is a liability. Yet he is no nihilist — he prizes knowledge above wealth, character above birth, and self-discipline above almost everything. His counsel simply refuses to flatter you.\n\nThe aphorisms cluster around recurring concerns: how to test people before trusting them; how to earn, keep, and spend money; how to choose company; how to run a household; how to advise the powerful; and how to survive bad times and seize good ones. Across seventeen traditional chapters he circles these themes, blunt and repetitive by design — a manual meant to be memorized. This Book Map regroups that material into seven coherent themes so you can go straight to the counsel you need.",
+    "howToUse": "Start with Chapter 1 for the mindset that underlies everything else. If you came for a specific problem — money, a friendship gone wrong, a hard season — jump straight there; each theme stands alone. Read Chapter 6 as leadership advice even if you lead no one but yourself. Take the aphorisms slowly; they reward rereading more than speed.",
+    "chapters": [
+      {
+        "number": 1,
+        "title": "The Operating System: Pragmatism Over Sentiment",
+        "minutes": 10,
+        "summary": "The foundation everything else is built on. Chanakya's starting assumption is that people act from self-interest, and that reading this honestly protects you far better than hoping otherwise. From that premise flow his core moves: **test before you trust** — judge a servant on the job, a relative in your difficulty, a friend in your adversity; ask **three questions** before any undertaking (why, what outcome, will I succeed); **guard your plans** like capital, because an announced intention invites interference; and rely on yourself first, because help is never guaranteed. He warns against being so rigidly honest and pliable that you get exploited — the straight tree is felled first. None of this is cynicism for its own sake; it is a discipline of clear sight meant to keep you from being blindsided by a world that does not owe you fairness. Read this chapter as the lens through which the other six make sense.",
+        "readIf": [
+          "You trust too fast and keep getting burned",
+          "You want a clear-eyed way to read people",
+          "You mistake being nice for being wise"
+        ]
+      },
+      {
+        "number": 2,
+        "title": "Knowledge, Discipline, and the Cost of Wasted Time",
+        "minutes": 11,
+        "summary": "Chanakya's one great exception to his hard pragmatism: he treats **knowledge as the supreme wealth** — the asset that can't be stolen, taxed, or lost, that commands respect abroad where money and beauty don't reach, and that outlasts youth. But he is exacting about what counts. Book-learning you can't apply is like a ladle in a pot that never tastes the food; borrowed knowledge is money in someone else's hands. He lays out the conduct that earns real learning — renouncing comfort, ego, and distraction while you study — and he is merciless about **wasted time**, treating an idle, uneducated life as no better than a dog's tail: attached, but useless. The chapter turns his famous animal lessons (the lion's whole-hearted effort, the crow's discretion, the donkey's tireless persistence) into a practical curriculum for self-discipline. It's the most hopeful chapter in the book, and the one most in your control.",
+        "readIf": [
+          "You keep meaning to learn something but never start",
+          "You feel your time quietly slipping away",
+          "You want discipline that actually sticks"
+        ]
+      },
+      {
+        "number": 3,
+        "title": "Wealth: Earning, Keeping, and Giving Well",
+        "minutes": 10,
+        "summary": "Chanakya is unembarrassed about money. He treats wealth as the base of dignity and independence — the world quietly abandons the weak and the broke, and a person without resources finds their virtues overlooked. So he insists you take earning seriously, save against the bad season you can't predict, and spend with judgment rather than impulse. But he splits sharply from pure accumulation: hoarded wealth that is never used or given is a loss, and money clung to at the cost of your soul loses you both. His model of generosity is deliberate, not sentimental — give to the deserving, at the right time, without letting it hollow you out. The chapter also handles money's dangers: debt, dependence, and the way status distorts how people treat you. Read it as a values-driven personal-finance philosophy that predates the term by two thousand years.",
+        "readIf": [
+          "You earn well but somehow keep nothing",
+          "Money stress is quietly running your decisions",
+          "You want to give generously without being drained"
+        ]
+      },
+      {
+        "number": 4,
+        "title": "Friends, Enemies, and the Company You Keep",
+        "minutes": 11,
+        "summary": "This is Chanakya at his most practical about relationships. He argues that **you become the company you keep**, so choosing your circle is one of the highest-leverage decisions you make. He gives concrete tests for real friendship — adversity is the assay that separates the genuine from the fair-weather — and a clear-eyed account of enemies: don't underestimate a small threat, since a spark left alone burns the forest, and sometimes the wise move is to keep a dangerous person close and appear harmless. He addresses the hardest case too — when a bond has curdled and the honest move is to walk away rather than keep paying into it. Underneath the tactics sits a warning against self-deception: we cling to comforting stories about people because the truth is inconvenient. The chapter teaches you to trade those stories for evidence.",
+        "readIf": [
+          "A friendship just went wrong and you're unsure why",
+          "You can't tell your allies from people using you",
+          "You're stuck near people who drag you down"
+        ]
+      },
+      {
+        "number": 5,
+        "title": "Family, Marriage, and the Household",
+        "minutes": 9,
+        "summary": "Chanakya's family verses are the most rooted in the social norms of his era, and this chapter reads them honestly — with brief historical context — while extracting the durable principle from the dated packaging. The through-line is that a household is a system whose strength depends on its weakest members and its habits: one wayward child can burn down a family's standing the way one dry tree torches a forest, and character formed early is the real inheritance. He treats upbringing as deliberate cultivation, prizes conduct and compatibility over surface qualities in a partner, and is frank that attachment is both the source of our deepest comfort and our deepest fear. Where his advice reflects the hierarchy and prejudice of 300 BCE, we say so plainly and keep only what still holds: raise people well, choose partners on substance, and treat the household as something you build rather than something you're merely given.",
+        "readIf": [
+          "You're raising kids and want principles, not just rules",
+          "Family obligations feel heavy right now",
+          "You want the durable idea under the old advice"
+        ]
+      },
+      {
+        "number": 6,
+        "title": "Counsel, Secrecy, and Command: Leadership from the Arthashastra",
+        "minutes": 11,
+        "summary": "Chanakya spent his life advising a king, and these verses are his leadership manual — as sharp for a modern manager or founder as for a monarch. The core themes: **counsel** taken from the wise and kept confidential, because a plan discussed too widely dies before it's executed; **secrecy** as operational discipline, not paranoia; honest **assessment of strength** — your own and your rivals' — before you commit; and decisive timing, since the leader who deliberates forever is as useless as the one who acts blind. He's clear that a leader is judged by results and by the company of advisors they keep, that weakness invites abandonment, and that authority without competence collapses. Read literally it's statecraft; read as intended here, it's a guide to running a team, holding your strategy close, sizing up a competitor, and knowing the difference between patience and paralysis.",
+        "readIf": [
+          "You lead a team, a company, or a project",
+          "You over-share your plans before they're ready",
+          "You need to size up a rival honestly"
+        ]
+      },
+      {
+        "number": 7,
+        "title": "Adversity, Timing, and the Crooked Wisdom",
+        "minutes": 11,
+        "summary": "The survival chapter. Chanakya assumes bad times are not an aberration but a season everyone passes through, and he arms you for them: keep your losses, your humiliations, and your family troubles private rather than broadcasting weakness; live in the present rather than grieving the past or dreading the future; and save in good times against the flood you can't see coming. He teaches reading the moment — the same act is wisdom at the right time and folly at the wrong one — and introduces the **crooked wisdom** of statecraft, the four escalating tools of conciliation, incentive, division, and force (sama, dana, bheda, danda), used in that order. And he gives permission the sentimental rarely grant: when a place, job, or relationship no longer nourishes you and won't change, the strong move is to leave. It's the chapter that turns the whole book into resilience.",
+        "readIf": [
+          "You're in a hard season and need to endure it",
+          "You keep missing your moment to act",
+          "A job or place is failing you and you won't leave"
+        ]
+      }
+    ]
+  }
+}

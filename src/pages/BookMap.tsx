@@ -98,7 +98,8 @@ export default function BookMap() {
             <h1>{book.title}</h1>
             {book.subtitle && <p className="book-head-subtitle">{book.subtitle}</p>}
             <p className="book-head-byline">
-              {book.author} · {book.year} · {book.originalPages} pages in the original
+              {book.author} · {book.year < 0 ? `c. ${-book.year} BCE` : book.year} ·{' '}
+              {book.originalPages} pages in the original
             </p>
             <p className="book-head-tagline">{book.tagline}</p>
             <p className="book-head-why">{book.whyRead}</p>
