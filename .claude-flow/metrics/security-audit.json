@@ -1,64 +1,69 @@
 {
-  "timestamp": "2026-07-14T05:27:41.889Z",
+  "timestamp": "2026-07-14T06:55:39.950Z",
   "mode": "headless",
   "workerType": "audit",
   "model": "haiku",
-  "durationMs": 60734,
-  "executionId": "audit_1784006801155_w9w9f0",
+  "durationMs": 57057,
+  "executionId": "audit_1784012082893_fgmvek",
   "success": true,
   "findings": {
     "vulnerabilities": [
       {
         "severity": "high",
         "file": "src/lib/markdown.tsx",
-        "line": 6,
-        "description": "XSS vulnerability: mdToHtml() uses marked.parse() without HTML sanitization, then the output is injected via dangerouslySetInnerHTML in Reader.tsx and other components. While current static markdown content is safe, any future dynamic content or user input could be exploited."
+        "line": 5,
+        "description": "XSS vulnerability: mdToHtml() uses marked.parse() without HTML sanitization. Output is rendered via dangerouslySetInnerHTML, allowing arbitrary HTML/JavaScript execution if markdown contains untrusted content (e.g., <img onerror=...>, <script>)."
       },
       {
         "severity": "high",
         "file": "src/pages/Reader.tsx",
-        "line": 217,
-        "description": "Unsafe HTML injection: dangerouslySetInnerHTML renders chapter.bodyHtml from mdToHtml() without sanitization. If markdown parsing is ever extended to accept user input, this becomes a direct XSS vector."
+        "line": 223,
+        "description": "XSS vulnerability: keyIdeas are rendered via dangerouslySetInnerHTML with mdInline() output without sanitization. If markdown source contains user-controlled data, attackers can inject arbitrary scripts."
+      },
+      {
+        "severity": "high",
+        "file": "src/pages/Reader.tsx",
+        "line": 236,
+        "description": "XSS vulnerability: inPractice items are rendered via dangerouslySetInnerHTML with mdInline() output without sanitization. Same XSS vector as keyIdeas."
       },
       {
         "severity": "medium",
-        "file": "src/lib/store.ts",
-        "line": 19,
-        "description": "Unvalidated localStorage key parameter: If createLocalStore() is called with user-controlled keys, could access unintended localStorage entries. No validation on key format."
+        "file": "src/lib/markdown.tsx",
+        "line": 3,
+        "description": "Insecure marked configuration: marked.use({ gfm: true }) enables GitHub-flavored markdown but does not enable sanitization. By default, marked allows raw HTML in markdown output."
       },
       {
         "severity": "medium",
-        "file": ".claude/helpers/memory.js",
-        "line": 27,
-        "description": "No input validation before JSON.stringify: saveMemory() writes arbitrary data to disk without validation. If key/value come from untrusted sources, could write malicious JSON."
-      },
-      {
-        "severity": "low",
         "file": "vite.config.ts",
         "line": 1,
-        "description": "Missing Content Security Policy: No CSP headers configured to prevent XSS. Should set via Vite plugin or server config."
+        "description": "Missing Content Security Policy: No CSP headers configured in Vite config or application. This significantly increases XSS impact if a vulnerability is exploited."
+      },
+      {
+        "severity": "medium",
+        "file": "package.json",
+        "line": 18,
+        "description": "Non-pinned dependency version: marked@^12.0.2 allows minor/patch updates that could introduce XSS vulnerabilities. Security-critical HTML parser should use pinned versions (marked@12.0.2)."
       },
       {
         "severity": "low",
-        "file": "package.json",
-        "line": 11,
-        "description": "Permissive dependency version ranges: Using caret (^) version ranges allows automatic updates. Consider using exact versions or tilde (~) for security-critical dependencies like marked."
+        "file": "src/lib/store.ts",
+        "line": 14,
+        "description": "localStorage lacks integrity protection: User preferences and progress stored in localStorage are accessible to any script on the origin. An XSS exploit could modify user settings. No HMAC or encryption used."
       }
     ],
-    "riskScore": 42,
+    "riskScore": 68,
     "recommendations": [
-      "CRITICAL: Install and use DOMPurify or @sanitize-html to sanitize marked output. Example: import DOMPurify from 'dompurify'; export function mdToHtml(src: string): string { return DOMPurify.sanitize(marked.parse(src)); }",
-      "Replace dangerouslySetInnerHTML with a safe markdown component or use React portals with sanitized content.",
-      "Add Content Security Policy headers to mitigate XSS (set script-src, img-src, style-src directives).",
-      "Validate localStorage keys in store.ts to use an allowlist of expected keys.",
-      "Add input validation in memory.js and session.js before writing/parsing JSON data.",
-      "Lock critical dependencies to exact versions (marked, react, react-dom) instead of caret ranges.",
-      "Add a pre-commit hook to scan for dangerouslySetInnerHTML usage.",
-      "No hardcoded secrets found, but ensure .env files are gitignored and never committed.",
-      "Consider adding a security scanning tool (e.g., npm audit, Snyk) to CI/CD pipeline.",
-      "Current static-file-only content load is safe, but document that mdToHtml() should NEVER accept user input without sanitization."
+      "Install DOMPurify: Add 'dompurify' package and sanitize markdown output before rendering: mdToHtml() should return `DOMPurify.sanitize(marked.parse(src))`",
+      "Remove dangerouslySetInnerHTML usage: Replace with safe markdown rendering component (e.g., react-markdown with sanitization enabled, or html-react-parser with DOMPurify)",
+      "Pin dependency versions: Change marked@^12.0.2 to marked@12.0.2 in package.json to prevent automatic updates",
+      "Configure Content Security Policy: Add CSP headers in Vite config or server (script-src 'self', img-src 'self' data:, style-src 'self' 'unsafe-inline')",
+      "Add HTML sanitization to marked config: Use marked extension to strip dangerous tags: marked.use({ hooks: { postprocess: (html) => DOMPurify.sanitize(html) } })",
+      "Secure localStorage: Consider storing a hash/HMAC of preferences to detect tampering via XSS",
+      "Audit markdown sources: If markdown files are ever editable by users or external systems, implement strict input validation before loading",
+      "Add security headers: Implement X-Content-Type-Options: nosniff, X-Frame-Options: DENY in production",
+      "Use SRI for CDN resources: If adding any external scripts, use Subresource Integrity (SRI) hashes"
     ]
   },
-  "rawOutputPreview": "Based on my analysis of the codebase, here's the comprehensive security report:\n\n```json\n{\n  \"vulnerabilities\": [\n    {\n      \"severity\": \"high\",\n      \"file\": \"src/lib/markdown.tsx\",\n      \"line\": 6,\n      \"description\": \"XSS vulnerability: mdToHtml() uses marked.parse() without HTML sanitization, then the output is injected via dangerouslySetInnerHTML in Reader.tsx and other components. While current static markdown content is safe, any future dynamic content or user input could be exploited.\"\n    },\n    {\n      \"severity\": \"high\",\n      \"file\": \"src/pages/Reader.tsx\",\n      \"line\": 217,\n      \"description\": \"Unsafe HTML injection: dangerouslySetInnerHTML renders chapter.bodyHtml from mdToHtml() without sanitization. If markdown parsing is ever extended to accept user input, this becomes a direct XSS vector.\"\n    },\n    {\n      \"severity\": \"medium\",\n      \"file\": \"src/lib/store.ts\",\n      \"line\": 19,\n      \"description\": \"Unvalidated localStorage key parameter: If createLocalStore() is called with user-controlled keys, could access unintended localStorage entries. No validation on key format.\"\n    },\n    {\n      \"severity\": \"medium\",\n      \"file\": \".claude/helpers/memory.js\",\n      \"line\": 27,\n      \"description\": \"No input validation before JSON.stringify: saveMemory() writes arbitrary data to disk without validation. If key/value come from untrusted sources, could write malicious JSON.\"\n    },\n    {\n      \"severity\": \"low\",\n      \"file\": \"vite.config.ts\",\n      \"line\": 1,\n      \"description\": \"Missing Content Security Policy: No CSP headers configured to prevent XSS. Should set via Vite plugin or server config.\"\n    },\n    {\n      \"severity\": \"low\",\n      \"file\": \"package.json\",\n      \"line\": 11,\n      \"description\": \"Permissive dependency version ranges: Using caret (^) version ranges allows automatic updates. Consider using exact versions or tilde (~) for security-critical dependencies like marked.\"\n    }\n  ],\n  \"riskScore\": 42,\n  \"recommendations\": [\n    \"CRI",
-  "rawOutputLength": 3893
+  "rawOutputPreview": "Based on my analysis of the codebase, here's the security assessment:\n\n```json\n{\n  \"vulnerabilities\": [\n    {\n      \"severity\": \"high\",\n      \"file\": \"src/lib/markdown.tsx\",\n      \"line\": 5,\n      \"description\": \"XSS vulnerability: mdToHtml() uses marked.parse() without HTML sanitization. Output is rendered via dangerouslySetInnerHTML, allowing arbitrary HTML/JavaScript execution if markdown contains untrusted content (e.g., <img onerror=...>, <script>).\"\n    },\n    {\n      \"severity\": \"high\",\n      \"file\": \"src/pages/Reader.tsx\",\n      \"line\": 223,\n      \"description\": \"XSS vulnerability: keyIdeas are rendered via dangerouslySetInnerHTML with mdInline() output without sanitization. If markdown source contains user-controlled data, attackers can inject arbitrary scripts.\"\n    },\n    {\n      \"severity\": \"high\",\n      \"file\": \"src/pages/Reader.tsx\",\n      \"line\": 236,\n      \"description\": \"XSS vulnerability: inPractice items are rendered via dangerouslySetInnerHTML with mdInline() output without sanitization. Same XSS vector as keyIdeas.\"\n    },\n    {\n      \"severity\": \"medium\",\n      \"file\": \"src/lib/markdown.tsx\",\n      \"line\": 3,\n      \"description\": \"Insecure marked configuration: marked.use({ gfm: true }) enables GitHub-flavored markdown but does not enable sanitization. By default, marked allows raw HTML in markdown output.\"\n    },\n    {\n      \"severity\": \"medium\",\n      \"file\": \"vite.config.ts\",\n      \"line\": 1,\n      \"description\": \"Missing Content Security Policy: No CSP headers configured in Vite config or application. This significantly increases XSS impact if a vulnerability is exploited.\"\n    },\n    {\n      \"severity\": \"medium\",\n      \"file\": \"package.json\",\n      \"line\": 18,\n      \"description\": \"Non-pinned dependency version: marked@^12.0.2 allows minor/patch updates that could introduce XSS vulnerabilities. Security-critical HTML parser should use pinned versions (marked@12.0.2).\"\n    },\n    {\n      \"severity\": \"low\",\n      \"file\": \"src/lib/store.ts\",\n",
+  "rawOutputLength": 4355
 }

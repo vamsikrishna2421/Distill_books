@@ -389,7 +389,10 @@
   .book-head-cover {
     width: 150px;
     font-size: 10px;
-    position: static;
+    /* relative, not static: cancels the desktop stickiness while still
+       containing the absolutely-positioned cover spine (.cover::before) */
+    position: relative;
+    top: 0;
   }
 
   .statbar {

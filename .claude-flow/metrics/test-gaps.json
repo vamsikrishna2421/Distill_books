@@ -1,93 +1,208 @@
 {
-  "timestamp": "2026-07-14T05:34:24.042Z",
+  "timestamp": "2026-07-14T07:00:27.121Z",
   "mode": "headless",
   "workerType": "testgaps",
   "model": "sonnet",
-  "durationMs": 102891,
-  "executionId": "testgaps_1784007161151_b20fz5",
+  "durationMs": 85497,
+  "executionId": "testgaps_1784012341624_39vn8k",
   "success": true,
   "findings": {
     "sections": [
       {
-        "title": "Coverage snapshot",
-        "content": "\nNo test framework is configured. `npm test` just runs `scripts/validate-content.mjs`, which checks markdown/JSON structure (chapter counts, required fields, word counts) — it exercises zero application logic. **Every function in `src/lib/*` and every component/page has 0% test coverage.**\n\nRecommended setup (not yet present):\n```bash\nnpm i -D vitest jsdom @testing-library/react @testing-library/jest-dom @testing-library/user-event\n```\n```ts\n// vitest.config.ts\nimport { defineConfig } from 'vite'\nimport react from '@vitejs/plugin-react'\nexport default defineConfig({\n  plugins: [react()],\n  test: { environment: 'jsdom', setupFiles: './src/test/setup.ts' },\n})\n```\n\n---\n\n",
-        "level": 2
-      },
-      {
-        "title": "`src/lib/progress.ts` — highest priority (drives correctness/persistence, pure functions, zero coverage)",
-        "content": "\nGaps: `sanitize` (private, only reachable via reads) never tested against malformed localStorage data; `completionPct` never tested at boundaries; `latestProgress` tie-breaking/empty-state untested; toggle/mark idempotency untested.\n\n```ts\n// src/lib/progress.test.ts\nimport { describe, it, expect, beforeEach } from 'vitest'\nimport {\n  useBookProgress, markMapRead, markChapterRead, toggleChapterRead,\n  setLastChapter, completionPct, latestProgress, EMPTY_PROGRESS,\n} from './progress'\n\nbeforeEach(() => localStorage.clear())\n\ndescribe('sanitize (via useBookProgress)', () => {\n  it('returns EMPTY_PROGRESS for a missing book id', () => { /* ... */ })\n  it('drops non-number entries from chaptersRead', () => { /* seed localStorage with {chaptersRead:[1,\"x\",null,3]} */ })\n  it('dedupes and sorts chaptersRead', () => { /* [3,1,1,2] -> [1,2,3] */ })\n  it('falls back to EMPTY_PROGRESS when stored value is a string/number/null', () => {})\n  it('ignores a non-number lastChapter', () => {})\n})\n\ndescribe('markChapterRead / toggleChapterRead', () => {\n  it('marking the same chapter twice does not duplicate it', () => {})\n  it('toggle adds then removes the chapter', () => {})\n  it('markChapterRead sets lastChapter and updatedAt', () => {})\n})\n\ndescribe('completionPct', () => {\n  it('0 chapters read, map unread -> 0%', () => {})\n  it('map read only -> 1/(total+1)', () => {})\n  it('chaptersRead containing an out-of-range number does not exceed 100%', () => {\n    // chaptersRead: [1,2,999], totalChapters: 2 -> should clamp via Math.min(read, totalChapters)\n  })\n  it('all chapters + map read -> 100%', () => {})\n})\n\ndescribe('latestProgress', () => {\n  it('returns null for empty state', () => { expect(latestProgress({})).toBeNull() })\n  it('ignores entries with updatedAt === 0 (never touched)', () => {})\n  it('picks the book with the highest updatedAt across multiple books', () => {})\n})\n```\n\n---\n\n",
+        "title": "Setup gap (blocking everything else)",
+        "content": "\nNo test runner is installed — `npm test` only runs the content-integrity script. Add:\n\n```bash\nnpm i -D vitest jsdom @testing-library/react @testing-library/jest-dom\n```\n\n```ts\n// vite.config.ts — add test block\ntest: { environment: 'jsdom', globals: true }\n```\n\n---\n\n",
         "level": 2
       },
       {
         "title": "`src/lib/content.ts`",
-        "content": "\nGaps: `isBook` isn't exported, so malformed `book.json` handling (console.warn + filter) is untested; `loadChapter`'s markdown-contract parsing (title fallback, section extraction, case-insensitivity, unknown sections) is completely untested; `bookStats` negative-clamp and rounding untested; `searchBooks` scoring/ranking untested.\n\n```ts\n// src/lib/content.test.ts\nimport { describe, it, expect } from 'vitest'\nimport { countWords, bookStats, fmtDuration, searchBooks, getBook, categoryOf } from './content'\n\ndescribe('countWords', () => {\n  it('empty string -> 0', () => expect(countWords('')).toBe(0))\n  it('whitespace-only -> 0', () => expect(countWords('   \\n\\t')).toBe(0))\n  it('collapses multiple spaces/newlines between words', () => expect(countWords('a  b\\n\\nc')).toBe(3))\n})\n\ndescribe('bookStats', () => {\n  it('mapMinutes never drops below 4 for a tiny intro', () => {})\n  it('savedPct clamps to 0 instead of going negative when distilled > original', () => {})\n  it('deepMinutes falls back to 9 min per chapter when map chapter.minutes is missing', () => {})\n})\n\ndescribe('fmtDuration', () => {\n  it('< 60 minutes -> \"N min\"', () => expect(fmtDuration(45)).toBe('45 min'))\n  it('exact hour -> \"N h\" with no minutes suffix', () => expect(fmtDuration(120)).toBe('2 h'))\n  it('hour + remainder -> \"N h M m\"', () => expect(fmtDuration(125)).toBe('2 h 5 m'))\n})\n\ndescribe('searchBooks', () => {\n  it('empty/whitespace query returns all books unfiltered', () => {})\n  it('title/author match outranks chapter-title-only match', () => {})\n  it('multi-term query: a book only matching one of two terms still scores (OR, not AND)', () => {})\n  it('is case-insensitive', () => {})\n  it('returns [] when no term matches anything', () => {})\n})\n\ndescribe('getBook / categoryOf', () => {\n  it('getBook(undefined) -> undefined', () => expect(getBook(undefined)).toBeUndefined())\n  it('getBook with unknown id -> undefined', () => {})\n  it('categoryOf with an invalid categoryId -> undefined', () => {})\n})\n```\n\n```ts\n// loadChapter needs its own file with a mocked chapter loader, since chapterIndex\n// is built once at module load from import.meta.glob.\n// src/lib/content.loadChapter.test.ts\nimport { describe, it, expect, vi } from 'vitest'\n\nvi.mock('../content/books/fixture/chapters/01.md?raw', () => ({\n  default: '# My Title\\n\\nIntro para.\\n\\n## Key Ideas\\n- one\\n- two\\n\\n## In Practice\\n- do this\\n',\n}))\n\ndescribe('loadChapter', () => {\n  it('returns null for a chapter with no loader', async () => {})\n  it('falls back to \"Chapter N\" title when no \"# \" heading is present', async () => {})\n  it('extracts Key Ideas and In Practice bullets case-insensitively (\"## key ideas\")', async () => {})\n  it('keeps unknown \"## \" sections in the body, in order', async () => {})\n  it('handles a chapter with neither Key Ideas nor In Practice (both arrays empty)', async () => {})\n  it('computes words/minutes including keyIdeas + inPractice text, minutes >= 3', async () => {})\n})\n```\n\n---\n\n",
+        "content": "\n",
         "level": 2
+      },
+      {
+        "title": "1. `isBook` (unexported validator) — no coverage of rejection paths",
+        "content": "Untested: missing fields, wrong types, empty `map.chapters`, malformed chapter entries. Bug risk: a malformed `book.json` silently drops a book (`console.warn` + filter) with no test proving that behavior.\n\n```ts\n// tests/lib/content.test.ts\nimport { describe, it, expect } from 'vitest'\n// isBook isn't exported — either export it for testing or test via `books` array shape\ndescribe('book validation (via books export)', () => {\n  it('every loaded book satisfies the Book shape', () => {\n    expect(books.every(b => b.map.chapters.length > 0)).toBe(true)\n  })\n})\n```\n\n",
+        "level": 3
+      },
+      {
+        "title": "2. `countWords` — edge cases untested",
+        "content": "```ts\ndescribe('countWords', () => {\n  it('returns 0 for empty string', () => expect(countWords('')).toBe(0))\n  it('returns 0 for whitespace-only', () => expect(countWords('   \\n\\t ')).toBe(0))\n  it('collapses multiple spaces/newlines between words', () =>\n    expect(countWords('a   b\\n\\nc')).toBe(3))\n})\n```\n\n",
+        "level": 3
+      },
+      {
+        "title": "3. `getBook` — undefined / unknown id path never tested",
+        "content": "```ts\ndescribe('getBook', () => {\n  it('returns undefined for undefined id', () => expect(getBook(undefined)).toBeUndefined())\n  it('returns undefined for unknown id', () => expect(getBook('does-not-exist')).toBeUndefined())\n  it('returns the matching book for a known id', () => {\n    const id = books[0].id\n    expect(getBook(id)?.id).toBe(id)\n  })\n})\n```\n\n",
+        "level": 3
+      },
+      {
+        "title": "4. `booksInCategory` — empty-result and multi-match paths untested",
+        "content": "```ts\ndescribe('booksInCategory', () => {\n  it('returns [] for a category with no books', () => expect(booksInCategory('nonexistent')).toEqual([]))\n})\n```\n\n",
+        "level": 3
+      },
+      {
+        "title": "5. `loadChapter` — the most logic-heavy function, zero coverage",
+        "content": "Untested branches: unknown book/chapter → `null`; missing `## Key Ideas` / `## In Practice` (doc comment claims \"graceful degrade\" — unverified); case-insensitive heading match (`## key ideas` vs `## Key Ideas`); no `# Title` heading fallback to `Chapter ${n}`; word/minute calc boundary (`Math.max(3, ...)`).\n\n```ts\ndescribe('loadChapter', () => {\n  it('returns null for unknown book id', async () => {\n    expect(await loadChapter('nope', 1)).toBeNull()\n  })\n  it('returns null for unknown chapter number', async () => {\n    expect(await loadChapter(books[0].id, 999)).toBeNull()\n  })\n  it('falls back to \"Chapter N\" title when no \"# Title\" heading present', async () => {\n    // requires a fixture chapter without a title line\n  })\n  it('degrades gracefully when Key Ideas / In Practice sections are missing', async () => {\n    // fixture with only a body, no ## sections — body should still render, arrays should be []\n  })\n  it('matches section headings case-insensitively', async () => {\n    // fixture with \"## key ideas\" (lowercase) still populates keyIdeas\n  })\n  it('enforces a 3-minute floor on very short chapters', async () => {\n    // fixture with ~50 words → minutes should be 3, not round(50/220)=0\n  })\n})\n```\n\n",
+        "level": 3
+      },
+      {
+        "title": "6. `bookStats` — savedPct clamping untested",
+        "content": "`savedPct` uses `Math.max(0, ...)` implying distilled time can exceed original time for very short books — never verified.\n```ts\ndescribe('bookStats', () => {\n  it('clamps savedPct to 0 when distilled time exceeds original reading time', () => {\n    const tinyBook = { ...books[0], originalPages: 1 } // forces originalMinutes small\n    expect(bookStats(tinyBook).savedPct).toBeGreaterThanOrEqual(0)\n  })\n  it('enforces a 4-minute floor on mapMinutes', () => { /* book with a 1-word intro */ })\n})\n```\n\n",
+        "level": 3
+      },
+      {
+        "title": "7. `fmtDuration` — no tests at all",
+        "content": "```ts\ndescribe('fmtDuration', () => {\n  it('formats < 60 minutes as \"N min\"', () => expect(fmtDuration(45)).toBe('45 min'))\n  it('formats exact hours without minutes remainder', () => expect(fmtDuration(120)).toBe('2 h'))\n  it('formats hours + minutes', () => expect(fmtDuration(125)).toBe('2 h 5 m'))\n  it('handles 0 minutes', () => expect(fmtDuration(0)).toBe('0 min'))\n})\n```\n\n",
+        "level": 3
+      },
+      {
+        "title": "8. `searchBooks` — ranking/scoring logic entirely untested",
+        "content": "```ts\ndescribe('searchBooks', () => {\n  it('returns all books, unfiltered, for an empty query', () => expect(searchBooks('  ')).toEqual(books))\n  it('is case-insensitive', () => {\n    const byTitle = books[0].title.toLowerCase()\n    expect(searchBooks(byTitle.toUpperCase())).toContainEqual(books[0])\n  })\n  it('ranks title/author matches above chapter-title-only matches', () => { /* score ordering */ })\n  it('returns [] when no term matches anything', () => expect(searchBooks('zzzznotarealword')).toEqual([]))\n  it('requires all terms to contribute (multi-word query narrows results)', () => { /* two-term query */ })\n})\n```\n\n---\n\n",
+        "level": 3
+      },
+      {
+        "title": "`src/lib/progress.ts`",
+        "content": "\n",
+        "level": 2
+      },
+      {
+        "title": "9. `sanitize` (unexported) — corrupted-localStorage recovery, the whole point of this function, is untested",
+        "content": "```ts\ndescribe('useBookProgress / sanitize (via localStorage fixtures)', () => {\n  it('recovers from a non-object stored value', () => { /* localStorage set to \"null\", \"123\", \"[]\" */ })\n  it('dedupes and sorts chaptersRead', () => { /* stored [3,1,1,2] → [1,2,3] */ })\n  it('drops non-number entries from chaptersRead', () => { /* stored [1,\"x\",2] → [1,2] */ })\n  it('defaults mapRead to false for any non-true value', () => {})\n})\n```\n\n",
+        "level": 3
+      },
+      {
+        "title": "10. `markChapterRead` / `toggleChapterRead` — idempotency and toggle-off untested",
+        "content": "```ts\ndescribe('markChapterRead', () => {\n  it('is idempotent — marking the same chapter twice does not duplicate it', () => {\n    markChapterRead('book-a', 3); markChapterRead('book-a', 3)\n    expect(useBookProgress('book-a').chaptersRead).toEqual([3])\n  })\n})\ndescribe('toggleChapterRead', () => {\n  it('removes a chapter that was already read', () => {\n    markChapterRead('book-a', 3); toggleChapterRead('book-a', 3)\n    expect(useBookProgress('book-a').chaptersRead).toEqual([])\n  })\n})\n```\n\n",
+        "level": 3
+      },
+      {
+        "title": "11. `completionPct` — no tests, includes a clamp (`Math.min(read, totalChapters)`) that guards against corrupted data",
+        "content": "```ts\ndescribe('completionPct', () => {\n  it('counts map as one unit alongside chapters', () => {\n    expect(completionPct(3, { mapRead: true, chaptersRead: [], updatedAt: 0 })).toBe(25) // 1/4\n  })\n  it('clamps when chaptersRead has more entries than totalChapters (corrupted data)', () => {\n    expect(completionPct(2, { mapRead: false, chaptersRead: [1,2,3,4], updatedAt: 0 })).toBe(67) // 2/3, not >100\n  })\n})\n```\n\n",
+        "level": 3
+      },
+      {
+        "title": "12. `latestProgress` — untested, including the \"no progress yet\" path",
+        "content": "```ts\ndescribe('latestProgress', () => {\n  it('returns null when no book has updatedAt > 0', () => expect(latestProgress({})).toBeNull())\n  it('picks the book with the highest updatedAt', () => { /* two books, differing updatedAt */ })\n})\n```\n\n---\n\n",
+        "level": 3
       },
       {
         "title": "`src/lib/prefs.ts`",
-        "content": "\n```ts\n// src/lib/prefs.test.ts\nimport { describe, it, expect, beforeEach } from 'vitest'\nimport { bumpFontScale, updatePrefs, resolveReaderTheme, usePrefs } from './prefs'\n\nbeforeEach(() => localStorage.clear())\n\ndescribe('bumpFontScale', () => {\n  it('clamps at 0.85 minimum', () => {})\n  it('clamps at 1.3 maximum', () => {})\n  it('rounds to 2 decimal places (no float drift from repeated +0.05)', () => {})\n})\n\ndescribe('resolveReaderTheme', () => {\n  it('readerTheme null + appTheme dark -> \"dark\"', () => {})\n  it('readerTheme null + appTheme light -> \"paper\"', () => {})\n  it('explicit readerTheme overrides appTheme', () => {})\n})\n```\n\n---\n\n",
+        "content": "\n",
         "level": 2
       },
       {
-        "title": "`src/lib/store.ts` — missing error-handling coverage specifically",
-        "content": "\n```ts\n// src/lib/store.test.ts\nimport { describe, it, expect, vi } from 'vitest'\nimport { createLocalStore } from './store'\n\ndescribe('createLocalStore', () => {\n  it('merges stored partial data over the fallback', () => {})\n  it('falls back to default when localStorage.getItem throws (private-mode / disabled storage)', () => {\n    const spy = vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => { throw new Error('blocked') })\n    const s = createLocalStore('k', { a: 1 })\n    expect(s.get()).toEqual({ a: 1 })\n    spy.mockRestore()\n  })\n  it('falls back to default on corrupted JSON in localStorage', () => {\n    localStorage.setItem('k', '{not json')\n    // ...\n  })\n  it('set() survives localStorage.setItem throwing (quota exceeded) and keeps in-memory state', () => {\n    const spy = vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => { throw new Error('quota') })\n    // s.set(...) should not throw, and s.get() should reflect the new in-memory value\n    spy.mockRestore()\n  })\n  it('set() accepts both a plain value and an updater function', () => {})\n  it('unsubscribe stops further notifications', () => {})\n})\n```\n\n---\n\n",
+        "title": "13. `bumpFontScale` — clamp boundaries never verified",
+        "content": "```ts\ndescribe('bumpFontScale', () => {\n  it('clamps to 1.3 max', () => { updatePrefs({ fontScale: 1.3 }); bumpFontScale(0.5); /* expect 1.3 */ })\n  it('clamps to 0.85 min', () => { updatePrefs({ fontScale: 0.85 }); bumpFontScale(-0.5); /* expect 0.85 */ })\n  it('rounds to 2 decimal places', () => { /* avoid float drift like 1.0500000001 */ })\n})\n```\n\n",
+        "level": 3
+      },
+      {
+        "title": "14. `resolveReaderTheme` — fallback chain untested",
+        "content": "```ts\ndescribe('resolveReaderTheme', () => {\n  it('uses explicit readerTheme when set', () => expect(resolveReaderTheme({ readerTheme: 'sepia', appTheme: 'dark', fontScale: 1, wide: false })).toBe('sepia'))\n  it('falls back to dark when readerTheme is null and appTheme is dark', () => expect(resolveReaderTheme({ readerTheme: null, appTheme: 'dark', fontScale: 1, wide: false })).toBe('dark'))\n  it('falls back to paper when readerTheme is null and appTheme is light', () => expect(resolveReaderTheme({ readerTheme: null, appTheme: 'light', fontScale: 1, wide: false })).toBe('paper'))\n})\n```\n\n---\n\n",
+        "level": 3
+      },
+      {
+        "title": "`src/lib/store.ts`",
+        "content": "\n",
         "level": 2
+      },
+      {
+        "title": "15. `createLocalStore` — error-handling paths are the entire reason this wrapper exists, and are untested",
+        "content": "```ts\ndescribe('createLocalStore', () => {\n  it('falls back to the default when localStorage has invalid JSON', () => {\n    localStorage.setItem('k', 'not json')\n    expect(createLocalStore('k', { a: 1 }).get()).toEqual({ a: 1 })\n  })\n  it('merges stored partial state over defaults', () => {\n    localStorage.setItem('k', JSON.stringify({ a: 2 }))\n    expect(createLocalStore('k', { a: 1, b: 2 }).get()).toEqual({ a: 2, b: 2 })\n  })\n  it('keeps working in-memory when localStorage.setItem throws (e.g. private mode/quota)', () => {\n    const store = createLocalStore('k', { a: 1 })\n    const spy = vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => { throw new Error('quota') })\n    expect(() => store.set({ a: 2 })).not.toThrow()\n    expect(store.get()).toEqual({ a: 2 })\n    spy.mockRestore()\n  })\n  it('notifies subscribed listeners on set, and stops after unsubscribe', () => {\n    const store = createLocalStore('k', { a: 1 })\n    const listener = vi.fn()\n    const unsub = store.subscribe(listener)\n    store.set({ a: 2 })\n    unsub()\n    store.set({ a: 3 })\n    expect(listener).toHaveBeenCalledTimes(1)\n  })\n})\n```\n\n---\n\n",
+        "level": 3
       },
       {
         "title": "`src/lib/markdown.tsx`",
-        "content": "\n```ts\n// src/lib/markdown.test.tsx\nimport { describe, it, expect } from 'vitest'\nimport { render } from '@testing-library/react'\nimport { mdToHtml, mdInline, Markdown } from './markdown'\n\ndescribe('mdToHtml / mdInline', () => {\n  it('mdToHtml wraps a paragraph in <p>', () => {})\n  it('mdInline does NOT wrap in <p> (inline use in list items)', () => {})\n  it('renders GFM features (tables/strikethrough) since gfm:true is set', () => {})\n})\n\ndescribe('Markdown component', () => {\n  it('applies \"md\" class alone when no className passed', () => {})\n  it('combines \"md {className}\" when className passed', () => {})\n})\n```\n\n---\n\n",
+        "content": "\n",
         "level": 2
       },
       {
-        "title": "Integration gaps (pages/components) — currently zero coverage",
-        "content": "\nThese need `MemoryRouter` + RTL; none exist today.\n\n- **Reader.tsx**: race condition — switching `num` quickly before the previous `loadChapter` promise resolves must not apply the stale chapter (the `alive` flag is the only guard, untested). Keyboard nav (`ArrowRight`/`ArrowLeft`) must be gated by `hasChapterFile` and not navigate past bounds. `Escape` closes settings first, then navigates back. Invalid `bookId` or non-numeric `num` → redirect to `/`.\n- **BookMap.tsx**: \"Mark the map as read\" button flips `progress.mapRead`; per-chapter \"Map was enough\" toggles `chaptersRead`; chapters without a file show \"Being distilled\" instead of the read link; `nextBook` link only renders when a sibling with `syllabusOrder + 1` exists.\n- **Library.tsx**: `/` keyboard shortcut focuses search input (but not while another input is focused); empty search results message; `ContinueStrip` renders `null` when no progress exists, when `pct >= 100`, and renders \"Pick up the map\" vs a chapter link depending on `mapRead`.\n- **NavBar.tsx**: theme toggle button flips `appTheme` and updates the icon/aria-label.\n- **App.tsx**: unknown route redirects to `/`; `document.documentElement.dataset.theme` updates when `appTheme` changes.\n\n```tsx\n// example shape — src/pages/Reader.test.tsx\nimport { describe, it, expect, vi } from 'vitest'\nimport { render, screen, fireEvent, waitFor } from '@testing-library/react'\nimport { MemoryRouter, Routes, Route } from 'react-router-dom'\nimport Reader from './Reader'\n\ndescribe('Reader', () => {\n  it('shows \"missing\" state when the chapter has no file', async () => {})\n  it('does not render a chapter loaded for a previous, now-abandoned bookId/num', async () => {\n    // render with num=1, immediately rerender with num=2 before chapter 1 resolves\n  })\n  it('ArrowRight does nothing on the last available chapter', () => {})\n  it('finishChapter marks the chapter read and navigates to book map when no next chapter exists', () => {})\n})\n```\n\n---\n\n",
-        "level": 2
+        "title": "16. `mdToHtml` / `mdInline` — untested, plus a security note",
+        "content": "```ts\ndescribe('mdToHtml', () => {\n  it('renders GFM tables/strikethrough (gfm: true)', () => { /* ~~x~~ → <del>x</del> */ })\n})\n```\n**Security note (not just a coverage gap):** `Markdown` renders via `dangerouslySetInnerHTML` with no sanitizer (no DOMPurify). It's currently safe only because all Markdown comes from trusted local `.md` files. If chapter content is ever sourced from user input or a CMS, this becomes an XSS vector — worth a regression test pinning \"content source stays trusted local files\" if that assumption is load-bearing.\n\n---\n\n",
+        "level": 3
       },
       {
-        "title": "Priority order",
-        "content": "1. `progress.ts` + `store.ts` — pure, high-risk (data loss/corruption), fast to cover.\n2. `content.ts` (`bookStats`, `fmtDuration`, `searchBooks`, `loadChapter` parsing contract).\n3. `prefs.ts`.\n4. Reader race condition (real bug risk on fast navigation).\n5. Remaining page/component integration tests.\n\nWant me to actually scaffold the test runner (vitest config + setup file) and write out the `progress.test.ts`/`store.test.ts` files for real, since those are the highest-value, lowest-effort wins?",
+        "title": "Integration/component gaps (all currently 0%)",
+        "content": "- **`Reader.tsx`**: keyboard navigation (`onKey` handler), scroll-progress tracking, `finishChapter` marking progress — no test drives a keypress or scroll event through to `markChapterRead`.\n- **`Library.tsx`**: search-input → `useMemo(searchBooks)` wiring, keyboard shortcut to focus search, `ContinueStrip` rendering when `latestProgress` is null vs populated.\n- **`BookMap.tsx`**: `MapChapterCard` rendering against real book fixtures.\n- **`App.tsx`**: routing (unknown route → redirect/404 behavior untested).\n\n```tsx\n// tests/pages/Reader.test.tsx (example integration skeleton)\nimport { render, screen, fireEvent } from '@testing-library/react'\nimport { MemoryRouter } from 'react-router-dom'\n\nit('marks a chapter as read when the user reaches the end and navigates away', async () => {\n  render(<MemoryRouter initialEntries={['/book/some-id/chapter/1']}><App /></MemoryRouter>)\n  // simulate scroll to bottom, then navigation; assert localStorage/progress store updated\n})\n```\n\n---\n\n**Priority order**: `content.ts` (`loadChapter`, `searchBooks`, `bookStats`) and `progress.ts` (`sanitize`, `completionPct`) first — they're pure functions with real branching logic and no framework needed to test. `store.ts` error paths second — they're the app's only defense against corrupted/unavailable localStorage. Component/integration tests last, once Testing Library is wired up.",
         "level": 2
       }
     ],
     "codeBlocks": [
       {
         "language": "bash",
-        "code": "npm i -D vitest jsdom @testing-library/react @testing-library/jest-dom @testing-library/user-event"
+        "code": "npm i -D vitest jsdom @testing-library/react @testing-library/jest-dom"
       },
       {
         "language": "ts",
-        "code": "// vitest.config.ts\nimport { defineConfig } from 'vite'\nimport react from '@vitejs/plugin-react'\nexport default defineConfig({\n  plugins: [react()],\n  test: { environment: 'jsdom', setupFiles: './src/test/setup.ts' },\n})"
+        "code": "// vite.config.ts — add test block\ntest: { environment: 'jsdom', globals: true }"
       },
       {
         "language": "ts",
-        "code": "// src/lib/progress.test.ts\nimport { describe, it, expect, beforeEach } from 'vitest'\nimport {\n  useBookProgress, markMapRead, markChapterRead, toggleChapterRead,\n  setLastChapter, completionPct, latestProgress, EMPTY_PROGRESS,\n} from './progress'\n\nbeforeEach(() => localStorage.clear())\n\ndescribe('sanitize (via useBookProgress)', () => {\n  it('returns EMPTY_PROGRESS for a missing book id', () => { /* ... */ })\n  it('drops non-number entries from chaptersRead', () => { /* seed localStorage with {chaptersRead:[1,\"x\",null,3]} */ })\n  it('dedupes and sorts chaptersRead', () => { /* [3,1,1,2] -> [1,2,3] */ })\n  it('falls back to EMPTY_PROGRESS when stored value is a string/number/null', () => {})\n  it('ignores a non-number lastChapter', () => {})\n})\n\ndescribe('markChapterRead / toggleChapterRead', () => {\n  it('marking the same chapter twice does not duplicate it', () => {})\n  it('toggle adds then removes the chapter', () => {})\n  it('markChapterRead sets lastChapter and updatedAt', () => {})\n})\n\ndescribe('completionPct', () => {\n  it('0 chapters read, map unread -> 0%', () => {})\n  it('map read only -> 1/(total+1)', () => {})\n  it('chaptersRead containing an out-of-range number does not exceed 100%', () => {\n    // chaptersRead: [1,2,999], totalChapters: 2 -> should clamp via Math.min(read, totalChapters)\n  })\n  it('all chapters + map read -> 100%', () => {})\n})\n\ndescribe('latestProgress', () => {\n  it('returns null for empty state', () => { expect(latestProgress({})).toBeNull() })\n  it('ignores entries with updatedAt === 0 (never touched)', () => {})\n  it('picks the book with the highest updatedAt across multiple books', () => {})\n})"
+        "code": "// tests/lib/content.test.ts\nimport { describe, it, expect } from 'vitest'\n// isBook isn't exported — either export it for testing or test via `books` array shape\ndescribe('book validation (via books export)', () => {\n  it('every loaded book satisfies the Book shape', () => {\n    expect(books.every(b => b.map.chapters.length > 0)).toBe(true)\n  })\n})"
       },
       {
         "language": "ts",
-        "code": "// src/lib/content.test.ts\nimport { describe, it, expect } from 'vitest'\nimport { countWords, bookStats, fmtDuration, searchBooks, getBook, categoryOf } from './content'\n\ndescribe('countWords', () => {\n  it('empty string -> 0', () => expect(countWords('')).toBe(0))\n  it('whitespace-only -> 0', () => expect(countWords('   \\n\\t')).toBe(0))\n  it('collapses multiple spaces/newlines between words', () => expect(countWords('a  b\\n\\nc')).toBe(3))\n})\n\ndescribe('bookStats', () => {\n  it('mapMinutes never drops below 4 for a tiny intro', () => {})\n  it('savedPct clamps to 0 instead of going negative when distilled > original', () => {})\n  it('deepMinutes falls back to 9 min per chapter when map chapter.minutes is missing', () => {})\n})\n\ndescribe('fmtDuration', () => {\n  it('< 60 minutes -> \"N min\"', () => expect(fmtDuration(45)).toBe('45 min'))\n  it('exact hour -> \"N h\" with no minutes suffix', () => expect(fmtDuration(120)).toBe('2 h'))\n  it('hour + remainder -> \"N h M m\"', () => expect(fmtDuration(125)).toBe('2 h 5 m'))\n})\n\ndescribe('searchBooks', () => {\n  it('empty/whitespace query returns all books unfiltered', () => {})\n  it('title/author match outranks chapter-title-only match', () => {})\n  it('multi-term query: a book only matching one of two terms still scores (OR, not AND)', () => {})\n  it('is case-insensitive', () => {})\n  it('returns [] when no term matches anything', () => {})\n})\n\ndescribe('getBook / categoryOf', () => {\n  it('getBook(undefined) -> undefined', () => expect(getBook(undefined)).toBeUndefined())\n  it('getBook with unknown id -> undefined', () => {})\n  it('categoryOf with an invalid categoryId -> undefined', () => {})\n})"
+        "code": "describe('countWords', () => {\n  it('returns 0 for empty string', () => expect(countWords('')).toBe(0))\n  it('returns 0 for whitespace-only', () => expect(countWords('   \\n\\t ')).toBe(0))\n  it('collapses multiple spaces/newlines between words', () =>\n    expect(countWords('a   b\\n\\nc')).toBe(3))\n})"
       },
       {
         "language": "ts",
-        "code": "// loadChapter needs its own file with a mocked chapter loader, since chapterIndex\n// is built once at module load from import.meta.glob.\n// src/lib/content.loadChapter.test.ts\nimport { describe, it, expect, vi } from 'vitest'\n\nvi.mock('../content/books/fixture/chapters/01.md?raw', () => ({\n  default: '# My Title\\n\\nIntro para.\\n\\n## Key Ideas\\n- one\\n- two\\n\\n## In Practice\\n- do this\\n',\n}))\n\ndescribe('loadChapter', () => {\n  it('returns null for a chapter with no loader', async () => {})\n  it('falls back to \"Chapter N\" title when no \"# \" heading is present', async () => {})\n  it('extracts Key Ideas and In Practice bullets case-insensitively (\"## key ideas\")', async () => {})\n  it('keeps unknown \"## \" sections in the body, in order', async () => {})\n  it('handles a chapter with neither Key Ideas nor In Practice (both arrays empty)', async () => {})\n  it('computes words/minutes including keyIdeas + inPractice text, minutes >= 3', async () => {})\n})"
+        "code": "describe('getBook', () => {\n  it('returns undefined for undefined id', () => expect(getBook(undefined)).toBeUndefined())\n  it('returns undefined for unknown id', () => expect(getBook('does-not-exist')).toBeUndefined())\n  it('returns the matching book for a known id', () => {\n    const id = books[0].id\n    expect(getBook(id)?.id).toBe(id)\n  })\n})"
       },
       {
         "language": "ts",
-        "code": "// src/lib/prefs.test.ts\nimport { describe, it, expect, beforeEach } from 'vitest'\nimport { bumpFontScale, updatePrefs, resolveReaderTheme, usePrefs } from './prefs'\n\nbeforeEach(() => localStorage.clear())\n\ndescribe('bumpFontScale', () => {\n  it('clamps at 0.85 minimum', () => {})\n  it('clamps at 1.3 maximum', () => {})\n  it('rounds to 2 decimal places (no float drift from repeated +0.05)', () => {})\n})\n\ndescribe('resolveReaderTheme', () => {\n  it('readerTheme null + appTheme dark -> \"dark\"', () => {})\n  it('readerTheme null + appTheme light -> \"paper\"', () => {})\n  it('explicit readerTheme overrides appTheme', () => {})\n})"
+        "code": "describe('booksInCategory', () => {\n  it('returns [] for a category with no books', () => expect(booksInCategory('nonexistent')).toEqual([]))\n})"
       },
       {
         "language": "ts",
-        "code": "// src/lib/store.test.ts\nimport { describe, it, expect, vi } from 'vitest'\nimport { createLocalStore } from './store'\n\ndescribe('createLocalStore', () => {\n  it('merges stored partial data over the fallback', () => {})\n  it('falls back to default when localStorage.getItem throws (private-mode / disabled storage)', () => {\n    const spy = vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => { throw new Error('blocked') })\n    const s = createLocalStore('k', { a: 1 })\n    expect(s.get()).toEqual({ a: 1 })\n    spy.mockRestore()\n  })\n  it('falls back to default on corrupted JSON in localStorage', () => {\n    localStorage.setItem('k', '{not json')\n    // ...\n  })\n  it('set() survives localStorage.setItem throwing (quota exceeded) and keeps in-memory state', () => {\n    const spy = vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => { throw new Error('quota') })\n    // s.set(...) should not throw, and s.get() should reflect the new in-memory value\n    spy.mockRestore()\n  })\n  it('set() accepts both a plain value and an updater function', () => {})\n  it('unsubscribe stops further notifications', () => {})\n})"
+        "code": "describe('loadChapter', () => {\n  it('returns null for unknown book id', async () => {\n    expect(await loadChapter('nope', 1)).toBeNull()\n  })\n  it('returns null for unknown chapter number', async () => {\n    expect(await loadChapter(books[0].id, 999)).toBeNull()\n  })\n  it('falls back to \"Chapter N\" title when no \"# Title\" heading present', async () => {\n    // requires a fixture chapter without a title line\n  })\n  it('degrades gracefully when Key Ideas / In Practice sections are missing', async () => {\n    // fixture with only a body, no ## sections — body should still render, arrays should be []\n  })\n  it('matches section headings case-insensitively', async () => {\n    // fixture with \"## key ideas\" (lowercase) still populates keyIdeas\n  })\n  it('enforces a 3-minute floor on very short chapters', async () => {\n    // fixture with ~50 words → minutes should be 3, not round(50/220)=0\n  })\n})"
       },
       {
         "language": "ts",
-        "code": "// src/lib/markdown.test.tsx\nimport { describe, it, expect } from 'vitest'\nimport { render } from '@testing-library/react'\nimport { mdToHtml, mdInline, Markdown } from './markdown'\n\ndescribe('mdToHtml / mdInline', () => {\n  it('mdToHtml wraps a paragraph in <p>', () => {})\n  it('mdInline does NOT wrap in <p> (inline use in list items)', () => {})\n  it('renders GFM features (tables/strikethrough) since gfm:true is set', () => {})\n})\n\ndescribe('Markdown component', () => {\n  it('applies \"md\" class alone when no className passed', () => {})\n  it('combines \"md {className}\" when className passed', () => {})\n})"
+        "code": "describe('bookStats', () => {\n  it('clamps savedPct to 0 when distilled time exceeds original reading time', () => {\n    const tinyBook = { ...books[0], originalPages: 1 } // forces originalMinutes small\n    expect(bookStats(tinyBook).savedPct).toBeGreaterThanOrEqual(0)\n  })\n  it('enforces a 4-minute floor on mapMinutes', () => { /* book with a 1-word intro */ })\n})"
+      },
+      {
+        "language": "ts",
+        "code": "describe('fmtDuration', () => {\n  it('formats < 60 minutes as \"N min\"', () => expect(fmtDuration(45)).toBe('45 min'))\n  it('formats exact hours without minutes remainder', () => expect(fmtDuration(120)).toBe('2 h'))\n  it('formats hours + minutes', () => expect(fmtDuration(125)).toBe('2 h 5 m'))\n  it('handles 0 minutes', () => expect(fmtDuration(0)).toBe('0 min'))\n})"
+      },
+      {
+        "language": "ts",
+        "code": "describe('searchBooks', () => {\n  it('returns all books, unfiltered, for an empty query', () => expect(searchBooks('  ')).toEqual(books))\n  it('is case-insensitive', () => {\n    const byTitle = books[0].title.toLowerCase()\n    expect(searchBooks(byTitle.toUpperCase())).toContainEqual(books[0])\n  })\n  it('ranks title/author matches above chapter-title-only matches', () => { /* score ordering */ })\n  it('returns [] when no term matches anything', () => expect(searchBooks('zzzznotarealword')).toEqual([]))\n  it('requires all terms to contribute (multi-word query narrows results)', () => { /* two-term query */ })\n})"
+      },
+      {
+        "language": "ts",
+        "code": "describe('useBookProgress / sanitize (via localStorage fixtures)', () => {\n  it('recovers from a non-object stored value', () => { /* localStorage set to \"null\", \"123\", \"[]\" */ })\n  it('dedupes and sorts chaptersRead', () => { /* stored [3,1,1,2] → [1,2,3] */ })\n  it('drops non-number entries from chaptersRead', () => { /* stored [1,\"x\",2] → [1,2] */ })\n  it('defaults mapRead to false for any non-true value', () => {})\n})"
+      },
+      {
+        "language": "ts",
+        "code": "describe('markChapterRead', () => {\n  it('is idempotent — marking the same chapter twice does not duplicate it', () => {\n    markChapterRead('book-a', 3); markChapterRead('book-a', 3)\n    expect(useBookProgress('book-a').chaptersRead).toEqual([3])\n  })\n})\ndescribe('toggleChapterRead', () => {\n  it('removes a chapter that was already read', () => {\n    markChapterRead('book-a', 3); toggleChapterRead('book-a', 3)\n    expect(useBookProgress('book-a').chaptersRead).toEqual([])\n  })\n})"
+      },
+      {
+        "language": "ts",
+        "code": "describe('completionPct', () => {\n  it('counts map as one unit alongside chapters', () => {\n    expect(completionPct(3, { mapRead: true, chaptersRead: [], updatedAt: 0 })).toBe(25) // 1/4\n  })\n  it('clamps when chaptersRead has more entries than totalChapters (corrupted data)', () => {\n    expect(completionPct(2, { mapRead: false, chaptersRead: [1,2,3,4], updatedAt: 0 })).toBe(67) // 2/3, not >100\n  })\n})"
+      },
+      {
+        "language": "ts",
+        "code": "describe('latestProgress', () => {\n  it('returns null when no book has updatedAt > 0', () => expect(latestProgress({})).toBeNull())\n  it('picks the book with the highest updatedAt', () => { /* two books, differing updatedAt */ })\n})"
+      },
+      {
+        "language": "ts",
+        "code": "describe('bumpFontScale', () => {\n  it('clamps to 1.3 max', () => { updatePrefs({ fontScale: 1.3 }); bumpFontScale(0.5); /* expect 1.3 */ })\n  it('clamps to 0.85 min', () => { updatePrefs({ fontScale: 0.85 }); bumpFontScale(-0.5); /* expect 0.85 */ })\n  it('rounds to 2 decimal places', () => { /* avoid float drift like 1.0500000001 */ })\n})"
+      },
+      {
+        "language": "ts",
+        "code": "describe('resolveReaderTheme', () => {\n  it('uses explicit readerTheme when set', () => expect(resolveReaderTheme({ readerTheme: 'sepia', appTheme: 'dark', fontScale: 1, wide: false })).toBe('sepia'))\n  it('falls back to dark when readerTheme is null and appTheme is dark', () => expect(resolveReaderTheme({ readerTheme: null, appTheme: 'dark', fontScale: 1, wide: false })).toBe('dark'))\n  it('falls back to paper when readerTheme is null and appTheme is light', () => expect(resolveReaderTheme({ readerTheme: null, appTheme: 'light', fontScale: 1, wide: false })).toBe('paper'))\n})"
+      },
+      {
+        "language": "ts",
+        "code": "describe('createLocalStore', () => {\n  it('falls back to the default when localStorage has invalid JSON', () => {\n    localStorage.setItem('k', 'not json')\n    expect(createLocalStore('k', { a: 1 }).get()).toEqual({ a: 1 })\n  })\n  it('merges stored partial state over defaults', () => {\n    localStorage.setItem('k', JSON.stringify({ a: 2 }))\n    expect(createLocalStore('k', { a: 1, b: 2 }).get()).toEqual({ a: 2, b: 2 })\n  })\n  it('keeps working in-memory when localStorage.setItem throws (e.g. private mode/quota)', () => {\n    const store = createLocalStore('k', { a: 1 })\n    const spy = vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => { throw new Error('quota') })\n    expect(() => store.set({ a: 2 })).not.toThrow()\n    expect(store.get()).toEqual({ a: 2 })\n    spy.mockRestore()\n  })\n  it('notifies subscribed listeners on set, and stops after unsubscribe', () => {\n    const store = createLocalStore('k', { a: 1 })\n    const listener = vi.fn()\n    const unsub = store.subscribe(listener)\n    store.set({ a: 2 })\n    unsub()\n    store.set({ a: 3 })\n    expect(listener).toHaveBeenCalledTimes(1)\n  })\n})"
+      },
+      {
+        "language": "ts",
+        "code": "describe('mdToHtml', () => {\n  it('renders GFM tables/strikethrough (gfm: true)', () => { /* ~~x~~ → <del>x</del> */ })\n})"
       },
       {
         "language": "tsx",
-        "code": "// example shape — src/pages/Reader.test.tsx\nimport { describe, it, expect, vi } from 'vitest'\nimport { render, screen, fireEvent, waitFor } from '@testing-library/react'\nimport { MemoryRouter, Routes, Route } from 'react-router-dom'\nimport Reader from './Reader'\n\ndescribe('Reader', () => {\n  it('shows \"missing\" state when the chapter has no file', async () => {})\n  it('does not render a chapter loaded for a previous, now-abandoned bookId/num', async () => {\n    // render with num=1, immediately rerender with num=2 before chapter 1 resolves\n  })\n  it('ArrowRight does nothing on the last available chapter', () => {})\n  it('finishChapter marks the chapter read and navigates to book map when no next chapter exists', () => {})\n})"
+        "code": "// tests/pages/Reader.test.tsx (example integration skeleton)\nimport { render, screen, fireEvent } from '@testing-library/react'\nimport { MemoryRouter } from 'react-router-dom'\n\nit('marks a chapter as read when the user reaches the end and navigates away', async () => {\n  render(<MemoryRouter initialEntries={['/book/some-id/chapter/1']}><App /></MemoryRouter>)\n  // simulate scroll to bottom, then navigation; assert localStorage/progress store updated\n})"
       }
     ]
   },
-  "rawOutputPreview": "## Coverage snapshot\n\nNo test framework is configured. `npm test` just runs `scripts/validate-content.mjs`, which checks markdown/JSON structure (chapter counts, required fields, word counts) — it exercises zero application logic. **Every function in `src/lib/*` and every component/page has 0% test coverage.**\n\nRecommended setup (not yet present):\n```bash\nnpm i -D vitest jsdom @testing-library/react @testing-library/jest-dom @testing-library/user-event\n```\n```ts\n// vitest.config.ts\nimport { defineConfig } from 'vite'\nimport react from '@vitejs/plugin-react'\nexport default defineConfig({\n  plugins: [react()],\n  test: { environment: 'jsdom', setupFiles: './src/test/setup.ts' },\n})\n```\n\n---\n\n## `src/lib/progress.ts` — highest priority (drives correctness/persistence, pure functions, zero coverage)\n\nGaps: `sanitize` (private, only reachable via reads) never tested against malformed localStorage data; `completionPct` never tested at boundaries; `latestProgress` tie-breaking/empty-state untested; toggle/mark idempotency untested.\n\n```ts\n// src/lib/progress.test.ts\nimport { describe, it, expect, beforeEach } from 'vitest'\nimport {\n  useBookProgress, markMapRead, markChapterRead, toggleChapterRead,\n  setLastChapter, completionPct, latestProgress, EMPTY_PROGRESS,\n} from './progress'\n\nbeforeEach(() => localStorage.clear())\n\ndescribe('sanitize (via useBookProgress)', () => {\n  it('returns EMPTY_PROGRESS for a missing book id', () => { /* ... */ })\n  it('drops non-number entries from chaptersRead', () => { /* seed localStorage with {chaptersRead:[1,\"x\",null,3]} */ })\n  it('dedupes and sorts chaptersRead', () => { /* [3,1,1,2] -> [1,2,3] */ })\n  it('falls back to EMPTY_PROGRESS when stored value is a string/number/null', () => {})\n  it('ignores a non-number lastChapter', () => {})\n})\n\ndescribe('markChapterRead / toggleChapterRead', () => {\n  it('marking the same chapter twice does not duplicate it', () => {})\n  it('toggle adds then removes the chapter', () => {})\n  it('markChapt",
-  "rawOutputLength": 10851
+  "rawOutputPreview": "## Setup gap (blocking everything else)\n\nNo test runner is installed — `npm test` only runs the content-integrity script. Add:\n\n```bash\nnpm i -D vitest jsdom @testing-library/react @testing-library/jest-dom\n```\n\n```ts\n// vite.config.ts — add test block\ntest: { environment: 'jsdom', globals: true }\n```\n\n---\n\n## `src/lib/content.ts`\n\n### 1. `isBook` (unexported validator) — no coverage of rejection paths\nUntested: missing fields, wrong types, empty `map.chapters`, malformed chapter entries. Bug risk: a malformed `book.json` silently drops a book (`console.warn` + filter) with no test proving that behavior.\n\n```ts\n// tests/lib/content.test.ts\nimport { describe, it, expect } from 'vitest'\n// isBook isn't exported — either export it for testing or test via `books` array shape\ndescribe('book validation (via books export)', () => {\n  it('every loaded book satisfies the Book shape', () => {\n    expect(books.every(b => b.map.chapters.length > 0)).toBe(true)\n  })\n})\n```\n\n### 2. `countWords` — edge cases untested\n```ts\ndescribe('countWords', () => {\n  it('returns 0 for empty string', () => expect(countWords('')).toBe(0))\n  it('returns 0 for whitespace-only', () => expect(countWords('   \\n\\t ')).toBe(0))\n  it('collapses multiple spaces/newlines between words', () =>\n    expect(countWords('a   b\\n\\nc')).toBe(3))\n})\n```\n\n### 3. `getBook` — undefined / unknown id path never tested\n```ts\ndescribe('getBook', () => {\n  it('returns undefined for undefined id', () => expect(getBook(undefined)).toBeUndefined())\n  it('returns undefined for unknown id', () => expect(getBook('does-not-exist')).toBeUndefined())\n  it('returns the matching book for a known id', () => {\n    const id = books[0].id\n    expect(getBook(id)?.id).toBe(id)\n  })\n})\n```\n\n### 4. `booksInCategory` — empty-result and multi-match paths untested\n```ts\ndescribe('booksInCategory', () => {\n  it('returns [] for a category with no books', () => expect(booksInCategory('nonexistent')).toEqual([]))\n})\n```\n\n### 5. `loadChapter` — th",
+  "rawOutputLength": 11403
 }
