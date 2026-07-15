@@ -6,3 +6,4 @@ dist/
 .tools/
 audio-dist/
 public/audio/
+audio-staging/
