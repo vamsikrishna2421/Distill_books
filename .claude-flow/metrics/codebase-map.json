@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-15T02:33:04.762Z",
+  "timestamp": "2026-07-15T02:44:50.275Z",
   "projectRoot": "/Users/vamsikrishnareddylekkala/Documents/My_AI_Projects/book_shorts",
   "structure": {
     "hasPackageJson": true,
@@ -7,5 +7,5 @@
     "hasClaudeConfig": true,
     "hasClaudeFlow": true
   },
-  "scannedAt": 1784082784762
+  "scannedAt": 1784083490275
 }

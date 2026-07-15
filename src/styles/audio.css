@@ -145,6 +145,20 @@
   padding: 7px 14px;
 }
 
+/* --- Follow-along ---------------------------------------------------- */
+
+/* the sentence currently being spoken (CSS Custom Highlight API) */
+::highlight(distill-tts) {
+  background-color: rgba(217, 119, 6, 0.32);
+}
+
+/* the block currently being spoken — also the fallback highlight */
+.tts-now {
+  background: color-mix(in oklab, var(--raccent, var(--brand)) 9%, transparent);
+  border-radius: 6px;
+  transition: background 0.3s ease;
+}
+
 @media (max-width: 560px) {
   .audio-voice {
     display: none;

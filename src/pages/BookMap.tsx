@@ -1,10 +1,11 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { NavBar } from '../components/NavBar'
 import { Cover } from '../components/Cover'
 import { AudioPlayer } from '../components/AudioPlayer'
 import { Markdown } from '../lib/markdown'
-import { mapSpeechBlocks, ttsStart, ttsStop, ttsSupported, useTts } from '../lib/tts'
+import { collectSpeechTargets, useSpeechFollow } from '../lib/follow'
+import { ttsStart, ttsStop, ttsSupported, useTts } from '../lib/tts'
 import {
   bookStats,
   booksInCategory,
@@ -74,8 +75,30 @@ export default function BookMap() {
   const book = getBook(bookId)
   const progress = useBookProgress(bookId ?? '')
   const tts = useTts()
+  const mapRef = useRef<HTMLElement>(null)
+  const speechElsRef = useRef<(HTMLElement | null)[]>([])
+  useSpeechFollow(speechElsRef)
   useEffect(() => () => ttsStop(), [])
   if (!book) return <Navigate to="/" replace />
+
+  const MAP_SPEECH_SELECTOR =
+    '.map-intro p, .map-intro li, .map-howto p, .map-ch h3, .map-ch-summary p, .map-ch-summary li'
+
+  function startMapListening() {
+    if (!book) return
+    const { texts, elements } = collectSpeechTargets(mapRef.current, MAP_SPEECH_SELECTOR)
+    if (texts.length === 0) return
+    speechElsRef.current = [null, ...elements, null] // spoken intro/outro have no element
+    ttsStart(
+      [
+        `${book.title}, by ${book.author}. The book map.`,
+        ...texts,
+        'End of the map. Pick the chapters that earn your time.',
+      ],
+      `The Map · ${book.title}`,
+      () => markMapRead(book.id),
+    )
+  }
 
   const stats = bookStats(book)
   const category = categoryOf(book)
@@ -147,18 +170,11 @@ export default function BookMap() {
           </div>
         </section>
 
-        <section className="map">
+        <section className="map" ref={mapRef}>
           <h2 className="map-title">
             The Map <span className="map-min">{stats.mapMinutes} min read</span>
             {ttsSupported && (
-              <button
-                className="btn btn-ghost map-listen"
-                onClick={() =>
-                  ttsStart(mapSpeechBlocks(book), `The Map · ${book.title}`, () =>
-                    markMapRead(book.id),
-                  )
-                }
-              >
+              <button className="btn btn-ghost map-listen" onClick={startMapListening}>
                 🎧 Listen
               </button>
             )}

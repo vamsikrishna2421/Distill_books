@@ -1,12 +1,12 @@
 import { useSyncExternalStore } from 'react'
-import type { Book, Chapter } from '../types'
-import { mdToHtml } from './markdown'
 import { getPrefs, updatePrefs } from './prefs'
 
 // ---------------------------------------------------------------------------
 // Text-to-speech engine over the Web Speech API. One global playback session,
 // consumed by any page via useTts(). Text is chunked by sentence — long
-// utterances get cut off on several platforms.
+// utterances get cut off on several platforms. Each chunk remembers which
+// source block it came from and its character range within that block's
+// whitespace-normalized text, so pages can highlight and follow along.
 // ---------------------------------------------------------------------------
 
 export interface TtsState {
@@ -16,6 +16,11 @@ export interface TtsState {
   currentText: string
   label: string
   charsRemaining: number
+  /** index into the blocks array passed to ttsStart */
+  block: number
+  /** current sentence's range within the normalized block text */
+  charStart: number
+  charEnd: number
   /** bumped when the voice list loads/changes so components re-render */
   voicesVersion: number
 }
@@ -30,6 +35,9 @@ const IDLE: TtsState = {
   currentText: '',
   label: '',
   charsRemaining: 0,
+  block: 0,
+  charStart: 0,
+  charEnd: 0,
   voicesVersion: 0,
 }
 
@@ -79,9 +87,48 @@ function pickVoice(): SpeechSynthesisVoice | null {
   return en.find((v) => v.default) ?? en[0] ?? null
 }
 
+// --- Chunking ---------------------------------------------------------------
+
+interface Chunk {
+  text: string
+  block: number
+  start: number
+  end: number
+}
+
+function toChunks(blocks: string[]): Chunk[] {
+  const out: Chunk[] = []
+  const push = (block: number, raw: string, rawStart: number) => {
+    const lead = raw.length - raw.trimStart().length
+    const text = raw.trim()
+    if (text) out.push({ text, block, start: rawStart + lead, end: rawStart + lead + text.length })
+  }
+  blocks.forEach((rawBlock, b) => {
+    const text = rawBlock.replace(/\s+/g, ' ').trim()
+    if (!text) return
+    const sentences = text.match(/[^.!?]+[.!?]+["')\]]*\s*|[^.!?]+$/g) ?? [text]
+    let cur = ''
+    let curStart = 0
+    let pos = 0
+    for (const s of sentences) {
+      if (cur && (cur + s).length > 230) {
+        push(b, cur, curStart)
+        cur = s
+        curStart = pos
+      } else {
+        if (!cur) curStart = pos
+        cur += s
+      }
+      pos += s.length
+    }
+    push(b, cur, curStart)
+  })
+  return out
+}
+
 // --- Playback ---------------------------------------------------------------
 
-let chunks: string[] = []
+let chunks: Chunk[] = []
 let onFinished: (() => void) | null = null
 let session = 0
 let keepalive: number | null = null
@@ -110,28 +157,8 @@ function stopKeepalive(): void {
 
 function charsFrom(i: number): number {
   let n = 0
-  for (let k = i; k < chunks.length; k++) n += chunks[k].length
+  for (let k = i; k < chunks.length; k++) n += chunks[k].text.length
   return n
-}
-
-function toChunks(blocks: string[]): string[] {
-  const out: string[] = []
-  for (const block of blocks) {
-    const text = block.replace(/\s+/g, ' ').trim()
-    if (!text) continue
-    const sentences = text.match(/[^.!?]+[.!?]+["')\]]*\s*|[^.!?]+$/g) ?? [text]
-    let cur = ''
-    for (const s of sentences) {
-      if (cur && (cur + s).length > 230) {
-        out.push(cur.trim())
-        cur = s
-      } else {
-        cur += s
-      }
-    }
-    if (cur.trim()) out.push(cur.trim())
-  }
-  return out
 }
 
 function speakFrom(i: number): void {
@@ -140,8 +167,16 @@ function speakFrom(i: number): void {
     finish()
     return
   }
-  emit({ index: i, currentText: chunks[i], charsRemaining: charsFrom(i) })
-  const u = new SpeechSynthesisUtterance(chunks[i])
+  const c = chunks[i]
+  emit({
+    index: i,
+    currentText: c.text,
+    charsRemaining: charsFrom(i),
+    block: c.block,
+    charStart: c.start,
+    charEnd: c.end,
+  })
+  const u = new SpeechSynthesisUtterance(c.text)
   u.rate = getPrefs().ttsRate
   const voice = pickVoice()
   if (voice) u.voice = voice
@@ -182,8 +217,11 @@ export function ttsStart(blocks: string[], label: string, finished?: () => void)
     index: 0,
     total: chunks.length,
     label,
-    currentText: chunks[0],
+    currentText: chunks[0].text,
     charsRemaining: charsFrom(0),
+    block: chunks[0].block,
+    charStart: chunks[0].start,
+    charEnd: chunks[0].end,
   })
   startKeepalive()
   // a beat after cancel() avoids a WebKit race where the new queue is dropped
@@ -233,50 +271,4 @@ export function ttsSetRate(rate: number): void {
 export function ttsSetVoice(voiceURI: string | null): void {
   updatePrefs({ ttsVoice: voiceURI })
   if (state.status === 'playing') ttsSkip(0)
-}
-
-// --- Speech text builders ----------------------------------------------------
-
-function htmlToBlocks(html: string): string[] {
-  const doc = new DOMParser().parseFromString(html, 'text/html')
-  const nodes = doc.body.querySelectorAll('p, h2, h3, li, blockquote')
-  const blocks: string[] = []
-  nodes.forEach((el) => {
-    if (el.querySelector('p, h2, h3, li')) return // container; children handled
-    const t = el.textContent?.trim()
-    if (t) blocks.push(t)
-  })
-  if (blocks.length === 0) {
-    const t = doc.body.textContent?.trim()
-    if (t) blocks.push(t)
-  }
-  return blocks
-}
-
-function plain(md: string): string {
-  return htmlToBlocks(mdToHtml(md)).join(' ')
-}
-
-export function chapterSpeechBlocks(chapter: Chapter, n: number): string[] {
-  return [
-    `Chapter ${n}. ${chapter.title}.`,
-    ...(chapter.keyIdeas.length ? ['The key ideas.', ...chapter.keyIdeas.map(plain)] : []),
-    ...htmlToBlocks(chapter.bodyHtml),
-    ...(chapter.inPractice.length ? ['In practice.', ...chapter.inPractice.map(plain)] : []),
-  ]
-}
-
-export function mapSpeechBlocks(book: Book): string[] {
-  const blocks = [
-    `${book.title}, by ${book.author}. The book map.`,
-    ...htmlToBlocks(mdToHtml(book.map.intro)),
-  ]
-  if (book.map.howToUse) {
-    blocks.push('How to choose.', ...htmlToBlocks(mdToHtml(book.map.howToUse)))
-  }
-  for (const c of book.map.chapters) {
-    blocks.push(`Chapter ${c.number}. ${c.title}.`, ...htmlToBlocks(mdToHtml(c.summary)))
-  }
-  blocks.push('End of the map. Pick the chapters that earn your time.')
-  return blocks
 }

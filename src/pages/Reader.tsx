@@ -3,7 +3,8 @@ import type { CSSProperties } from 'react'
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import { AudioPlayer } from '../components/AudioPlayer'
 import { getBook, hasChapterFile, loadChapter } from '../lib/content'
-import { chapterSpeechBlocks, ttsStart, ttsStop, ttsSupported, useTts } from '../lib/tts'
+import { collectSpeechTargets, useSpeechFollow } from '../lib/follow'
+import { ttsStart, ttsStop, ttsSupported, useTts } from '../lib/tts'
 import {
   bumpFontScale,
   resolveReaderTheme,
@@ -29,11 +30,21 @@ export default function Reader() {
   const [pct, setPct] = useState(0)
   const [showSettings, setShowSettings] = useState(false)
   const autoplayRef = useRef(false)
+  const articleRef = useRef<HTMLElement>(null)
+  const speechElsRef = useRef<(HTMLElement | null)[]>([])
   const tts = useTts()
+  useSpeechFollow(speechElsRef)
 
-  function playChapter(ch: Chapter, num: number) {
-    if (!book) return
-    ttsStart(chapterSpeechBlocks(ch, num), `Ch ${num} · ${book.title}`, () => {
+  const SPEECH_SELECTOR =
+    '.ch-title, .key-ideas h2, .key-ideas li, .ch-body p, .ch-body h2, .ch-body h3, .ch-body li, .ch-body blockquote, .in-practice h2, .in-practice li'
+
+  function startListening() {
+    if (!book || state !== 'ready') return
+    const { texts, elements } = collectSpeechTargets(articleRef.current, SPEECH_SELECTOR)
+    if (texts.length === 0) return
+    speechElsRef.current = [null, ...elements] // spoken chapter intro has no element
+    const num = n
+    ttsStart([`Chapter ${num}.`, ...texts], `Ch ${num} · ${book.title}`, () => {
       markChapterRead(book.id, num)
       const nextAvailable =
         book.map.chapters.some((c) => c.number === num + 1) && hasChapterFile(book.id, num + 1)
@@ -56,10 +67,6 @@ export default function Reader() {
         if (ch) {
           setChapter(ch)
           setState('ready')
-          if (autoplayRef.current) {
-            autoplayRef.current = false
-            playChapter(ch, n)
-          }
         } else {
           setState('missing')
         }
@@ -70,8 +77,17 @@ export default function Reader() {
     return () => {
       alive = false
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bookId, n])
+
+  // continue listening into the next chapter once its DOM has rendered
+  useEffect(() => {
+    if (state === 'ready' && autoplayRef.current) {
+      autoplayRef.current = false
+      const t = window.setTimeout(startListening, 150)
+      return () => window.clearTimeout(t)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state, n])
 
   useEffect(() => () => ttsStop(), [])
 
@@ -172,7 +188,7 @@ export default function Reader() {
           {ttsSupported && state === 'ready' && chapter && (
             <button
               className={tts.status !== 'idle' ? 'rdr-aa on' : 'rdr-aa'}
-              onClick={() => playChapter(chapter, n)}
+              onClick={startListening}
               aria-label="Listen to this chapter"
               title="Listen"
             >
@@ -244,7 +260,7 @@ export default function Reader() {
       )}
 
       {state === 'ready' && chapter && (
-        <article className="rdr-page">
+        <article className="rdr-page" ref={articleRef}>
           <p className="ch-kicker">
             Chapter {n} · {chapter.minutes} min
           </p>

@@ -1,72 +1,71 @@
 {
-  "timestamp": "2026-07-15T02:33:04.759Z",
+  "timestamp": "2026-07-15T02:43:54.406Z",
   "mode": "headless",
   "workerType": "audit",
   "model": "haiku",
-  "durationMs": 74496,
-  "executionId": "audit_1784082710263_j6lcws",
+  "durationMs": 49635,
+  "executionId": "audit_1784083384771_trng1a",
   "success": true,
   "findings": {
     "vulnerabilities": [
       {
         "severity": "medium",
         "file": "src/lib/markdown.tsx",
-        "line": 17,
-        "description": "Unsafe HTML rendering via dangerouslySetInnerHTML without sanitization. The marked library (v12.0.2) does not escape HTML by default, allowing potential XSS if untrusted content is passed to mdToHtml(). Currently data is from bundled static files, but pattern is vulnerable if content source changes."
+        "line": 13,
+        "description": "Potential XSS vulnerability: dangerouslySetInnerHTML with markdown output. The marked library is used without explicit sanitization options. While marked has some built-in protections, an attacker could potentially craft markdown that includes raw HTML/JavaScript. Recommend using marked-sanitizer-plus, DOMPurify, or configuring marked.use({ breaks: false }) with a sanitizer function."
       },
       {
-        "severity": "medium",
-        "file": "src/pages/Reader.tsx",
-        "line": 223,
-        "description": "Unsafe HTML rendering via dangerouslySetInnerHTML with mdInline() output. The keyIdeas array items are rendered without HTML sanitization. Vulnerable to XSS if chapter files contain malicious HTML/JavaScript in key ideas sections."
+        "severity": "low",
+        "file": "src/lib/markdown.tsx",
+        "line": 5,
+        "description": "Missing input validation: mdToHtml() accepts raw user strings with no length limits or content validation before markdown parsing. While marked handles most edge cases, consider adding size caps and input validation."
       },
       {
-        "severity": "medium",
-        "file": "src/pages/Reader.tsx",
-        "line": 229,
-        "description": "Unsafe HTML rendering of chapter.bodyHtml via dangerouslySetInnerHTML. The marked library processes markdown without HTML sanitization. XSS risk if chapter files are ever user-controlled or externally sourced."
-      },
-      {
-        "severity": "medium",
-        "file": "src/pages/Reader.tsx",
-        "line": 236,
-        "description": "Unsafe HTML rendering via dangerouslySetInnerHTML with mdInline() for inPractice items. Same XSS risk as key ideas - no sanitization of marked output."
+        "severity": "low",
+        "file": "src/lib/store.ts",
+        "line": 11,
+        "description": "Unencrypted localStorage storage: Preferences and reading progress stored in plaintext JSON in localStorage. While this data is non-sensitive, any sensitive user data (if added) would be exposed. Consider using encryption for localStorage if handling sensitive data in future."
       },
       {
         "severity": "low",
         "file": ".claude/helpers/memory.js",
         "line": 18,
-        "description": "Memory storage accepts arbitrary keys without validation. While not directly exploitable (keys are object properties, not system calls), this could become a vulnerability if keys are ever used in system operations or file paths."
+        "description": "Unencrypted plaintext file storage: Memory data written to .claude-flow/data/memory.json with no encryption. If this ever stores credentials or sensitive data, it would be exposed. Recommend using encryption for production secrets."
+      },
+      {
+        "severity": "low",
+        "file": ".claude/helpers/session.js",
+        "line": 17,
+        "description": "Unencrypted plaintext file storage: Session context stored in .claude-flow/sessions/current.json without encryption. If sensitive context is added, recommend using encrypted storage."
+      },
+      {
+        "severity": "low",
+        "file": ".claude/helpers/memory.js",
+        "line": 24,
+        "description": "No input validation on memory key/value: The set() function accepts arbitrary keys and values with no validation, length limits, or sanitization. Could allow pollution of memory state or DoS via oversized writes."
+      },
+      {
+        "severity": "low",
+        "file": ".claude/helpers/router.js",
+        "line": 60,
+        "description": "Regex injection potential (low risk): While escapeRegex() is used, the pattern building logic could theoretically be exploited if TASK_PATTERNS are modified from external sources. Currently safe as patterns are hardcoded."
       }
     ],
-    "riskScore": 35,
+    "riskScore": 28,
     "recommendations": [
-      "Install and configure a markdown sanitization library (e.g., DOMPurify) to sanitize marked output before rendering. Example: `DOMPurify.sanitize(marked.parse(src))`",
-      "Update marked configuration to disable HTML: use `marked.use({ breaks: true, pedantic: false })` and sanitize output.",
-      "Add Content Security Policy (CSP) headers to prevent inline script execution as a defense-in-depth measure",
-      "Validate markdown chapter files in the build process to reject files containing script tags or event handlers",
-      "If chapter files are ever loaded from external sources or user input, implement strict input validation",
-      "Add optional keys validation in memory.js if keys are ever used in file paths or system calls",
-      "Consider using a safer markdown renderer alternative like `react-markdown` with plugin configuration that disables HTML rendering",
-      "Add automated security scanning to CI/CD pipeline to detect dangerouslySetInnerHTML usage"
-    ],
-    "positiveFindings": [
-      "No hardcoded secrets, API keys, or credentials found in codebase",
-      "No SQL injection risks (frontend-only app with no database queries)",
-      "Proper use of execFileSync with array arguments in helper scripts prevents shell injection",
-      "Input sanitization in progress.ts with defensive schema validation",
-      "React Router properly uses Link components instead of href manipulation",
-      "localStorage data is properly validated before use via sanitize() function",
-      "No external API calls or network requests that could leak data",
-      "Type validation with isBook() function provides runtime safety checks",
-      "Atomic file writes in session.js prevent race condition vulnerabilities"
-    ],
-    "contextualRisk": {
-      "currentRisk": "LOW - All content is from bundled static files, reducing XSS attack surface",
-      "futureRisk": "MEDIUM - If content source changes to external/user-controlled, XSS vulnerabilities would become critical",
-      "exposureWindow": "Content is read-only in current architecture; risk increases if content becomes dynamic"
-    }
+      "Install and use DOMPurify: `npm install dompurify` and configure marked to sanitize HTML output before passing to dangerouslySetInnerHTML",
+      "Alternative: Use marked-sanitizer-plus: `npm install marked-sanitizer-plus` for built-in XSS protection",
+      "Add input validation to mdToHtml(): Enforce reasonable string length limits (e.g., 100KB) to prevent DoS via oversized markdown",
+      "Use marked.use({ gfm: true, breaks: true, pedantic: false }) to disable potentially unsafe features",
+      "Encrypt sensitive data: If helper scripts ever store credentials, implement encryption using crypto module (AES-256-GCM recommended)",
+      "Add input validation to memory.js helpers: Validate key names and cap value size to prevent memory pollution",
+      "Use Content Security Policy (CSP) headers: Set `script-src 'self'` to mitigate inline script attacks from markdown",
+      "Audit marked library version: Ensure you're using the latest version with security patches. Current package.json shows ^12.0.2 which is recent",
+      "Consider using react-markdown over dangerouslySetInnerHTML: Provides safer component-based rendering with optional rehype plugins for sanitization",
+      "Add rate limiting to file write operations in helper scripts to prevent DoS via repeated writes",
+      "Never commit secrets to .claude directory: Add .claude-flow/ and .claude/data/ to .gitignore if not already present"
+    ]
   },
-  "rawOutputPreview": "Now let me compile a comprehensive security analysis report based on my findings.\n\n## Security Analysis Report\n\n```json\n{\n  \"vulnerabilities\": [\n    {\n      \"severity\": \"medium\",\n      \"file\": \"src/lib/markdown.tsx\",\n      \"line\": 17,\n      \"description\": \"Unsafe HTML rendering via dangerouslySetInnerHTML without sanitization. The marked library (v12.0.2) does not escape HTML by default, allowing potential XSS if untrusted content is passed to mdToHtml(). Currently data is from bundled static files, but pattern is vulnerable if content source changes.\"\n    },\n    {\n      \"severity\": \"medium\",\n      \"file\": \"src/pages/Reader.tsx\",\n      \"line\": 223,\n      \"description\": \"Unsafe HTML rendering via dangerouslySetInnerHTML with mdInline() output. The keyIdeas array items are rendered without HTML sanitization. Vulnerable to XSS if chapter files contain malicious HTML/JavaScript in key ideas sections.\"\n    },\n    {\n      \"severity\": \"medium\",\n      \"file\": \"src/pages/Reader.tsx\",\n      \"line\": 229,\n      \"description\": \"Unsafe HTML rendering of chapter.bodyHtml via dangerouslySetInnerHTML. The marked library processes markdown without HTML sanitization. XSS risk if chapter files are ever user-controlled or externally sourced.\"\n    },\n    {\n      \"severity\": \"medium\",\n      \"file\": \"src/pages/Reader.tsx\",\n      \"line\": 236,\n      \"description\": \"Unsafe HTML rendering via dangerouslySetInnerHTML with mdInline() for inPractice items. Same XSS risk as key ideas - no sanitization of marked output.\"\n    },\n    {\n      \"severity\": \"low\",\n      \"file\": \".claude/helpers/memory.js\",\n      \"line\": 18,\n      \"description\": \"Memory storage accepts arbitrary keys without validation. While not directly exploitable (keys are object properties, not system calls), this could become a vulnerability if keys are ever used in system operations or file paths.\"\n    }\n  ],\n  \"riskScore\": 35,\n  \"recommendations\": [\n    \"Install and configure a markdown sanitization library (e.g., DOMPurify) to sa",
-  "rawOutputLength": 4919
+  "rawOutputPreview": "```json\n{\n  \"vulnerabilities\": [\n    {\n      \"severity\": \"medium\",\n      \"file\": \"src/lib/markdown.tsx\",\n      \"line\": 13,\n      \"description\": \"Potential XSS vulnerability: dangerouslySetInnerHTML with markdown output. The marked library is used without explicit sanitization options. While marked has some built-in protections, an attacker could potentially craft markdown that includes raw HTML/JavaScript. Recommend using marked-sanitizer-plus, DOMPurify, or configuring marked.use({ breaks: false }) with a sanitizer function.\"\n    },\n    {\n      \"severity\": \"low\",\n      \"file\": \"src/lib/markdown.tsx\",\n      \"line\": 5,\n      \"description\": \"Missing input validation: mdToHtml() accepts raw user strings with no length limits or content validation before markdown parsing. While marked handles most edge cases, consider adding size caps and input validation.\"\n    },\n    {\n      \"severity\": \"low\",\n      \"file\": \"src/lib/store.ts\",\n      \"line\": 11,\n      \"description\": \"Unencrypted localStorage storage: Preferences and reading progress stored in plaintext JSON in localStorage. While this data is non-sensitive, any sensitive user data (if added) would be exposed. Consider using encryption for localStorage if handling sensitive data in future.\"\n    },\n    {\n      \"severity\": \"low\",\n      \"file\": \".claude/helpers/memory.js\",\n      \"line\": 18,\n      \"description\": \"Unencrypted plaintext file storage: Memory data written to .claude-flow/data/memory.json with no encryption. If this ever stores credentials or sensitive data, it would be exposed. Recommend using encryption for production secrets.\"\n    },\n    {\n      \"severity\": \"low\",\n      \"file\": \".claude/helpers/session.js\",\n      \"line\": 17,\n      \"description\": \"Unencrypted plaintext file storage: Session context stored in .claude-flow/sessions/current.json without encryption. If sensitive context is added, recommend using encrypted storage.\"\n    },\n    {\n      \"severity\": \"low\",\n      \"file\": \".claude/helpers/memory.js\",\n   ",
+  "rawOutputLength": 5027
 }
