@@ -34,25 +34,10 @@ GAP_SEC = 0.45
 MAX_SYNTH_CHARS = 400
 SAMPLE_RATE = 24000
 
-# Narrator casting: kokoro voice id + display name shown in the app.
-CASTING = {
-    "the-great-mental-models": ("af_heart", "The Guide"),
-    "think-again": ("am_puck", "The Challenger"),
-    "clear-thinking": ("am_michael", "The Coach"),
-    "thinking-fast-and-slow": ("am_onyx", "The Anchor"),
-    "predictably-irrational": ("af_bella", "The Spark"),
-    "the-art-of-thinking-clearly": ("bm_george", "The Professor"),
-    "decisive": ("am_michael", "The Coach"),
-    "thinking-in-bets": ("af_nicole", "The Calm"),
-    "algorithms-to-live-by": ("bm_fable", "The Storyteller"),
-    "superforecasting": ("am_michael", "The Coach"),
-    "fooled-by-randomness": ("bm_george", "The Professor"),
-    "poor-charlies-almanack": ("am_onyx", "The Anchor"),
-    "chanakya-neeti": ("am_onyx", "The Anchor"),
-    "the-alchemist": ("bm_fable", "The Storyteller"),
-    "the-5am-club": ("af_bella", "The Spark"),
-    "hooked": ("am_puck", "The Challenger"),
-}
+# Single narrator across the whole library (user preference): Kokoro's
+# top-rated voice, a warm female narrator. Per-book casting can return
+# by adding entries here.
+CASTING: dict[str, tuple[str, str]] = {}
 DEFAULT_VOICE = ("af_heart", "The Guide")
 
 # --- markdown -> spoken blocks ------------------------------------------------
