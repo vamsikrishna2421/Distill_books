@@ -4,8 +4,9 @@ import { NavBar } from '../components/NavBar'
 import { Cover } from '../components/Cover'
 import { AudioPlayer } from '../components/AudioPlayer'
 import { Markdown } from '../lib/markdown'
-import { collectSpeechTargets, useSpeechFollow } from '../lib/follow'
-import { ttsStart, ttsStop, ttsSupported, useTts } from '../lib/tts'
+import { abPlay, abStop, useAudiobook } from '../lib/audiobook'
+import { alignManifestToElements, collectSpeechTargets, useSpeechFollow } from '../lib/follow'
+import { ttsStart, ttsStop, useTts } from '../lib/tts'
 import {
   bookStats,
   booksInCategory,
@@ -75,29 +76,43 @@ export default function BookMap() {
   const book = getBook(bookId)
   const progress = useBookProgress(bookId ?? '')
   const tts = useTts()
+  const audiobook = useAudiobook()
   const mapRef = useRef<HTMLElement>(null)
   const speechElsRef = useRef<(HTMLElement | null)[]>([])
   useSpeechFollow(speechElsRef)
-  useEffect(() => () => ttsStop(), [])
+  useEffect(
+    () => () => {
+      ttsStop()
+      abStop()
+    },
+    [],
+  )
   if (!book) return <Navigate to="/" replace />
 
   const MAP_SPEECH_SELECTOR =
     '.map-intro p, .map-intro li, .map-howto p, .map-ch h3, .map-ch-summary p, .map-ch-summary li'
 
-  function startMapListening() {
+  async function startMapListening() {
     if (!book) return
-    const { texts, elements } = collectSpeechTargets(mapRef.current, MAP_SPEECH_SELECTOR)
-    if (texts.length === 0) return
-    speechElsRef.current = [null, ...elements, null] // spoken intro/outro have no element
-    ttsStart(
-      [
-        `${book.title}, by ${book.author}. The book map.`,
-        ...texts,
-        'End of the map. Pick the chapters that earn your time.',
-      ],
-      `The Map · ${book.title}`,
-      () => markMapRead(book.id),
-    )
+    const targets = collectSpeechTargets(mapRef.current, MAP_SPEECH_SELECTOR)
+    if (targets.texts.length === 0) return
+    const label = `The Map · ${book.title}`
+    const finished = () => markMapRead(book.id)
+    const manifest = await abPlay(book.id, 'map', label, finished)
+    if (manifest) {
+      speechElsRef.current = alignManifestToElements(manifest.blocks, targets)
+    } else {
+      speechElsRef.current = [null, ...targets.elements, null] // spoken intro/outro
+      ttsStart(
+        [
+          `${book.title}, by ${book.author}. The book map.`,
+          ...targets.texts,
+          'End of the map. Pick the chapters that earn your time.',
+        ],
+        label,
+        finished,
+      )
+    }
   }
 
   const stats = bookStats(book)
@@ -114,7 +129,13 @@ export default function BookMap() {
           <Link to="/">Library</Link> / {category?.name ?? ''}
         </span>
       </NavBar>
-      <main className={tts.status !== 'idle' ? 'bookpage wrap has-audio' : 'bookpage wrap'}>
+      <main
+        className={
+          tts.status !== 'idle' || audiobook.status !== 'idle'
+            ? 'bookpage wrap has-audio'
+            : 'bookpage wrap'
+        }
+      >
         <header className="book-head">
           <Cover book={book} className="book-head-cover" />
           <div className="book-head-info">
@@ -173,11 +194,9 @@ export default function BookMap() {
         <section className="map" ref={mapRef}>
           <h2 className="map-title">
             The Map <span className="map-min">{stats.mapMinutes} min read</span>
-            {ttsSupported && (
-              <button className="btn btn-ghost map-listen" onClick={startMapListening}>
-                🎧 Listen
-              </button>
-            )}
+            <button className="btn btn-ghost map-listen" onClick={() => void startMapListening()}>
+              🎧 Listen
+            </button>
           </h2>
           <Markdown text={book.map.intro} className="map-intro" />
           {book.map.howToUse && (

@@ -1,5 +1,7 @@
 import { useEffect, useRef } from 'react'
 import type { MutableRefObject } from 'react'
+import { useAudiobook } from './audiobook'
+import type { ManifestBlock } from './audiobook'
 import { useTts } from './tts'
 
 // ---------------------------------------------------------------------------
@@ -30,6 +32,36 @@ export function collectSpeechTargets(root: HTMLElement | null, selector: string)
     })
   }
   return { texts, elements }
+}
+
+/** Align narration-manifest blocks to collected page elements by normalized
+    text (sequential, small lookahead). Unmatched blocks map to null — spoken
+    but not highlighted. */
+export function alignManifestToElements(
+  blocks: ManifestBlock[],
+  targets: SpeechTargets,
+): (HTMLElement | null)[] {
+  const norm = (s: string) => s.replace(/\s+/g, ' ').trim().toLowerCase()
+  const targetNorm = targets.texts.map(norm)
+  const out: (HTMLElement | null)[] = []
+  let ptr = 0
+  for (const b of blocks) {
+    const nb = norm(b.text)
+    let found = -1
+    for (let j = ptr; j < targetNorm.length && j < ptr + 6; j++) {
+      if (targetNorm[j] === nb) {
+        found = j
+        break
+      }
+    }
+    if (found >= 0) {
+      out.push(targets.elements[found])
+      ptr = found + 1
+    } else {
+      out.push(null)
+    }
+  }
+  return out
 }
 
 const HIGHLIGHT_NAME = 'distill-tts'
@@ -84,16 +116,24 @@ function rangeForNormalizedOffsets(el: HTMLElement, start: number, end: number):
     `block` (null entries — e.g. spoken-only intros — are simply skipped). */
 export function useSpeechFollow(elementsRef: MutableRefObject<(HTMLElement | null)[]>): void {
   const tts = useTts()
+  const ab = useAudiobook()
   const lastEl = useRef<HTMLElement | null>(null)
 
+  // file narration takes precedence; sentence ranges only exist for Web Speech
+  const abActive = ab.status !== 'idle'
+  const status = abActive ? ab.status : tts.status
+  const block = abActive ? ab.block : tts.block
+  const charStart = abActive ? -1 : tts.charStart
+  const charEnd = abActive ? -1 : tts.charEnd
+
   useEffect(() => {
-    if (tts.status === 'idle') {
+    if (status === 'idle') {
       lastEl.current?.classList.remove('tts-now')
       lastEl.current = null
       clearSentenceHighlight()
       return
     }
-    const el = elementsRef.current[tts.block] ?? null
+    const el = elementsRef.current[block] ?? null
     if (el !== lastEl.current) {
       lastEl.current?.classList.remove('tts-now')
       if (el) {
@@ -105,14 +145,14 @@ export function useSpeechFollow(elementsRef: MutableRefObject<(HTMLElement | nul
       }
       lastEl.current = el
     }
-    if (el) {
-      const range = rangeForNormalizedOffsets(el, tts.charStart, tts.charEnd)
+    if (el && charStart >= 0) {
+      const range = rangeForNormalizedOffsets(el, charStart, charEnd)
       if (range) setSentenceHighlight(range)
       else clearSentenceHighlight()
     } else {
       clearSentenceHighlight()
     }
-  }, [tts.status, tts.block, tts.index, tts.charStart, tts.charEnd, elementsRef])
+  }, [status, block, tts.index, charStart, charEnd, elementsRef])
 
   useEffect(
     () => () => {

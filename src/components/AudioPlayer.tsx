@@ -1,4 +1,13 @@
-import { usePrefs } from '../lib/prefs'
+import type { MouseEvent } from 'react'
+import {
+  abSeek,
+  abSeekTo,
+  abSetRate,
+  abStop,
+  abToggle,
+  useAudiobook,
+} from '../lib/audiobook'
+import { updatePrefs, usePrefs } from '../lib/prefs'
 import {
   ttsSetRate,
   ttsSetVoice,
@@ -15,21 +24,86 @@ const SPEECH_CHARS_PER_MIN = 900
 const touchDevice =
   typeof window !== 'undefined' && window.matchMedia?.('(pointer: coarse)').matches
 
-/** Floating playback bar. Renders nothing while idle; inherits the reader's
-    theme variables when mounted inside .reader, app variables elsewhere. */
+function fmtTime(sec: number): string {
+  const m = Math.floor(sec / 60)
+  const s = Math.floor(sec % 60)
+  return `${m}:${String(s).padStart(2, '0')}`
+}
+
+/** Floating playback bar for both engines: pre-generated narration (seekable,
+    lock-screen capable) and Web Speech fallback. Renders nothing while idle. */
 export function AudioPlayer() {
-  const s = useTts()
+  const tts = useTts()
+  const ab = useAudiobook()
   const prefs = usePrefs()
-  if (s.status === 'idle') return null
+
+  const abActive = ab.status !== 'idle'
+  if (!abActive && tts.status === 'idle') return null
 
   const rate = prefs.ttsRate
-  const minutesLeft = Math.max(1, Math.ceil(s.charsRemaining / (SPEECH_CHARS_PER_MIN * rate)))
-  const pct = s.total > 0 ? (s.index / s.total) * 100 : 0
 
   function cycleRate() {
-    const i = RATES.indexOf(rate)
-    ttsSetRate(RATES[(i + 1) % RATES.length])
+    const next = RATES[(RATES.indexOf(rate) + 1) % RATES.length]
+    if (abActive) {
+      updatePrefs({ ttsRate: next })
+      abSetRate(next)
+    } else {
+      ttsSetRate(next)
+    }
   }
+
+  if (abActive) {
+    const pct = ab.duration > 0 ? (ab.time / ab.duration) * 100 : 0
+    function seekClick(e: MouseEvent<HTMLDivElement>) {
+      const rect = e.currentTarget.getBoundingClientRect()
+      abSeekTo(((e.clientX - rect.left) / rect.width) * ab.duration)
+    }
+    return (
+      <div className="audio-player" role="region" aria-label="Narration controls">
+        <div className="audio-seek" onClick={seekClick} aria-hidden="true">
+          <span style={{ width: `${pct}%` }} />
+        </div>
+        <div className="audio-main">
+          <button className="audio-btn" onClick={() => abSeek(-15)} aria-label="Back 15 seconds">
+            ↺
+          </button>
+          <button
+            className="audio-btn audio-play"
+            onClick={abToggle}
+            aria-label={ab.status === 'playing' ? 'Pause' : 'Play'}
+          >
+            {ab.status === 'playing' ? '❚❚' : '▶'}
+          </button>
+          <button className="audio-btn" onClick={() => abSeek(15)} aria-label="Forward 15 seconds">
+            ↻
+          </button>
+          <div className="audio-info">
+            <span className="audio-label">
+              {ab.label} · read by {ab.narrator}
+            </span>
+            <span className="audio-text">
+              {fmtTime(ab.time)} / {fmtTime(ab.duration)}
+            </span>
+          </div>
+          <button className="audio-rate" onClick={cycleRate} aria-label={`Speed ${rate}x`}>
+            {rate}×
+          </button>
+          <button className="audio-btn" onClick={abStop} aria-label="Stop narration">
+            ✕
+          </button>
+        </div>
+        {touchDevice && (
+          <p className="audio-hint">
+            Real narration — keeps playing with the screen locked. Control it from your lock
+            screen.
+          </p>
+        )}
+      </div>
+    )
+  }
+
+  const minutesLeft = Math.max(1, Math.ceil(tts.charsRemaining / (SPEECH_CHARS_PER_MIN * rate)))
+  const pct = tts.total > 0 ? (tts.index / tts.total) * 100 : 0
 
   return (
     <div className="audio-player" role="region" aria-label="Listening controls">
@@ -43,18 +117,18 @@ export function AudioPlayer() {
         <button
           className="audio-btn audio-play"
           onClick={ttsToggle}
-          aria-label={s.status === 'playing' ? 'Pause' : 'Play'}
+          aria-label={tts.status === 'playing' ? 'Pause' : 'Play'}
         >
-          {s.status === 'playing' ? '❚❚' : '▶'}
+          {tts.status === 'playing' ? '❚❚' : '▶'}
         </button>
         <button className="audio-btn" onClick={() => ttsSkip(1)} aria-label="Forward one passage">
           ⏭
         </button>
         <div className="audio-info">
           <span className="audio-label">
-            {s.label} · ~{minutesLeft} min left
+            {tts.label} · ~{minutesLeft} min left
           </span>
-          <span className="audio-text">{s.currentText}</span>
+          <span className="audio-text">{tts.currentText}</span>
         </div>
         <button className="audio-rate" onClick={cycleRate} aria-label={`Speed ${rate}x`}>
           {rate}×

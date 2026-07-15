@@ -3,3 +3,6 @@ dist/
 .vercel/
 .DS_Store
 *.local
+.tools/
+audio-dist/
+public/audio/

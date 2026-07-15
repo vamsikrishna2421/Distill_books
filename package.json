@@ -8,7 +8,8 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "validate": "node scripts/validate-content.mjs",
-    "test": "node scripts/validate-content.mjs"
+    "test": "node scripts/validate-content.mjs",
+    "audio:link": "node scripts/link-audio.mjs"
   },
   "dependencies": {
     "marked": "^12.0.2",

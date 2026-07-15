@@ -2,9 +2,10 @@ import { useEffect, useRef, useState } from 'react'
 import type { CSSProperties } from 'react'
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import { AudioPlayer } from '../components/AudioPlayer'
+import { abPlay, abStop, useAudiobook } from '../lib/audiobook'
 import { getBook, hasChapterFile, loadChapter } from '../lib/content'
-import { collectSpeechTargets, useSpeechFollow } from '../lib/follow'
-import { ttsStart, ttsStop, ttsSupported, useTts } from '../lib/tts'
+import { alignManifestToElements, collectSpeechTargets, useSpeechFollow } from '../lib/follow'
+import { ttsStart, ttsStop, useTts } from '../lib/tts'
 import {
   bumpFontScale,
   resolveReaderTheme,
@@ -33,18 +34,19 @@ export default function Reader() {
   const articleRef = useRef<HTMLElement>(null)
   const speechElsRef = useRef<(HTMLElement | null)[]>([])
   const tts = useTts()
+  const audiobook = useAudiobook()
   useSpeechFollow(speechElsRef)
 
   const SPEECH_SELECTOR =
     '.ch-title, .key-ideas h2, .key-ideas li, .ch-body p, .ch-body h2, .ch-body h3, .ch-body li, .ch-body blockquote, .in-practice h2, .in-practice li'
 
-  function startListening() {
+  async function startListening() {
     if (!book || state !== 'ready') return
-    const { texts, elements } = collectSpeechTargets(articleRef.current, SPEECH_SELECTOR)
-    if (texts.length === 0) return
-    speechElsRef.current = [null, ...elements] // spoken chapter intro has no element
+    const targets = collectSpeechTargets(articleRef.current, SPEECH_SELECTOR)
+    if (targets.texts.length === 0) return
     const num = n
-    ttsStart([`Chapter ${num}.`, ...texts], `Ch ${num} · ${book.title}`, () => {
+    const label = `Ch ${num} · ${book.title}`
+    const finished = () => {
       markChapterRead(book.id, num)
       const nextAvailable =
         book.map.chapters.some((c) => c.number === num + 1) && hasChapterFile(book.id, num + 1)
@@ -52,14 +54,25 @@ export default function Reader() {
         autoplayRef.current = true
         navigate(`/book/${book.id}/read/${num + 1}`)
       }
-    })
+    }
+    // pre-generated narration first; Web Speech as fallback
+    const manifest = await abPlay(book.id, `ch-${String(num).padStart(2, '0')}`, label, finished)
+    if (manifest) {
+      speechElsRef.current = alignManifestToElements(manifest.blocks, targets)
+    } else {
+      speechElsRef.current = [null, ...targets.elements] // spoken intro has no element
+      ttsStart([`Chapter ${num}.`, ...targets.texts], label, finished)
+    }
   }
 
   useEffect(() => {
     let alive = true
     setState('loading')
     setChapter(null)
-    if (!autoplayRef.current) ttsStop()
+    if (!autoplayRef.current) {
+      ttsStop()
+      abStop()
+    }
     if (!bookId) return
     loadChapter(bookId, n)
       .then((ch) => {
@@ -89,7 +102,13 @@ export default function Reader() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state, n])
 
-  useEffect(() => () => ttsStop(), [])
+  useEffect(
+    () => () => {
+      ttsStop()
+      abStop()
+    },
+    [],
+  )
 
   useEffect(() => {
     if (bookId && book && state === 'ready' && book.map.chapters.some((c) => c.number === n)) {
@@ -144,7 +163,9 @@ export default function Reader() {
 
   return (
     <div
-      className={tts.status !== 'idle' ? 'reader has-audio' : 'reader'}
+      className={
+        tts.status !== 'idle' || audiobook.status !== 'idle' ? 'reader has-audio' : 'reader'
+      }
       data-rtheme={readerTheme}
       style={
         {
@@ -185,10 +206,12 @@ export default function Reader() {
               →
             </span>
           )}
-          {ttsSupported && state === 'ready' && chapter && (
+          {state === 'ready' && chapter && (
             <button
-              className={tts.status !== 'idle' ? 'rdr-aa on' : 'rdr-aa'}
-              onClick={startListening}
+              className={
+                tts.status !== 'idle' || audiobook.status !== 'idle' ? 'rdr-aa on' : 'rdr-aa'
+              }
+              onClick={() => void startListening()}
               aria-label="Listen to this chapter"
               title="Listen"
             >
