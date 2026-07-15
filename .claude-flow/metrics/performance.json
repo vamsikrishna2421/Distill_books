@@ -1,111 +1,85 @@
 {
-  "timestamp": "2026-07-15T02:35:00.765Z",
+  "timestamp": "2026-07-15T02:51:19.174Z",
   "mode": "headless",
   "workerType": "optimize",
   "model": "sonnet",
-  "durationMs": 70502,
-  "executionId": "optimize_1784082830263_86ic24",
+  "durationMs": 78387,
+  "executionId": "optimize_1784083800787_9t7894",
   "success": true,
   "findings": {
     "sections": [
       {
         "title": "Performance Analysis — Distill (book_shorts)",
-        "content": "\nThis is a static-content React SPA (no backend), so \"N+1 queries\" show up as **repeated linear scans / recomputation** instead of DB round-trips. Findings below, ranked by impact.\n\n",
+        "content": "\nI read through `content.ts`, `store.ts`/`progress.ts`/`prefs.ts`, `tts.ts`/`follow.ts`, and the three pages. Findings below, ordered by impact.\n\n",
         "level": 2
       },
       {
-        "title": "1. Unnecessary re-renders: every `BookCard` re-renders when *any* book's progress changes",
-        "content": "`src/pages/Library.tsx:29-33` and `src/lib/progress.ts:32-39`\n\nEvery `BookCard` calls `useAllProgress()` — the whole progress store, not just its own book's slice. `store.set` always returns a **new top-level object** (`{...s, [bookId]: ...}`), so `useSyncExternalStore` fires a change for *every* subscriber whenever *any* book's progress updates. Marking one chapter read re-renders every card in the library.\n\n```tsx\n// current — subscribes to the entire store\nfunction BookCard({ book, step }: { book: Book; step?: number }) {\n  const all = useAllProgress()\n  const progress = all[book.id]\n  ...\n```\n\nFix: add a selector-based hook so each card only re-renders when its own slice changes, and memoize the card itself.\n\n```ts\n// progress.ts\nexport function useBookProgressSelector<T>(bookId: string, select: (p: BookProgress) => T): T {\n  return useSyncExternalStore(store.subscribe, () => select(sanitize(store.get()[bookId])))\n}\n```\n\n```tsx\nconst BookCard = memo(function BookCard({ book, step }: { book: Book; step?: number }) {\n  const pct = useBookProgressSelector(book.id, (p) => completionPct(book.map.chapters.length, p))\n  ...\n})\n```\n\n",
+        "title": "1. Store-wide re-render fan-out (biggest issue — \"N+1 render\" pattern)",
+        "content": "\n`useStore` (`src/lib/store.ts:31`) hands every subscriber the **entire** state object via `useSyncExternalStore`. Every `store.set()` call creates a brand-new top-level object (`{...s, [bookId]: ...}` in `progress.ts:39`), so **every** component calling `useAllProgress()` or `useBookProgress()` re-renders on **any** book's progress change — not just the one that changed.\n\nConcretely: `Library.tsx:30` calls `useAllProgress()` inside `BookCard`, once per card. Marking one chapter as read in *any* book re-renders *every* `BookCard` on the library page (could be dozens), each of which also recomputes `bookStats(book)` (see #3).\n\n```tsx\n// src/pages/Library.tsx — current\nfunction BookCard({ book, step }: { book: Book; step?: number }) {\n  const all = useAllProgress()       // subscribes to the WHOLE store\n  const progress = all[book.id]\n  ...\n}\n```\n\n**Fix:** add a selector-based subscription to `store.ts` so components only re-render when their slice actually changes:\n\n```ts\n// src/lib/store.ts\nexport function useStoreSelector<T extends object, S>(\n  store: Store<T>,\n  selector: (s: T) => S,\n): S {\n  return useSyncExternalStore(\n    store.subscribe,\n    () => selector(store.get()),\n    () => selector(store.get()),\n  )\n}\n```\n\n```ts\n// src/lib/progress.ts\nexport function useBookProgress(bookId: string): BookProgress {\n  return useStoreSelector(store, (all) => sanitize(all[bookId]))\n}\n```\n\n`useStoreSelector` still returns a fresh object each call (since `sanitize` builds a new object), so pair it with `useSyncExternalStoreWithSelector` (from `use-sync-external-store/shim/with-selector`) or a shallow-equal memo if you want true skip-on-unrelated-change behavior — plain `useSyncExternalStore` will still re-render on every store write because the selector result is a new reference. The `with-selector` variant does the equality check for you.\n\n",
         "level": 3
       },
       {
-        "title": "2. `bookStats(book)` recomputed on every render, everywhere it's used",
-        "content": "`src/lib/content.ts:161-170`, called from `BookCard`, `BookMap`, and `ContinueStrip`\n\n`bookStats` does several `reduce`s over `map.chapters` plus regex-based `countWords`. It's pure given `book`, but nothing memoizes it — it reruns on every render of every card (compounded by finding #1: a single progress update re-runs it for *all* books). Wrap with a `WeakMap`/id cache or `useMemo` at the call site:\n\n```ts\nconst statsCache = new Map<string, BookStats>()\nexport function bookStats(b: Book): BookStats {\n  const cached = statsCache.get(b.id)\n  if (cached) return cached\n  const stats = computeStats(b) // existing body\n  statsCache.set(b.id, stats)\n  return stats\n}\n```\nSafe because `books` is static content loaded once at build/module time — never mutated at runtime.\n\n",
+        "title": "2. Linear scans instead of indexed lookups (`content.ts`)",
+        "content": "\n`getBook`, `booksInCategory`, and `categoryOf` all do `.find()`/`.filter()` over the full `books`/`categories` arrays, and are called on **every render** of `BookMap.tsx` (lines 75, 104, 107) and `Reader.tsx` (line 24) — not just once. With a bigger catalog this is the closest thing to an N+1 pattern here: repeated O(n) scans that should be O(1) map lookups, since `books`/`categories` are static after module load.\n\n```ts\n// src/lib/content.ts — add alongside the existing arrays\nconst booksById = new Map(books.map((b) => [b.id, b]))\nconst categoriesById = new Map(categories.map((c) => [c.id, c]))\nconst booksByCategoryId = new Map<string, Book[]>()\nfor (const b of books) {\n  const list = booksByCategoryId.get(b.categoryId) ?? []\n  list.push(b)\n  booksByCategoryId.set(b.categoryId, list)\n}\n\nexport function getBook(id: string | undefined): Book | undefined {\n  return id ? booksById.get(id) : undefined\n}\nexport function booksInCategory(categoryId: string): Book[] {\n  return booksByCategoryId.get(categoryId) ?? []\n}\nexport function categoryOf(book: Book): Category | undefined {\n  return categoriesById.get(book.categoryId)\n}\n```\n\n",
         "level": 3
       },
       {
-        "title": "3. Linear scans standing in for indexed lookups (\"N+1\" pattern)",
-        "content": "`src/lib/content.ts`:\n- `categoryOf(book)` → `categories.find(c => c.id === book.categoryId)` — called once per book, per render (Library renders all books).\n- `booksInCategory(categoryId)` → `books.filter(...)` — called once per category **on every Library render** (`src/pages/Library.tsx:199`), each doing a full pass over `books`.\n\nFor N books and M categories, rendering the Library is O(N·M) work that's trivially O(N) with precomputed indexes:\n\n```ts\nconst categoryById = new Map(categories.map((c) => [c.id, c]))\nexport function categoryOf(book: Book) { return categoryById.get(book.categoryId) }\n\nconst booksByCategory = new Map<string, Book[]>()\nfor (const b of books) {\n  const list = booksByCategory.get(b.categoryId) ?? []\n  list.push(b)\n  booksByCategory.set(b.categoryId, list)\n}\nexport function booksInCategory(categoryId: string) { return booksByCategory.get(categoryId) ?? [] }\n```\nSmall dataset today, but this scales linearly with content and currently reruns on *every* keystroke-triggered re-render of `Library` (see #4), not just once.\n\n",
+        "title": "3. Redundant computation: `bookStats` recomputed every render, per card",
+        "content": "\n`bookStats(book)` (`content.ts:154`) does two `countWords`/regex passes over every chapter summary. It's pure — given `books` is static — yet `Library.tsx:32` recomputes it inside every `BookCard` render, and `Library.tsx:111` recomputes it again for `totals` (that one is at least memoized with `useMemo([])`).\n\n**Fix — memoize once per book at module load:**\n\n```ts\n// src/lib/content.ts\nconst statsCache = new Map<string, BookStats>()\nexport function bookStats(b: Book): BookStats {\n  let s = statsCache.get(b.id)\n  if (!s) {\n    s = computeBookStats(b)   // rename current function body\n    statsCache.set(b.id, s)\n  }\n  return s\n}\n```\n\n",
         "level": 3
       },
       {
-        "title": "4. `searchBooks` does full-corpus work on every keystroke, no debounce",
-        "content": "`src/pages/Library.tsx:95` + `src/lib/content.ts:182-193`\n\n```tsx\nconst results = useMemo(() => searchBooks(query), [query])\n```\n`useMemo` here only prevents *duplicate* recompute per render, not per-keystroke work — every keystroke still re-scans all books × chapters × categoryOf lookups. Fine at 10s of books; add a `useDeferredValue`/debounce once the catalog grows, since typing fast currently triggers a full re-score on every character:\n\n```tsx\nconst deferredQuery = useDeferredValue(query)\nconst results = useMemo(() => searchBooks(deferredQuery), [deferredQuery])\n```\n\n",
+        "title": "4. `searchBooks` rebuilds search corpus on every keystroke",
+        "content": "\n`content.ts:173-193` recomputes `strong`/`mid`/`weak` lowercase strings (including a `categoryOf` lookup and joining every chapter title) for **every book, on every keystroke** in `Library.tsx`'s search box. None of this depends on the query — only scoring does.\n\n**Fix — precompute the searchable corpus once:**\n\n```ts\n// src/lib/content.ts\nconst searchCorpus = books.map((b) => ({\n  b,\n  strong: `${b.title} ${b.author}`.toLowerCase(),\n  mid: `${b.tagline} ${categoryOf(b)?.name ?? ''}`.toLowerCase(),\n  weak: b.map.chapters.map((c) => c.title).join(' ').toLowerCase(),\n}))\n\nexport function searchBooks(query: string): Book[] {\n  const q = query.trim().toLowerCase()\n  if (!q) return books\n  const terms = q.split(/\\s+/)\n  return searchCorpus\n    .map(({ b, strong, mid, weak }) => {\n      let score = 0\n      for (const t of terms) {\n        if (strong.includes(t)) score += 5\n        if (mid.includes(t)) score += 2\n        if (weak.includes(t)) score += 1\n      }\n      return { b, score }\n    })\n    .filter((x) => x.score > 0)\n    .sort((x, y) => y.score - x.score)\n    .map((x) => x.b)\n}\n```\n\n",
         "level": 3
       },
       {
-        "title": "5. Chapter content re-parsed from markdown on every visit — missing cache",
-        "content": "`src/lib/content.ts:120-150` (`loadChapter`)\n\nEvery time `Reader` mounts for a chapter (including navigating back and forth, or React StrictMode's double-invoke in dev), `loadChapter` re-runs the regex parsing **and** re-runs `marked.parse` (`mdToHtml`) from scratch — same input, same output, every time. This is the most expensive per-visit computation in the app (markdown parsing) and is fully cacheable since chapter files are static.\n\n```ts\nconst chapterCache = new Map<string, Promise<Chapter | null>>()\nexport function loadChapter(bookId: string, n: number): Promise<Chapter | null> {\n  const key = `${bookId}/${n}`\n  let p = chapterCache.get(key)\n  if (!p) {\n    p = loadChapterUncached(bookId, n)\n    chapterCache.set(key, p)\n  }\n  return p\n}\n```\nCaching the in-flight promise also collapses concurrent double-fetches (e.g. StrictMode).\n\n",
+        "title": "5. `loadChapter` re-parses markdown on every navigation",
+        "content": "\n`Reader.tsx:64` calls `loadChapter(bookId, n)` in a `useEffect` on every `[bookId, n]` change with no cache — so navigating back to a previously-viewed chapter re-runs the title/section regex splits and `mdToHtml` (a full `marked.parse`) again. Chapter files never change at runtime.\n\n```ts\n// src/lib/content.ts\nconst chapterCache = new Map<string, Chapter | null>()\nexport async function loadChapter(bookId: string, n: number): Promise<Chapter | null> {\n  const key = `${bookId}:${n}`\n  if (chapterCache.has(key)) return chapterCache.get(key)!\n  const loader = chapterIndex.get(bookId)?.get(n)\n  if (!loader) { chapterCache.set(key, null); return null }\n  const chapter = await buildChapter(bookId, n, await loader())  // extract current body into buildChapter\n  chapterCache.set(key, chapter)\n  return chapter\n}\n```\n\nThis also fixes a subtle UX/perf issue: rapid prev/next navigation currently triggers a fresh async parse + a loading flash every time, even for chapters already visited this session.\n\n",
         "level": 3
       },
       {
-        "title": "6. Unthrottled scroll handler forces a render on every scroll tick",
-        "content": "`src/pages/Reader.tsx` (`onScroll` effect)\n\n```tsx\nconst onScroll = () => {\n  const el = document.documentElement\n  const max = el.scrollHeight - window.innerHeight\n  setPct(max > 0 ? Math.min(100, (window.scrollY / max) * 100) : 100)\n}\nwindow.addEventListener('scroll', onScroll, { passive: true })\n```\nThis calls `setState` on *every* scroll event (can fire dozens of times/sec), triggering a re-render of the whole `Reader` tree each time, and it isn't wrapped in `requestAnimationFrame`. Throttle via rAF:\n\n```tsx\nconst onScroll = () => {\n  requestAnimationFrame(() => {\n    const max = document.documentElement.scrollHeight - window.innerHeight\n    setPct(max > 0 ? Math.min(100, (window.scrollY / max) * 100) : 100)\n  })\n}\n```\nAlso worth moving the progress bar's width into a ref-driven DOM write (bypass React state) if this needs to feel perfectly smooth, since it's purely visual.\n\n",
+        "title": "6. Minor / lower-impact",
+        "content": "\n- **`BookMap.tsx:84-85`** — `MAP_SPEECH_SELECTOR` is a string literal re-created every render. Hoist it to module scope (like `Reader.tsx`'s `SPEECH_SELECTOR` should be too, `Reader.tsx:38-39`).\n- **`follow.ts` `useSpeechFollow`** — `elementsRef` is included in the effect's dependency array; refs are stable so this is harmless but misleading — safe to drop it, no behavior change.\n- **Potential leak edge case in `tts.ts`**: `startKeepalive` (`tts.ts:141`) sets a `window.setInterval`, cleared only via `stopKeepalive()` inside `finish()`/`ttsStop()`. Every call path you have does clean up correctly (including the page-level `useEffect(() => () => ttsStop(), [])` unmount guards in both `BookMap.tsx:81` and `Reader.tsx:92`), so this isn't currently leaking — but it's fragile: any future code path that flips `status` away from `'idle'`/`'playing'` without going through `ttsStop`/`finish` would leave the 10s interval running forever (module-level, so it'd survive route changes). Worth a comment or an assertion, not an active bug.\n- **`Reader.tsx:100-109`** — the scroll listener effect depends on `[state]`, so it detaches/reattaches on every chapter load transition (`loading`→`ready`). Not expensive, but could depend on `[]` since `onScroll` doesn't capture anything from `state`.\n\n",
         "level": 3
       },
       {
-        "title": "7. `BookCard` isn't memoized — Library keystrokes re-render the whole grid",
-        "content": "`src/pages/Library.tsx:92-231`\n\n`query` state lives in `Library`. Every keystroke re-renders `Library`, and since `BookCard` isn't wrapped in `memo`, every card in every category track re-renders too — even though only the search-results section (which isn't shown until `searching` is true) actually depends on `query`. Combine with fix #1's selector hook:\n\n```tsx\nconst BookCard = memo(function BookCard(...) { ... })\n```\n\n",
-        "level": 3
-      },
-      {
-        "title": "Memory leaks / cleanup",
-        "content": "No real leaks found — `useEffect` cleanup for scroll/keydown listeners and the `alive` flag pattern in `Reader`'s chapter-load effect are both correct. The `store.ts` listener `Set` is properly pruned via the `unsubscribe` returned to `useSyncExternalStore`. One minor note: `chapterCache` (fix #5) should stay unbounded-but-small since chapter count is fixed content, not user-generated — no eviction needed.\n\n",
-        "level": 3
-      },
-      {
-        "title": "Priority order",
-        "content": "1. Selector-based progress subscription + `memo(BookCard)` (#1, #7) — biggest win, fixes O(N) re-renders on every progress write.\n2. Cache `loadChapter`/`mdToHtml` output (#5) — avoids re-parsing markdown on repeat visits.\n3. Memoize `bookStats` (#2) and index `categoryOf`/`booksInCategory` (#3) — cheap, compounds with #1.\n4. Throttle scroll handler (#6).\n5. Debounce search (#4) — only matters once the catalog grows past ~50-100 books.",
+        "title": "Suggested priority",
+        "content": "1. Fix store fan-out (#1) — biggest win as the library grows, since it's O(books) wasted re-renders per progress write.\n2. Add `Map`-based indices in `content.ts` (#2) and cache `bookStats`/`loadChapter` (#3, #5) — all mechanical, low-risk changes in one file.\n3. Precompute search corpus (#4) — only matters once the catalog is larger than a handful of books, but it's a one-time, no-risk change.\n\nNone of these are urgent at the current catalog size (a handful of books/chapters), but #1 and #2 will matter as soon as the library grows past ~20-30 books, since they're the two patterns whose cost scales with catalog size on every interaction. Want me to implement any of these?",
         "level": 3
       }
     ],
     "codeBlocks": [
       {
         "language": "tsx",
-        "code": "// current — subscribes to the entire store\nfunction BookCard({ book, step }: { book: Book; step?: number }) {\n  const all = useAllProgress()\n  const progress = all[book.id]\n  ..."
+        "code": "// src/pages/Library.tsx — current\nfunction BookCard({ book, step }: { book: Book; step?: number }) {\n  const all = useAllProgress()       // subscribes to the WHOLE store\n  const progress = all[book.id]\n  ...\n}"
       },
       {
         "language": "ts",
-        "code": "// progress.ts\nexport function useBookProgressSelector<T>(bookId: string, select: (p: BookProgress) => T): T {\n  return useSyncExternalStore(store.subscribe, () => select(sanitize(store.get()[bookId])))\n}"
-      },
-      {
-        "language": "tsx",
-        "code": "const BookCard = memo(function BookCard({ book, step }: { book: Book; step?: number }) {\n  const pct = useBookProgressSelector(book.id, (p) => completionPct(book.map.chapters.length, p))\n  ...\n})"
+        "code": "// src/lib/store.ts\nexport function useStoreSelector<T extends object, S>(\n  store: Store<T>,\n  selector: (s: T) => S,\n): S {\n  return useSyncExternalStore(\n    store.subscribe,\n    () => selector(store.get()),\n    () => selector(store.get()),\n  )\n}"
       },
       {
         "language": "ts",
-        "code": "const statsCache = new Map<string, BookStats>()\nexport function bookStats(b: Book): BookStats {\n  const cached = statsCache.get(b.id)\n  if (cached) return cached\n  const stats = computeStats(b) // existing body\n  statsCache.set(b.id, stats)\n  return stats\n}"
+        "code": "// src/lib/progress.ts\nexport function useBookProgress(bookId: string): BookProgress {\n  return useStoreSelector(store, (all) => sanitize(all[bookId]))\n}"
       },
       {
         "language": "ts",
-        "code": "const categoryById = new Map(categories.map((c) => [c.id, c]))\nexport function categoryOf(book: Book) { return categoryById.get(book.categoryId) }\n\nconst booksByCategory = new Map<string, Book[]>()\nfor (const b of books) {\n  const list = booksByCategory.get(b.categoryId) ?? []\n  list.push(b)\n  booksByCategory.set(b.categoryId, list)\n}\nexport function booksInCategory(categoryId: string) { return booksByCategory.get(categoryId) ?? [] }"
-      },
-      {
-        "language": "tsx",
-        "code": "const results = useMemo(() => searchBooks(query), [query])"
-      },
-      {
-        "language": "tsx",
-        "code": "const deferredQuery = useDeferredValue(query)\nconst results = useMemo(() => searchBooks(deferredQuery), [deferredQuery])"
+        "code": "// src/lib/content.ts — add alongside the existing arrays\nconst booksById = new Map(books.map((b) => [b.id, b]))\nconst categoriesById = new Map(categories.map((c) => [c.id, c]))\nconst booksByCategoryId = new Map<string, Book[]>()\nfor (const b of books) {\n  const list = booksByCategoryId.get(b.categoryId) ?? []\n  list.push(b)\n  booksByCategoryId.set(b.categoryId, list)\n}\n\nexport function getBook(id: string | undefined): Book | undefined {\n  return id ? booksById.get(id) : undefined\n}\nexport function booksInCategory(categoryId: string): Book[] {\n  return booksByCategoryId.get(categoryId) ?? []\n}\nexport function categoryOf(book: Book): Category | undefined {\n  return categoriesById.get(book.categoryId)\n}"
       },
       {
         "language": "ts",
-        "code": "const chapterCache = new Map<string, Promise<Chapter | null>>()\nexport function loadChapter(bookId: string, n: number): Promise<Chapter | null> {\n  const key = `${bookId}/${n}`\n  let p = chapterCache.get(key)\n  if (!p) {\n    p = loadChapterUncached(bookId, n)\n    chapterCache.set(key, p)\n  }\n  return p\n}"
+        "code": "// src/lib/content.ts\nconst statsCache = new Map<string, BookStats>()\nexport function bookStats(b: Book): BookStats {\n  let s = statsCache.get(b.id)\n  if (!s) {\n    s = computeBookStats(b)   // rename current function body\n    statsCache.set(b.id, s)\n  }\n  return s\n}"
       },
       {
-        "language": "tsx",
-        "code": "const onScroll = () => {\n  const el = document.documentElement\n  const max = el.scrollHeight - window.innerHeight\n  setPct(max > 0 ? Math.min(100, (window.scrollY / max) * 100) : 100)\n}\nwindow.addEventListener('scroll', onScroll, { passive: true })"
+        "language": "ts",
+        "code": "// src/lib/content.ts\nconst searchCorpus = books.map((b) => ({\n  b,\n  strong: `${b.title} ${b.author}`.toLowerCase(),\n  mid: `${b.tagline} ${categoryOf(b)?.name ?? ''}`.toLowerCase(),\n  weak: b.map.chapters.map((c) => c.title).join(' ').toLowerCase(),\n}))\n\nexport function searchBooks(query: string): Book[] {\n  const q = query.trim().toLowerCase()\n  if (!q) return books\n  const terms = q.split(/\\s+/)\n  return searchCorpus\n    .map(({ b, strong, mid, weak }) => {\n      let score = 0\n      for (const t of terms) {\n        if (strong.includes(t)) score += 5\n        if (mid.includes(t)) score += 2\n        if (weak.includes(t)) score += 1\n      }\n      return { b, score }\n    })\n    .filter((x) => x.score > 0)\n    .sort((x, y) => y.score - x.score)\n    .map((x) => x.b)\n}"
       },
       {
-        "language": "tsx",
-        "code": "const onScroll = () => {\n  requestAnimationFrame(() => {\n    const max = document.documentElement.scrollHeight - window.innerHeight\n    setPct(max > 0 ? Math.min(100, (window.scrollY / max) * 100) : 100)\n  })\n}"
-      },
-      {
-        "language": "tsx",
-        "code": "const BookCard = memo(function BookCard(...) { ... })"
+        "language": "ts",
+        "code": "// src/lib/content.ts\nconst chapterCache = new Map<string, Chapter | null>()\nexport async function loadChapter(bookId: string, n: number): Promise<Chapter | null> {\n  const key = `${bookId}:${n}`\n  if (chapterCache.has(key)) return chapterCache.get(key)!\n  const loader = chapterIndex.get(bookId)?.get(n)\n  if (!loader) { chapterCache.set(key, null); return null }\n  const chapter = await buildChapter(bookId, n, await loader())  // extract current body into buildChapter\n  chapterCache.set(key, chapter)\n  return chapter\n}"
       }
     ]
   },
-  "rawOutputPreview": "## Performance Analysis — Distill (book_shorts)\n\nThis is a static-content React SPA (no backend), so \"N+1 queries\" show up as **repeated linear scans / recomputation** instead of DB round-trips. Findings below, ranked by impact.\n\n### 1. Unnecessary re-renders: every `BookCard` re-renders when *any* book's progress changes\n`src/pages/Library.tsx:29-33` and `src/lib/progress.ts:32-39`\n\nEvery `BookCard` calls `useAllProgress()` — the whole progress store, not just its own book's slice. `store.set` always returns a **new top-level object** (`{...s, [bookId]: ...}`), so `useSyncExternalStore` fires a change for *every* subscriber whenever *any* book's progress updates. Marking one chapter read re-renders every card in the library.\n\n```tsx\n// current — subscribes to the entire store\nfunction BookCard({ book, step }: { book: Book; step?: number }) {\n  const all = useAllProgress()\n  const progress = all[book.id]\n  ...\n```\n\nFix: add a selector-based hook so each card only re-renders when its own slice changes, and memoize the card itself.\n\n```ts\n// progress.ts\nexport function useBookProgressSelector<T>(bookId: string, select: (p: BookProgress) => T): T {\n  return useSyncExternalStore(store.subscribe, () => select(sanitize(store.get()[bookId])))\n}\n```\n\n```tsx\nconst BookCard = memo(function BookCard({ book, step }: { book: Book; step?: number }) {\n  const pct = useBookProgressSelector(book.id, (p) => completionPct(book.map.chapters.length, p))\n  ...\n})\n```\n\n### 2. `bookStats(book)` recomputed on every render, everywhere it's used\n`src/lib/content.ts:161-170`, called from `BookCard`, `BookMap`, and `ContinueStrip`\n\n`bookStats` does several `reduce`s over `map.chapters` plus regex-based `countWords`. It's pure given `book`, but nothing memoizes it — it reruns on every render of every card (compounded by finding #1: a single progress update re-runs it for *all* books). Wrap with a `WeakMap`/id cache or `useMemo` at the call site:\n\n```ts\nconst statsCache = new Map<string, BookStat",
-  "rawOutputLength": 7391
+  "rawOutputPreview": "## Performance Analysis — Distill (book_shorts)\n\nI read through `content.ts`, `store.ts`/`progress.ts`/`prefs.ts`, `tts.ts`/`follow.ts`, and the three pages. Findings below, ordered by impact.\n\n### 1. Store-wide re-render fan-out (biggest issue — \"N+1 render\" pattern)\n\n`useStore` (`src/lib/store.ts:31`) hands every subscriber the **entire** state object via `useSyncExternalStore`. Every `store.set()` call creates a brand-new top-level object (`{...s, [bookId]: ...}` in `progress.ts:39`), so **every** component calling `useAllProgress()` or `useBookProgress()` re-renders on **any** book's progress change — not just the one that changed.\n\nConcretely: `Library.tsx:30` calls `useAllProgress()` inside `BookCard`, once per card. Marking one chapter as read in *any* book re-renders *every* `BookCard` on the library page (could be dozens), each of which also recomputes `bookStats(book)` (see #3).\n\n```tsx\n// src/pages/Library.tsx — current\nfunction BookCard({ book, step }: { book: Book; step?: number }) {\n  const all = useAllProgress()       // subscribes to the WHOLE store\n  const progress = all[book.id]\n  ...\n}\n```\n\n**Fix:** add a selector-based subscription to `store.ts` so components only re-render when their slice actually changes:\n\n```ts\n// src/lib/store.ts\nexport function useStoreSelector<T extends object, S>(\n  store: Store<T>,\n  selector: (s: T) => S,\n): S {\n  return useSyncExternalStore(\n    store.subscribe,\n    () => selector(store.get()),\n    () => selector(store.get()),\n  )\n}\n```\n\n```ts\n// src/lib/progress.ts\nexport function useBookProgress(bookId: string): BookProgress {\n  return useStoreSelector(store, (all) => sanitize(all[bookId]))\n}\n```\n\n`useStoreSelector` still returns a fresh object each call (since `sanitize` builds a new object), so pair it with `useSyncExternalStoreWithSelector` (from `use-sync-external-store/shim/with-selector`) or a shallow-equal memo if you want true skip-on-unrelated-change behavior — plain `useSyncExternalStore` will still re-rend",
+  "rawOutputLength": 8314
 }

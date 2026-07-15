@@ -37,7 +37,7 @@ export function AudioPlayer() {
         <span style={{ width: `${pct}%` }} />
       </div>
       <div className="audio-main">
-        <button className="audio-btn" onClick={() => ttsSkip(-1)} aria-label="Back one sentence">
+        <button className="audio-btn" onClick={() => ttsSkip(-1)} aria-label="Back one passage">
           ⏮
         </button>
         <button
@@ -47,7 +47,7 @@ export function AudioPlayer() {
         >
           {s.status === 'playing' ? '❚❚' : '▶'}
         </button>
-        <button className="audio-btn" onClick={() => ttsSkip(1)} aria-label="Forward one sentence">
+        <button className="audio-btn" onClick={() => ttsSkip(1)} aria-label="Forward one passage">
           ⏭
         </button>
         <div className="audio-info">
@@ -77,7 +77,11 @@ export function AudioPlayer() {
         </button>
       </div>
       {touchDevice && (
-        <p className="audio-hint">Browser speech pauses if the screen locks — keep it on.</p>
+        <p className="audio-hint">
+          Keep the screen on — browser speech pauses if it locks. Better voices: download
+          Enhanced/Siri voices in Settings → Accessibility → Spoken Content → Voices, then pick one
+          here.
+        </p>
       )}
     </div>
   )

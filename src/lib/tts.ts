@@ -72,9 +72,28 @@ if (ttsSupported) {
   speechSynthesis.addEventListener('voiceschanged', refreshVoices)
 }
 
+/** Heuristic quality ranking — prefer neural/enhanced system voices over the
+    compact robotic ones many platforms expose as the default. */
+function voiceScore(v: SpeechSynthesisVoice): number {
+  const n = `${v.name} ${v.voiceURI}`.toLowerCase()
+  let s = 0
+  if (n.includes('natural') || n.includes('neural')) s += 8
+  if (n.includes('siri')) s += 7
+  if (n.includes('premium') || n.includes('enhanced')) s += 6
+  if (n.includes('google')) s += 5
+  if (n.includes('samantha') || n.includes('ava') || n.includes('zoe')) s += 3
+  if (!v.localService) s += 2
+  if (v.lang.toLowerCase() === 'en-us') s += 1
+  if (n.includes('compact')) s -= 4
+  // macOS novelty voices
+  if (/fred|albert|zarvox|bells|trinoids|boing|bubbles|bahh|jester|organ|whisper/.test(n)) s -= 8
+  return s
+}
+
 export function voicesForUi(): SpeechSynthesisVoice[] {
   const en = voices.filter((v) => v.lang.toLowerCase().startsWith('en'))
-  return en.length ? en : voices
+  const list = en.length ? en : [...voices]
+  return [...list].sort((a, b) => voiceScore(b) - voiceScore(a))
 }
 
 function pickVoice(): SpeechSynthesisVoice | null {
@@ -83,45 +102,65 @@ function pickVoice(): SpeechSynthesisVoice | null {
     const match = voices.find((v) => v.voiceURI === wanted)
     if (match) return match
   }
-  const en = voicesForUi()
-  return en.find((v) => v.default) ?? en[0] ?? null
+  return voicesForUi()[0] ?? null
 }
 
 // --- Chunking ---------------------------------------------------------------
+
+interface SentenceSpan {
+  start: number
+  end: number
+}
 
 interface Chunk {
   text: string
   block: number
   start: number
   end: number
+  /** sentence ranges, chunk-relative — used for boundary-event highlighting */
+  sentences: SentenceSpan[]
+}
+
+/** One utterance per paragraph keeps the engine's natural sentence prosody
+    (per-sentence utterances sound abrupt). Very long paragraphs are split at
+    sentence boundaries — some engines cut off oversized utterances. */
+const MAX_UTTERANCE = 550
+
+function sentenceSpans(text: string): SentenceSpan[] {
+  const spans: SentenceSpan[] = []
+  const re = /[^.!?]+[.!?]+["')\]]*\s*|[^.!?]+$/g
+  let m: RegExpExecArray | null
+  while ((m = re.exec(text))) {
+    const raw = m[0]
+    const lead = raw.length - raw.trimStart().length
+    const t = raw.trim()
+    if (t) spans.push({ start: m.index + lead, end: m.index + lead + t.length })
+  }
+  return spans
 }
 
 function toChunks(blocks: string[]): Chunk[] {
   const out: Chunk[] = []
-  const push = (block: number, raw: string, rawStart: number) => {
-    const lead = raw.length - raw.trimStart().length
-    const text = raw.trim()
-    if (text) out.push({ text, block, start: rawStart + lead, end: rawStart + lead + text.length })
-  }
   blocks.forEach((rawBlock, b) => {
     const text = rawBlock.replace(/\s+/g, ' ').trim()
     if (!text) return
-    const sentences = text.match(/[^.!?]+[.!?]+["')\]]*\s*|[^.!?]+$/g) ?? [text]
-    let cur = ''
-    let curStart = 0
-    let pos = 0
-    for (const s of sentences) {
-      if (cur && (cur + s).length > 230) {
-        push(b, cur, curStart)
-        cur = s
-        curStart = pos
-      } else {
-        if (!cur) curStart = pos
-        cur += s
-      }
-      pos += s.length
+    const spans = sentenceSpans(text)
+    if (spans.length === 0) return
+    let groupStart = spans[0].start
+    let groupEnd = spans[0].end
+    const flush = () => {
+      const t = text.slice(groupStart, groupEnd)
+      out.push({ text: t, block: b, start: groupStart, end: groupEnd, sentences: sentenceSpans(t) })
     }
-    push(b, cur, curStart)
+    for (let i = 1; i < spans.length; i++) {
+      const s = spans[i]
+      if (s.end - groupStart > MAX_UTTERANCE) {
+        flush()
+        groupStart = s.start
+      }
+      groupEnd = s.end
+    }
+    flush()
   })
   return out
 }
@@ -168,18 +207,35 @@ function speakFrom(i: number): void {
     return
   }
   const c = chunks[i]
+  const first = c.sentences[0]
   emit({
     index: i,
-    currentText: c.text,
+    currentText: first ? c.text.slice(first.start, first.end) : c.text,
     charsRemaining: charsFrom(i),
     block: c.block,
-    charStart: c.start,
-    charEnd: c.end,
+    charStart: first ? c.start + first.start : c.start,
+    charEnd: first ? c.start + first.end : c.end,
   })
   const u = new SpeechSynthesisUtterance(c.text)
   u.rate = getPrefs().ttsRate
   const voice = pickVoice()
   if (voice) u.voice = voice
+  // track the spoken sentence inside the paragraph; engines without boundary
+  // events simply keep the first-sentence/paragraph highlight
+  let lastSentence = 0
+  u.onboundary = (e) => {
+    if (session !== mySession || typeof e.charIndex !== 'number') return
+    const si = c.sentences.findIndex((s) => e.charIndex >= s.start && e.charIndex < s.end)
+    if (si >= 0 && si !== lastSentence) {
+      lastSentence = si
+      const s = c.sentences[si]
+      emit({
+        currentText: c.text.slice(s.start, s.end),
+        charStart: c.start + s.start,
+        charEnd: c.start + s.end,
+      })
+    }
+  }
   u.onend = () => {
     if (session === mySession && state.status !== 'idle') speakFrom(i + 1)
   }
