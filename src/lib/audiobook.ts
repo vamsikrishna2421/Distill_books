@@ -103,7 +103,11 @@ function setupMediaSession(label: string, narrator: string): void {
 
 /** Start narration playback. Resolves with the manifest on success, or null
     (nothing generated / fetch failed / playback blocked) so the caller can
-    fall back to Web Speech. */
+    fall back to Web Speech.
+
+    Order matters: play() is called synchronously, inside the user's tap —
+    iOS rejects playback started after an awaited fetch. The manifest loads
+    in parallel. */
 export async function abPlay(
   bookId: string,
   item: string,
@@ -111,11 +115,6 @@ export async function abPlay(
   finished?: () => void,
 ): Promise<AudioManifest | null> {
   abStop()
-  const m = await fetchManifest(bookId, item)
-  if (!m) return null
-
-  manifest = m
-  onFinished = finished ?? null
   const el = new Audio(`${AUDIO_BASE}/${bookId}--${item}.m4a`)
   audio = el
   el.preload = 'auto'
@@ -125,7 +124,7 @@ export async function abPlay(
     if (audio === el) emit({ time: el.currentTime, block: blockAt(el.currentTime) })
   })
   el.addEventListener('play', () => {
-    if (audio === el) emit({ status: 'playing' })
+    if (audio === el && state.status !== 'idle') emit({ status: 'playing' })
   })
   el.addEventListener('pause', () => {
     if (audio === el && state.status !== 'idle' && !el.ended) emit({ status: 'paused' })
@@ -141,15 +140,51 @@ export async function abPlay(
     if (audio === el) abStop()
   })
 
-  emit({ status: 'playing', label, narrator: m.narrator, duration: m.duration, time: 0, block: 0 })
+  const playPromise = el.play() // synchronous start — still inside the gesture
+  const manifestPromise = fetchManifest(bookId, item)
+
+  let m: AudioManifest | null = null
   try {
-    await el.play()
+    const results = await Promise.all([playPromise, manifestPromise])
+    m = results[1]
   } catch {
+    m = null
+  }
+
+  if (audio !== el) {
+    // superseded by another play/stop while we were loading
+    el.pause()
+    return m ? m : null
+  }
+  if (!m) {
     abStop()
     return null
   }
+
+  manifest = m
+  onFinished = finished ?? null
+  emit({
+    status: el.paused ? 'paused' : 'playing',
+    label,
+    narrator: m.narrator,
+    duration: m.duration,
+    time: el.currentTime,
+    block: blockAt(el.currentTime),
+  })
   setupMediaSession(label, m.narrator)
   return m
+}
+
+const narratorCache = new Map<string, string | null>()
+
+/** Narrator display name for a book (from its map manifest), or null when no
+    narration has been generated. Cached per book. */
+export async function fetchNarrator(bookId: string): Promise<string | null> {
+  if (narratorCache.has(bookId)) return narratorCache.get(bookId) ?? null
+  const m = await fetchManifest(bookId, 'map')
+  const narrator = m?.narrator ?? null
+  narratorCache.set(bookId, narrator)
+  return narrator
 }
 
 export function abToggle(): void {

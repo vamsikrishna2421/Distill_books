@@ -1,10 +1,10 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { NavBar } from '../components/NavBar'
 import { Cover } from '../components/Cover'
 import { AudioPlayer } from '../components/AudioPlayer'
 import { Markdown } from '../lib/markdown'
-import { abPlay, abStop, useAudiobook } from '../lib/audiobook'
+import { abPlay, abStop, fetchNarrator, useAudiobook } from '../lib/audiobook'
 import {
   alignManifestToElements,
   collectSpeechTargets,
@@ -84,6 +84,7 @@ export default function BookMap() {
   const audiobook = useAudiobook()
   const mapRef = useRef<HTMLElement>(null)
   const speechElsRef = useRef<(HTMLElement | null)[]>([])
+  const [narrator, setNarrator] = useState<string | null>(null)
   useSpeechFollow(speechElsRef)
   useEffect(
     () => () => {
@@ -92,6 +93,18 @@ export default function BookMap() {
     },
     [],
   )
+  useEffect(() => {
+    let alive = true
+    setNarrator(null)
+    if (bookId) {
+      void fetchNarrator(bookId).then((n) => {
+        if (alive) setNarrator(n)
+      })
+    }
+    return () => {
+      alive = false
+    }
+  }, [bookId])
   if (!book) return <Navigate to="/" replace />
 
   const MAP_SPEECH_SELECTOR =
@@ -147,6 +160,7 @@ export default function BookMap() {
             <p className="book-head-chips">
               <span className="chip chip-cat">{category?.name}</span>
               <span className="chip">{DIFF_LABEL[book.difficulty]}</span>
+              {narrator && <span className="chip chip-audio">🎧 Audiobook · read by {narrator}</span>}
               {pct > 0 && <span className="chip chip-progress">{pct}% complete</span>}
             </p>
             <h1>{book.title}</h1>

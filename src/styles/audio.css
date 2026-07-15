@@ -161,6 +161,12 @@
   padding: 7px 14px;
 }
 
+.chip-audio {
+  border-color: color-mix(in oklab, var(--brand) 45%, var(--line));
+  color: var(--brand);
+  font-weight: 600;
+}
+
 /* --- Follow-along ---------------------------------------------------- */
 
 /* the sentence currently being spoken (CSS Custom Highlight API) */
