@@ -4,7 +4,12 @@ import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import { AudioPlayer } from '../components/AudioPlayer'
 import { abPlay, abStop, useAudiobook } from '../lib/audiobook'
 import { getBook, hasChapterFile, loadChapter } from '../lib/content'
-import { alignManifestToElements, collectSpeechTargets, useSpeechFollow } from '../lib/follow'
+import {
+  alignManifestToElements,
+  collectSpeechTargets,
+  handleFollowJump,
+  useSpeechFollow,
+} from '../lib/follow'
 import { ttsStart, ttsStop, useTts } from '../lib/tts'
 import {
   bumpFontScale,
@@ -283,7 +288,11 @@ export default function Reader() {
       )}
 
       {state === 'ready' && chapter && (
-        <article className="rdr-page" ref={articleRef}>
+        <article
+          className="rdr-page"
+          ref={articleRef}
+          onClick={(e) => handleFollowJump(e.target, speechElsRef.current)}
+        >
           <p className="ch-kicker">
             Chapter {n} · {chapter.minutes} min
           </p>

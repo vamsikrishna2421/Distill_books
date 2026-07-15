@@ -5,7 +5,12 @@ import { Cover } from '../components/Cover'
 import { AudioPlayer } from '../components/AudioPlayer'
 import { Markdown } from '../lib/markdown'
 import { abPlay, abStop, useAudiobook } from '../lib/audiobook'
-import { alignManifestToElements, collectSpeechTargets, useSpeechFollow } from '../lib/follow'
+import {
+  alignManifestToElements,
+  collectSpeechTargets,
+  handleFollowJump,
+  useSpeechFollow,
+} from '../lib/follow'
 import { ttsStart, ttsStop, useTts } from '../lib/tts'
 import {
   bookStats,
@@ -191,7 +196,11 @@ export default function BookMap() {
           </div>
         </section>
 
-        <section className="map" ref={mapRef}>
+        <section
+          className="map"
+          ref={mapRef}
+          onClick={(e) => handleFollowJump(e.target, speechElsRef.current)}
+        >
           <h2 className="map-title">
             The Map <span className="map-min">{stats.mapMinutes} min read</span>
             <button className="btn btn-ghost map-listen" onClick={() => void startMapListening()}>

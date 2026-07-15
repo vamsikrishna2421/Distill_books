@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react'
 import type { MutableRefObject } from 'react'
-import { useAudiobook } from './audiobook'
+import { abJumpToBlock, useAudiobook } from './audiobook'
 import type { ManifestBlock } from './audiobook'
-import { useTts } from './tts'
+import { ttsJumpToBlock, useTts } from './tts'
 
 // ---------------------------------------------------------------------------
 // Follow-along for TTS playback: the page collects its speakable elements in
@@ -62,6 +62,27 @@ export function alignManifestToElements(
     }
   }
   return out
+}
+
+/** Click/tap-to-jump: route a click on (or inside) a spoken element to the
+    active playback engine. No-op when nothing is playing or the click landed
+    on a control. */
+export function handleFollowJump(
+  target: EventTarget | null,
+  elements: (HTMLElement | null)[],
+): void {
+  const t = target instanceof HTMLElement ? target : null
+  if (!t || t.closest('a, button, select, .audio-player')) return
+  let idx = -1
+  for (let i = 0; i < elements.length; i++) {
+    const el = elements[i]
+    if (el && (el === t || el.contains(t))) {
+      idx = i
+      break
+    }
+  }
+  if (idx < 0) return
+  if (!abJumpToBlock(idx)) ttsJumpToBlock(idx)
 }
 
 const HIGHLIGHT_NAME = 'distill-tts'

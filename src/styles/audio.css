@@ -175,6 +175,14 @@
   transition: background 0.3s ease;
 }
 
+/* while listening, spoken blocks are tap targets: jump narration there */
+.has-audio :is(.ch-body, .key-ideas, .in-practice, .map-intro, .map-howto, .map-list)
+  :is(p, li, h2, h3, blockquote):hover {
+  cursor: pointer;
+  background: color-mix(in oklab, var(--raccent, var(--brand)) 5%, transparent);
+  border-radius: 6px;
+}
+
 @media (max-width: 560px) {
   .audio-voice {
     display: none;

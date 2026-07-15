@@ -287,15 +287,38 @@ export function ttsStart(blocks: string[], label: string, finished?: () => void)
   }, 60)
 }
 
+let pausedAt = 0
+
 export function ttsToggle(): void {
   if (!ttsSupported || state.status === 'idle') return
   if (state.status === 'playing') {
     speechSynthesis.pause()
+    pausedAt = Date.now()
     emit({ status: 'paused' })
+  } else if (Date.now() - pausedAt > 15000) {
+    // engines silently kill long-paused utterances and resume() goes nowhere —
+    // restart the current passage instead
+    ttsSkip(0)
   } else {
     speechSynthesis.resume()
     emit({ status: 'playing' })
   }
+}
+
+/** Jump playback to the first passage of the given source block.
+    Returns false when no speech session is active. */
+export function ttsJumpToBlock(block: number): boolean {
+  if (!ttsSupported || state.status === 'idle') return false
+  const target = chunks.findIndex((c) => c.block === block)
+  if (target < 0) return true
+  session++
+  const mySession = session
+  speechSynthesis.cancel()
+  emit({ status: 'playing' })
+  window.setTimeout(() => {
+    if (session === mySession) speakFrom(target)
+  }, 60)
+  return true
 }
 
 export function ttsSkip(delta: number): void {

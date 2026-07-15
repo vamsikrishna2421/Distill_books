@@ -175,6 +175,17 @@ export function abSetRate(rate: number): void {
   if (audio) audio.playbackRate = rate
 }
 
+/** Jump playback to the start of a manifest block (resumes if paused).
+    Returns false when no narration session is active. */
+export function abJumpToBlock(block: number): boolean {
+  if (!audio || !manifest || state.status === 'idle') return false
+  const b = manifest.blocks[block]
+  if (!b) return true
+  audio.currentTime = b.t + 0.01
+  if (audio.paused) void audio.play()
+  return true
+}
+
 export function abStop(): void {
   if (audio) {
     audio.pause()
