@@ -1,0 +1,157 @@
+/* ------------------------------------------------------------------ */
+/* Audio player — fixed listening bar. Uses reader theme vars when      */
+/* inside .reader (--r*), falling back to app tokens elsewhere.         */
+/* ------------------------------------------------------------------ */
+
+.audio-player {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 70;
+  background: var(--rsurface, var(--surface));
+  color: var(--rink, var(--ink));
+  border-top: 1px solid var(--rline, var(--line));
+  box-shadow: 0 -10px 34px -14px rgba(0, 0, 0, 0.4);
+  padding-bottom: max(10px, env(safe-area-inset-bottom));
+  font-family: var(--sans);
+}
+
+.audio-progress {
+  height: 3px;
+}
+
+.audio-progress span {
+  display: block;
+  height: 100%;
+  background: var(--raccent, var(--brand));
+  transition: width 0.3s ease;
+}
+
+.audio-main {
+  max-width: 880px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px 0;
+}
+
+.audio-btn {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--rline, var(--line));
+  color: var(--rmuted, var(--muted));
+  font-size: 0.8rem;
+  display: grid;
+  place-items: center;
+}
+
+.audio-btn:hover {
+  color: var(--rink, var(--ink));
+  border-color: var(--rmuted, var(--muted));
+}
+
+.audio-play {
+  width: 44px;
+  height: 44px;
+  background: var(--raccent, var(--brand));
+  border: none;
+  color: #fff;
+  font-size: 0.95rem;
+}
+
+.audio-play:hover {
+  color: #fff;
+  filter: brightness(1.08);
+}
+
+.audio-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.audio-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--rmuted, var(--muted));
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.audio-text {
+  font-size: 0.84rem;
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.audio-rate {
+  flex-shrink: 0;
+  border: 1px solid var(--rline, var(--line));
+  border-radius: 999px;
+  padding: 5px 11px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--rmuted, var(--muted));
+}
+
+.audio-rate:hover {
+  color: var(--raccent, var(--brand));
+  border-color: var(--raccent, var(--brand));
+}
+
+.audio-voice {
+  flex-shrink: 0;
+  max-width: 140px;
+  font: inherit;
+  font-size: 0.78rem;
+  background: transparent;
+  color: var(--rmuted, var(--muted));
+  border: 1px solid var(--rline, var(--line));
+  border-radius: 8px;
+  padding: 5px 6px;
+}
+
+.audio-hint {
+  text-align: center;
+  font-size: 0.68rem;
+  color: var(--rmuted, var(--muted));
+  margin: 6px 12px 0;
+}
+
+/* keep page content clear of the bar while listening */
+.reader.has-audio .rdr-page {
+  padding-bottom: 200px;
+}
+
+.bookpage.has-audio {
+  padding-bottom: 220px;
+}
+
+.map-listen {
+  margin-left: auto;
+  font-size: 0.82rem;
+  padding: 7px 14px;
+}
+
+@media (max-width: 560px) {
+  .audio-voice {
+    display: none;
+  }
+
+  .audio-main {
+    gap: 8px;
+    padding: 8px 10px 0;
+  }
+}

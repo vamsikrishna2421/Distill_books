@@ -1,7 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { CSSProperties } from 'react'
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
+import { AudioPlayer } from '../components/AudioPlayer'
 import { getBook, hasChapterFile, loadChapter } from '../lib/content'
+import { chapterSpeechBlocks, ttsStart, ttsStop, ttsSupported, useTts } from '../lib/tts'
 import {
   bumpFontScale,
   resolveReaderTheme,
@@ -26,11 +28,27 @@ export default function Reader() {
   const [state, setState] = useState<LoadState>('loading')
   const [pct, setPct] = useState(0)
   const [showSettings, setShowSettings] = useState(false)
+  const autoplayRef = useRef(false)
+  const tts = useTts()
+
+  function playChapter(ch: Chapter, num: number) {
+    if (!book) return
+    ttsStart(chapterSpeechBlocks(ch, num), `Ch ${num} · ${book.title}`, () => {
+      markChapterRead(book.id, num)
+      const nextAvailable =
+        book.map.chapters.some((c) => c.number === num + 1) && hasChapterFile(book.id, num + 1)
+      if (nextAvailable) {
+        autoplayRef.current = true
+        navigate(`/book/${book.id}/read/${num + 1}`)
+      }
+    })
+  }
 
   useEffect(() => {
     let alive = true
     setState('loading')
     setChapter(null)
+    if (!autoplayRef.current) ttsStop()
     if (!bookId) return
     loadChapter(bookId, n)
       .then((ch) => {
@@ -38,6 +56,10 @@ export default function Reader() {
         if (ch) {
           setChapter(ch)
           setState('ready')
+          if (autoplayRef.current) {
+            autoplayRef.current = false
+            playChapter(ch, n)
+          }
         } else {
           setState('missing')
         }
@@ -48,7 +70,10 @@ export default function Reader() {
     return () => {
       alive = false
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bookId, n])
+
+  useEffect(() => () => ttsStop(), [])
 
   useEffect(() => {
     if (bookId && book && state === 'ready' && book.map.chapters.some((c) => c.number === n)) {
@@ -103,7 +128,7 @@ export default function Reader() {
 
   return (
     <div
-      className="reader"
+      className={tts.status !== 'idle' ? 'reader has-audio' : 'reader'}
       data-rtheme={readerTheme}
       style={
         {
@@ -143,6 +168,16 @@ export default function Reader() {
             <span className="rdr-nav off" aria-hidden="true">
               →
             </span>
+          )}
+          {ttsSupported && state === 'ready' && chapter && (
+            <button
+              className={tts.status !== 'idle' ? 'rdr-aa on' : 'rdr-aa'}
+              onClick={() => playChapter(chapter, n)}
+              aria-label="Listen to this chapter"
+              title="Listen"
+            >
+              🎧
+            </button>
           )}
           <button
             className={showSettings ? 'rdr-aa on' : 'rdr-aa'}
@@ -251,6 +286,8 @@ export default function Reader() {
           </footer>
         </article>
       )}
+
+      <AudioPlayer />
     </div>
   )
 }

@@ -1,7 +1,10 @@
+import { useEffect } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { NavBar } from '../components/NavBar'
 import { Cover } from '../components/Cover'
+import { AudioPlayer } from '../components/AudioPlayer'
 import { Markdown } from '../lib/markdown'
+import { mapSpeechBlocks, ttsStart, ttsStop, ttsSupported, useTts } from '../lib/tts'
 import {
   bookStats,
   booksInCategory,
@@ -70,6 +73,8 @@ export default function BookMap() {
   const { bookId } = useParams()
   const book = getBook(bookId)
   const progress = useBookProgress(bookId ?? '')
+  const tts = useTts()
+  useEffect(() => () => ttsStop(), [])
   if (!book) return <Navigate to="/" replace />
 
   const stats = bookStats(book)
@@ -86,7 +91,7 @@ export default function BookMap() {
           <Link to="/">Library</Link> / {category?.name ?? ''}
         </span>
       </NavBar>
-      <main className="bookpage wrap">
+      <main className={tts.status !== 'idle' ? 'bookpage wrap has-audio' : 'bookpage wrap'}>
         <header className="book-head">
           <Cover book={book} className="book-head-cover" />
           <div className="book-head-info">
@@ -145,6 +150,18 @@ export default function BookMap() {
         <section className="map">
           <h2 className="map-title">
             The Map <span className="map-min">{stats.mapMinutes} min read</span>
+            {ttsSupported && (
+              <button
+                className="btn btn-ghost map-listen"
+                onClick={() =>
+                  ttsStart(mapSpeechBlocks(book), `The Map · ${book.title}`, () =>
+                    markMapRead(book.id),
+                  )
+                }
+              >
+                🎧 Listen
+              </button>
+            )}
           </h2>
           <Markdown text={book.map.intro} className="map-intro" />
           {book.map.howToUse && (
@@ -193,6 +210,8 @@ export default function BookMap() {
             <Cover book={nextBook} className="next-book-cover" />
           </Link>
         )}
+
+        <AudioPlayer />
       </main>
     </>
   )

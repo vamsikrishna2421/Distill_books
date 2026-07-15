@@ -9,6 +9,9 @@ export interface Prefs {
   readerTheme: ReaderTheme | null
   fontScale: number
   wide: boolean
+  ttsRate: number
+  /** voiceURI of the chosen speech voice; null → best available default */
+  ttsVoice: string | null
 }
 
 const systemDark =
@@ -19,12 +22,18 @@ const defaultPrefs: Prefs = {
   readerTheme: null,
   fontScale: 1,
   wide: false,
+  ttsRate: 1,
+  ttsVoice: null,
 }
 
 const store = createLocalStore<Prefs>('distill.prefs.v1', defaultPrefs)
 
 export function usePrefs(): Prefs {
   return useStore(store)
+}
+
+export function getPrefs(): Prefs {
+  return store.get()
 }
 
 export function updatePrefs(patch: Partial<Prefs>): void {

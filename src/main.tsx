@@ -5,6 +5,7 @@ import './styles/base.css'
 import './styles/library.css'
 import './styles/book.css'
 import './styles/reader.css'
+import './styles/audio.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
