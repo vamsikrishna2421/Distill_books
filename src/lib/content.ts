@@ -170,6 +170,17 @@ export function fmtDuration(mins: number): string {
   return m ? `${h} h ${m} m` : `${h} h`
 }
 
+/** Squash transliteration variants so "niti" finds "Neeti", "gita" finds
+    "Geeta", etc. — collapse doubled vowels and drop the rest. */
+function squash(s: string): string {
+  return s
+    .toLowerCase()
+    .replace(/ee/g, 'i')
+    .replace(/aa/g, 'a')
+    .replace(/oo/g, 'u')
+    .replace(/[^a-z0-9\s]/g, '')
+}
+
 export function searchBooks(query: string): Book[] {
   const q = query.trim().toLowerCase()
   if (!q) return books
@@ -179,9 +190,11 @@ export function searchBooks(query: string): Book[] {
       const strong = `${b.title} ${b.author}`.toLowerCase()
       const mid = `${b.tagline} ${categoryOf(b)?.name ?? ''}`.toLowerCase()
       const weak = b.map.chapters.map((c) => c.title).join(' ').toLowerCase()
+      const strongSq = squash(strong)
       let score = 0
       for (const t of terms) {
         if (strong.includes(t)) score += 5
+        else if (strongSq.includes(squash(t))) score += 4
         if (mid.includes(t)) score += 2
         if (weak.includes(t)) score += 1
       }
