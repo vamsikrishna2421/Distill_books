@@ -74,6 +74,9 @@ def md_blocks(md: str) -> list[str]:
         if not s:
             flush()
             continue
+        if re.match(r"^!\[[^\]]*\]\([^)]*\)$", s):  # illustration — not spoken
+            flush()
+            continue
         m = re.match(r"^(#{2,4})\s+(.*)$", s)
         if m:
             flush()
@@ -124,6 +127,28 @@ def chapter_blocks(md: str, n: int) -> list[str]:
         blocks.append("In practice")
         blocks.extend(in_practice)
     return blocks
+
+
+GUESS_RE = re.compile(r"^:::\s*guess\s*\n(.*?)\n---\n(.*?)\n:::\s*$", re.S | re.M)
+
+
+def story_blocks(md: str, n: int) -> list[str]:
+    """stories/NN.md -> spoken blocks. Guess cards become the same
+    'Pause and guess: ...' text the app renders, so manifests align."""
+    title_m = re.search(r"^#\s+(.+)$", md, re.M)
+    title = strip_inline(title_m.group(1)) if title_m else f"Chapter {n}"
+    body = md[title_m.end():] if title_m else md
+
+    blocks = [f"Chapter {n}.", title]
+    cursor = 0
+    for m in GUESS_RE.finditer(body):
+        blocks.extend(md_blocks(body[cursor:m.start()]))
+        blocks.append("Pause and guess: " + strip_inline(m.group(1)))
+        blocks.append("Ready? Here is what happened.")
+        blocks.extend(md_blocks(m.group(2)))
+        cursor = m.end()
+    blocks.extend(md_blocks(body[cursor:]))
+    return [b for b in blocks if b]
 
 
 def map_blocks(book: dict) -> list[str]:
@@ -235,6 +260,12 @@ def main() -> None:
             if args.item and args.item != name:
                 continue
             items.append((name, chapter_blocks(ch_file.read_text(), n)))
+        for st_file in sorted((book_dir / "stories").glob("*.md")) if (book_dir / "stories").is_dir() else []:
+            n = int(st_file.stem)
+            name = f"story-{st_file.stem}"
+            if args.item and args.item != name:
+                continue
+            items.append((name, story_blocks(st_file.read_text(), n)))
 
         for name, blocks in items:
             render(

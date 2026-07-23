@@ -1,6 +1,6 @@
 import type { Book, BookStats, Category, Chapter } from '../types'
 import rawCategories from '../content/categories.json'
-import { mdToHtml } from './markdown'
+import { mdInline, mdToHtml } from './markdown'
 
 // ---------------------------------------------------------------------------
 // Content discovery — books are plain files under src/content/books/<id>/
@@ -13,6 +13,11 @@ const bookModules = import.meta.glob('../content/books/*/book.json', {
 }) as Record<string, unknown>
 
 const chapterModules = import.meta.glob('../content/books/*/chapters/*.md', {
+  query: '?raw',
+  import: 'default',
+}) as Record<string, () => Promise<string>>
+
+const storyModules = import.meta.glob('../content/books/*/stories/*.md', {
   query: '?raw',
   import: 'default',
 }) as Record<string, () => Promise<string>>
@@ -88,6 +93,20 @@ export function hasChapterFile(bookId: string, n: number): boolean {
   return chapterIndex.get(bookId)?.has(n) ?? false
 }
 
+const storyIndex = new Map<string, Map<number, () => Promise<string>>>()
+for (const [path, loader] of Object.entries(storyModules)) {
+  const m = path.match(/books\/([^/]+)\/stories\/(\d+)\.md$/)
+  if (!m) continue
+  const bookId = m[1]
+  const num = parseInt(m[2], 10)
+  if (!storyIndex.has(bookId)) storyIndex.set(bookId, new Map())
+  storyIndex.get(bookId)!.set(num, loader)
+}
+
+export function hasStoryFile(bookId: string, n: number): boolean {
+  return storyIndex.get(bookId)?.has(n) ?? false
+}
+
 export function countWords(s: string): number {
   const t = s.trim()
   return t ? t.split(/\s+/).length : 0
@@ -141,6 +160,58 @@ export async function loadChapter(bookId: string, n: number): Promise<Chapter | 
     keyIdeas,
     bodyHtml: mdToHtml(bodyMd),
     inPractice,
+  }
+}
+
+/**
+ * Story markdown contract: "# Title" first, then free markdown, plus optional
+ * guess-before-reveal blocks:
+ *
+ *   ::: guess
+ *   {question, markdown}
+ *   ---
+ *   {answer, markdown}
+ *   :::
+ *
+ * Rendered as a <details class="reveal"> the reader taps to reveal. The
+ * summary text is exactly "Pause and guess: {question}" so pre-generated
+ * narration manifests align to it.
+ */
+const GUESS_RE = /^:::\s*guess\s*\n([\s\S]*?)\n---\n([\s\S]*?)\n:::\s*$/gm
+
+export async function loadStory(bookId: string, n: number): Promise<Chapter | null> {
+  const loader = storyIndex.get(bookId)?.get(n)
+  if (!loader) return null
+  const raw = await loader()
+
+  const titleMatch = raw.match(/^#\s+(.+)$/m)
+  const title = titleMatch ? titleMatch[1].trim() : `Chapter ${n}`
+  const body = titleMatch
+    ? raw.slice(raw.indexOf(titleMatch[0]) + titleMatch[0].length)
+    : raw
+
+  const parts: string[] = []
+  let cursor = 0
+  for (const m of body.matchAll(GUESS_RE)) {
+    parts.push(mdToHtml(body.slice(cursor, m.index)))
+    const question = m[1].trim().replace(/\s+/g, ' ')
+    parts.push(
+      `<details class="reveal"><summary>Pause and guess: ${mdInline(question)}</summary>` +
+        `<div class="reveal-a">${mdToHtml(m[2].trim())}</div></details>`,
+    )
+    cursor = (m.index ?? 0) + m[0].length
+  }
+  parts.push(mdToHtml(body.slice(cursor)))
+
+  const words = countWords(body.replace(GUESS_RE, (_, q, a) => `${q} ${a}`))
+  return {
+    number: n,
+    title,
+    words,
+    minutes: Math.max(3, Math.round(words / 220)),
+    keyIdeas: [],
+    bodyHtml: parts.join('\n'),
+    inPractice: [],
   }
 }
 

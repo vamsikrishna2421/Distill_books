@@ -12,6 +12,8 @@ export interface Prefs {
   ttsRate: number
   /** voiceURI of the chosen speech voice; null → best available default */
   ttsVoice: string | null
+  /** prefer the storytelling version of a chapter when one exists */
+  storyMode: boolean
 }
 
 const systemDark =
@@ -24,6 +26,7 @@ const defaultPrefs: Prefs = {
   wide: false,
   ttsRate: 1,
   ttsVoice: null,
+  storyMode: true,
 }
 
 const store = createLocalStore<Prefs>('distill.prefs.v1', defaultPrefs)

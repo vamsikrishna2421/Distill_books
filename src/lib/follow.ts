@@ -159,6 +159,11 @@ export function useSpeechFollow(elementsRef: MutableRefObject<(HTMLElement | nul
       lastEl.current?.classList.remove('tts-now')
       if (el) {
         el.classList.add('tts-now')
+        // a spoken block hidden inside a closed reveal card gets opened
+        const details = el.closest('details')
+        if (details && !details.open && !(el instanceof HTMLElement && el.tagName === 'SUMMARY')) {
+          details.open = true
+        }
         const r = el.getBoundingClientRect()
         if (r.top < window.innerHeight * 0.12 || r.bottom > window.innerHeight * 0.72) {
           el.scrollIntoView({ block: 'center', behavior: 'smooth' })

@@ -3,7 +3,7 @@ import type { CSSProperties } from 'react'
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import { AudioPlayer } from '../components/AudioPlayer'
 import { abPlay, abStop, useAudiobook } from '../lib/audiobook'
-import { getBook, hasChapterFile, loadChapter } from '../lib/content'
+import { getBook, hasChapterFile, hasStoryFile, loadChapter, loadStory } from '../lib/content'
 import {
   alignManifestToElements,
   collectSpeechTargets,
@@ -43,7 +43,10 @@ export default function Reader() {
   useSpeechFollow(speechElsRef)
 
   const SPEECH_SELECTOR =
-    '.ch-title, .key-ideas h2, .key-ideas li, .ch-body p, .ch-body h2, .ch-body h3, .ch-body li, .ch-body blockquote, .in-practice h2, .in-practice li'
+    '.ch-title, .key-ideas h2, .key-ideas li, .ch-body p, .ch-body h2, .ch-body h3, .ch-body li, .ch-body blockquote, .ch-body summary, .in-practice h2, .in-practice li'
+
+  const storyAvailable = book ? hasStoryFile(book.id, n) : false
+  const mode: 'story' | 'distilled' = storyAvailable && prefs.storyMode ? 'story' : 'distilled'
 
   async function startListening() {
     if (!book || state !== 'ready') return
@@ -61,7 +64,8 @@ export default function Reader() {
       }
     }
     // pre-generated narration first; Web Speech as fallback
-    const manifest = await abPlay(book.id, `ch-${String(num).padStart(2, '0')}`, label, finished)
+    const item = `${mode === 'story' ? 'story' : 'ch'}-${String(num).padStart(2, '0')}`
+    const manifest = await abPlay(book.id, item, label, finished)
     if (manifest) {
       speechElsRef.current = alignManifestToElements(manifest.blocks, targets)
     } else {
@@ -79,7 +83,8 @@ export default function Reader() {
       abStop()
     }
     if (!bookId) return
-    loadChapter(bookId, n)
+    const load = mode === 'story' ? loadStory : loadChapter
+    load(bookId, n)
       .then((ch) => {
         if (!alive) return
         if (ch) {
@@ -95,7 +100,7 @@ export default function Reader() {
     return () => {
       alive = false
     }
-  }, [bookId, n])
+  }, [bookId, n, mode])
 
   // continue listening into the next chapter once its DOM has rendered
   useEffect(() => {
@@ -293,8 +298,25 @@ export default function Reader() {
           ref={articleRef}
           onClick={(e) => handleFollowJump(e.target, speechElsRef.current)}
         >
+          {storyAvailable && (
+            <div className="mode-toggle" role="group" aria-label="Reading mode">
+              <button
+                className={mode === 'story' ? 'on' : ''}
+                onClick={() => updatePrefs({ storyMode: true })}
+              >
+                ✨ Story
+              </button>
+              <button
+                className={mode === 'distilled' ? 'on' : ''}
+                onClick={() => updatePrefs({ storyMode: false })}
+              >
+                📖 Distilled
+              </button>
+            </div>
+          )}
           <p className="ch-kicker">
-            Chapter {n} · {chapter.minutes} min
+            Chapter {n} · {mode === 'story' ? 'told as a story · ' : ''}
+            {chapter.minutes} min
           </p>
           <h1 className="ch-title">{chapter.title}</h1>
 
