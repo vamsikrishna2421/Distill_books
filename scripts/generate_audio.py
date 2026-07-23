@@ -77,6 +77,9 @@ def md_blocks(md: str) -> list[str]:
         if re.match(r"^!\[[^\]]*\]\([^)]*\)$", s):  # illustration — not spoken
             flush()
             continue
+        if s.startswith("<"):  # raw HTML (figure cards etc.) — not spoken
+            flush()
+            continue
         m = re.match(r"^(#{2,4})\s+(.*)$", s)
         if m:
             flush()
@@ -144,6 +147,7 @@ def story_blocks(md: str, n: int) -> list[str]:
     for m in GUESS_RE.finditer(body):
         blocks.extend(md_blocks(body[cursor:m.start()]))
         blocks.append("Pause and guess: " + strip_inline(m.group(1)))
+        blocks.append("[[pause:3]]")  # real thinking time before the reveal
         blocks.append("Ready? Here is what happened.")
         blocks.extend(md_blocks(m.group(2)))
         cursor = m.end()
@@ -196,6 +200,12 @@ def render(kokoro: Kokoro, blocks: list[str], voice: str, narrator: str,
     manifest_blocks = []
     cursor = 0.0
     for text in blocks:
+        pause = re.fullmatch(r"\[\[pause:(\d+(?:\.\d+)?)\]\]", text)
+        if pause:  # silence only — no manifest entry
+            secs = float(pause.group(1))
+            parts.append(np.zeros(int(secs * SAMPLE_RATE), dtype=np.float32))
+            cursor += secs
+            continue
         manifest_blocks.append({"t": round(cursor, 2), "text": text})
         for piece in synth_pieces(text):
             samples, sr = kokoro.create(piece, voice=voice, speed=1.0)

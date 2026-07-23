@@ -514,3 +514,30 @@ details.reveal .reveal-a > p:first-child {
   margin: 1.8em auto;
   border-radius: 12px;
 }
+
+/* labeled picture-cards (kid-friendly: the name travels with the picture) */
+figure.animal-card {
+  max-width: 420px;
+  margin: 1.6em auto;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--rline);
+  background: color-mix(in oklab, var(--raccent) 5%, transparent);
+}
+
+figure.animal-card img {
+  display: block;
+  width: 100%;
+  margin: 0;
+  border-radius: 0;
+}
+
+figure.animal-card figcaption {
+  padding: 10px 14px;
+  text-align: center;
+  font-family: var(--sans);
+  font-weight: 800;
+  font-size: 1.05rem;
+  letter-spacing: 0.14em;
+  color: var(--raccent);
+}
