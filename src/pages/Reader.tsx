@@ -23,6 +23,9 @@ import type { Chapter } from '../types'
 
 type LoadState = 'loading' | 'ready' | 'missing'
 
+// one automatic recovery reload per page lifetime, to avoid loops
+let staleReloadTried = false
+
 export default function Reader() {
   const { bookId, num } = useParams()
   const n = parseInt(num ?? '1', 10)
@@ -94,8 +97,17 @@ export default function Reader() {
           setState('missing')
         }
       })
-      .catch(() => {
-        if (alive) setState('missing')
+      .catch((e: unknown) => {
+        if (!alive) return
+        // A failed dynamic import usually means this client is a stale
+        // deploy whose hashed chunk files no longer exist — reload once
+        // to pick up the current version instead of showing "missing".
+        if (/dynamically imported module|failed to fetch|import/i.test(String(e)) && !staleReloadTried) {
+          staleReloadTried = true
+          window.location.reload()
+          return
+        }
+        setState('missing')
       })
     return () => {
       alive = false
