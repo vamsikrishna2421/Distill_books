@@ -1,0 +1,86 @@
+{
+  "id": "winning-customers",
+  "title": "How Companies Win Customers",
+  "subtitle": "Acquisition, Retention & Growth Across Retail, E-commerce, B2B and Services",
+  "author": "Global Research Report",
+  "year": 2026,
+  "originalPages": 18,
+  "categoryId": "briefs",
+  "difficulty": 2,
+  "syllabusOrder": 1,
+  "accent": "#0F4C5C",
+  "tagline": "How the world's best companies find, win, keep, and grow customers — 40+ named case studies with verified numbers.",
+  "whyRead": "This is a fact-checked synthesis of how leading companies actually grow: McKinsey, Gartner, Forrester and eMarketer research combined with company filings and investor presentations, 2023–2026. One storyline runs through it all — buying attention has become brutally expensive, so the winners have shifted from paid acquisition to owned demand, retention, and expansion. Six chapters take you from the structural forces to sector-specific playbooks to ten transferable principles any commercial leader can act on.",
+  "map": {
+    "intro": "This report maps how leading companies across the world identify, win, keep and grow customers — across consumer retail and e-commerce, B2B commerce and distribution, and service businesses from software to hospitality. Every headline statistic was extracted from a named source, and load-bearing figures were independently re-checked.\n\nA single storyline connects everything. The economics of buying attention have deteriorated sharply — blended customer acquisition cost is up roughly 40% in two years in consumer e-commerce — so the companies pulling ahead have shifted their centre of gravity from paid acquisition toward owned demand and, above all, toward retention and expansion of the customers they already have. A loyalty member who redeems rewards spends 25% more than an inactive one; software companies with net revenue retention at or above 100% grow more than twice as fast as those below it.\n\nFive shifts define the current playbook: acquisition rebuilt around owned and viral channels; retention promoted from afterthought to core growth engine; AI-driven personalization as both baseline expectation and 10–15% revenue lever; retailers becoming media owners and membership businesses; and omnichannel-hybrid beating pure-play everywhere.",
+    "howToUse": "Chapters 1 and 2 give you the structural forces and the targeting frameworks — read those first. Then jump to the world you operate in: Chapter 3 for consumer retail, Chapter 4 for B2B, Chapter 5 for services. Chapter 6 is the ten-principle playbook that ties it all together — if you only have ten minutes, that's the one.",
+    "chapters": [
+      {
+        "number": 1,
+        "title": "The New Growth Equation",
+        "minutes": 8,
+        "summary": "The structural forces that reshaped commercial strategy since 2023. Acquisition economics have inverted — blended CAC up ~40% in two years, paid search running $50–$130 per e-commerce customer and $1,200–$2,000 in B2B software — driving a flight to referral, organic and product-led channels. Retention mathematically beats acquisition: redeemers spend 25% more, NRR ≥100% doubles growth rate. Personalization delivers a 10–15% revenue lift. Retail media ($69B) and paid membership ($46B) have gone mainstream. And omnichannel-hybrid beats pure-play — D2C has plateaued at 19% of US retail e-commerce.",
+        "readIf": [
+          "You set growth strategy or budgets",
+          "Your paid-acquisition costs keep climbing",
+          "You need the macro picture before the tactics"
+        ]
+      },
+      {
+        "number": 2,
+        "title": "Identifying and Targeting the Right Customer",
+        "minutes": 6,
+        "summary": "Every growth strategy begins with who to serve. Two complementary frameworks dominate: the Ideal Customer Profile (the account that gets the most value and can pay) layered with the buyer persona (the individual decision-maker) — 71% of companies that exceed revenue goals keep documented personas. Christensen's Jobs to Be Done reframes the unit of analysis from demographics to the job the customer is hiring you for. Intent data — first-party and anonymised signals of purchase interest — lets sellers reach in-market accounts before they raise their hands.",
+        "readIf": [
+          "Your targeting still runs on demographics",
+          "Sales and marketing disagree about the ICP",
+          "You want the frameworks behind a $181M pipeline quarter"
+        ]
+      },
+      {
+        "number": 3,
+        "title": "B2C Retail & E-commerce Strategies",
+        "minutes": 10,
+        "summary": "The four pillars of consumer growth. Acquisition: a portfolio of low-cost, high-trust channels — referral at $40–$65 per customer, Pinduoduo's gamified virality at ~$0.40, Shein's micro-influencer engine. Retention: engagement beats enrolment — Sephora's members drive up to 80% of sales, Ulta's loyalty game got an 86% weekly return rate, and paid membership (Walmart+, Coupang's 14M-member Rocket WOW) changes spending behaviour. Marketing: personalization plus the $69B retail-media wave. Channels: Inditex's integrated store-plus-online model versus the D2C correction — Allbirds down 35%, Nike's reversal.",
+        "readIf": [
+          "You sell to consumers online or in stores",
+          "Your loyalty program has members but no engagement",
+          "You're weighing D2C against wholesale or marketplaces"
+        ]
+      },
+      {
+        "number": 4,
+        "title": "B2B Commerce, Wholesale & Distribution",
+        "minutes": 10,
+        "summary": "B2B buying changed more in five years than the previous fifty. Buyers use ten channels per journey and want the 'rule of thirds' — one-third in-person, one-third remote, one-third self-service; hybrid selling drives up to 50% more revenue. The distributor playbook, documented in investor filings: Grainger runs 75%+ digital penetration alongside 4,000 reps, Fastenal embeds vending machines in customer plants, Sysco's AI personalization has added $450M. Marketplace economics from Faire's 15% take rate to IndiaMART's freemium model. ABM plus intent data produced a $181M pipeline in one quarter; self-service channels raise order values, not cannibalise them.",
+        "readIf": [
+          "You sell to businesses or run a distributor",
+          "Your reps resist digital self-service",
+          "You're designing marketplace or platform monetisation"
+        ]
+      },
+      {
+        "number": 5,
+        "title": "Service-Business Growth Strategies",
+        "minutes": 9,
+        "summary": "Four families of service playbooks. Software: product-led growth — free trials convert 17% to paid versus freemium's 5%, Figma hit $912M ARR on 134% net dollar retention, Dropbox's storage-for-referral remains the template. Marketplaces: solve the constrained side first — Uber's 30-driver launch bar, Airbnb's Craigslist hack, DoorDash's contrarian suburbs. Subscription media: Spotify's 39% free-to-paid conversion, Netflix's recommender driving 80% of viewing. And the stunner: loyalty as profit centre — Delta earned more from its Amex partnership ($6.8B) than its entire net income.",
+        "readIf": [
+          "You run a SaaS, marketplace, or subscription business",
+          "Your free tier isn't converting",
+          "You want proof that loyalty can out-earn the core product"
+        ]
+      },
+      {
+        "number": 6,
+        "title": "The Cross-Sector Best-Practice Playbook",
+        "minutes": 7,
+        "summary": "The evidence converges on ten transferable principles: make customers acquire customers; reserve paid media for scaling proven economics; measure loyalty by engagement, not enrolment; treat retention as the primary growth metric; personalize because it pays; monetize your audience and data; go omnichannel-hybrid and avoid channel purity; embed yourself in the customer's operations; solve the constrained side of a marketplace first; and organize around the customer's job. Closes with the report's methodology and confidence tiers.",
+        "readIf": [
+          "You want the actionable summary",
+          "You're presenting growth strategy to leadership",
+          "You only have time for one chapter"
+        ]
+      }
+    ]
+  }
+}
