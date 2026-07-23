@@ -335,7 +335,7 @@ export default function Reader() {
 
           {chapter.inPractice.length > 0 && (
             <aside className="in-practice">
-              <h2>In practice</h2>
+              <h2>{mode === 'story' ? 'Key takeaways' : 'In practice'}</h2>
               <ul>
                 {chapter.inPractice.map((k, i) => (
                   <li key={i} dangerouslySetInnerHTML={{ __html: mdInline(k) }} />

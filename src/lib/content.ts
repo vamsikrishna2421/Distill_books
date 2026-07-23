@@ -186,9 +186,17 @@ export async function loadStory(bookId: string, n: number): Promise<Chapter | nu
 
   const titleMatch = raw.match(/^#\s+(.+)$/m)
   const title = titleMatch ? titleMatch[1].trim() : `Chapter ${n}`
-  const body = titleMatch
+  let body = titleMatch
     ? raw.slice(raw.indexOf(titleMatch[0]) + titleMatch[0].length)
     : raw
+
+  // trailing "## Key takeaways" bullets render as the end-of-chapter card
+  let takeaways: string[] = []
+  const tk = body.match(/\n##\s+Key takeaways\s*\n([\s\S]*)$/i)
+  if (tk) {
+    takeaways = extractBullets(tk[1])
+    body = body.slice(0, tk.index)
+  }
 
   const parts: string[] = []
   let cursor = 0
@@ -203,7 +211,9 @@ export async function loadStory(bookId: string, n: number): Promise<Chapter | nu
   }
   parts.push(mdToHtml(body.slice(cursor)))
 
-  const words = countWords(body.replace(GUESS_RE, (_, q, a) => `${q} ${a}`))
+  const words =
+    countWords(body.replace(GUESS_RE, (_, q, a) => `${q} ${a}`)) +
+    countWords(takeaways.join(' '))
   return {
     number: n,
     title,
@@ -211,7 +221,7 @@ export async function loadStory(bookId: string, n: number): Promise<Chapter | nu
     minutes: Math.max(3, Math.round(words / 220)),
     keyIdeas: [],
     bodyHtml: parts.join('\n'),
-    inPractice: [],
+    inPractice: takeaways,
   }
 }
 
