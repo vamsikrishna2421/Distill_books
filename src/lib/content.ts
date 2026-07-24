@@ -22,6 +22,11 @@ const storyModules = import.meta.glob('../content/books/*/stories/*.md', {
   import: 'default',
 }) as Record<string, () => Promise<string>>
 
+const fullStoryModules = import.meta.glob('../content/books/*/stories-full/*.md', {
+  query: '?raw',
+  import: 'default',
+}) as Record<string, () => Promise<string>>
+
 export const categories: Category[] = [...(rawCategories as Category[])].sort(
   (a, b) => a.order - b.order,
 )
@@ -93,18 +98,30 @@ export function hasChapterFile(bookId: string, n: number): boolean {
   return chapterIndex.get(bookId)?.has(n) ?? false
 }
 
-const storyIndex = new Map<string, Map<number, () => Promise<string>>>()
-for (const [path, loader] of Object.entries(storyModules)) {
-  const m = path.match(/books\/([^/]+)\/stories\/(\d+)\.md$/)
-  if (!m) continue
-  const bookId = m[1]
-  const num = parseInt(m[2], 10)
-  if (!storyIndex.has(bookId)) storyIndex.set(bookId, new Map())
-  storyIndex.get(bookId)!.set(num, loader)
+function buildStoryIndex(
+  modules: Record<string, () => Promise<string>>,
+  dir: string,
+): Map<string, Map<number, () => Promise<string>>> {
+  const index = new Map<string, Map<number, () => Promise<string>>>()
+  const re = new RegExp(`books/([^/]+)/${dir}/(\\d+)\\.md$`)
+  for (const [path, loader] of Object.entries(modules)) {
+    const m = path.match(re)
+    if (!m) continue
+    if (!index.has(m[1])) index.set(m[1], new Map())
+    index.get(m[1])!.set(parseInt(m[2], 10), loader)
+  }
+  return index
 }
+
+const storyIndex = buildStoryIndex(storyModules, 'stories')
+const fullStoryIndex = buildStoryIndex(fullStoryModules, 'stories-full')
 
 export function hasStoryFile(bookId: string, n: number): boolean {
   return storyIndex.get(bookId)?.has(n) ?? false
+}
+
+export function hasFullStoryFile(bookId: string, n: number): boolean {
+  return fullStoryIndex.get(bookId)?.has(n) ?? false
 }
 
 export function countWords(s: string): number {
@@ -180,7 +197,19 @@ export async function loadChapter(bookId: string, n: number): Promise<Chapter | 
 const GUESS_RE = /^:::\s*guess\s*\n([\s\S]*?)\n---\n([\s\S]*?)\n:::\s*$/gm
 
 export async function loadStory(bookId: string, n: number): Promise<Chapter | null> {
-  const loader = storyIndex.get(bookId)?.get(n)
+  return loadStoryFrom(storyIndex, bookId, n)
+}
+
+export async function loadFullStory(bookId: string, n: number): Promise<Chapter | null> {
+  return loadStoryFrom(fullStoryIndex, bookId, n)
+}
+
+async function loadStoryFrom(
+  index: Map<string, Map<number, () => Promise<string>>>,
+  bookId: string,
+  n: number,
+): Promise<Chapter | null> {
+  const loader = index.get(bookId)?.get(n)
   if (!loader) return null
   const raw = await loader()
 

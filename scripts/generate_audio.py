@@ -170,6 +170,41 @@ def map_blocks(book: dict) -> list[str]:
 
 # --- synthesis -----------------------------------------------------------------
 
+# Respellings fed ONLY to the synth engine so an American-English voice says
+# Indian words the Indian way. Manifests keep the true spelling, so the
+# on-screen text and highlight alignment are unaffected.
+PRONOUNCE = {
+    "Chanakya": "Chaanakyuh",
+    "Chandragupta": "Chundra goopta",
+    "Maurya": "Mouryah",
+    "Takshashila": "Tuckshuh sheela",
+    "Magadha": "Muggadha",
+    "Dhana Nanda": "Dhunna Nunda",
+    "Kautilya": "Cow tilyuh",
+    "Vishnugupta": "Vishnoo goopta",
+    "Arthashastra": "Arta shaastra",
+    "Ashoka": "Ashoka",
+    "Parvataka": "Purva tucka",
+    "shikha": "shikhaa",
+    "Neeti": "Neetee",
+    "sama": "saama",
+    "dana": "daana",
+    "bheda": "bhayda",
+    "danda": "dunda",
+    "upayas": "oopaayas",
+}
+PRONOUNCE_RES = [
+    (re.compile(r"\b" + re.escape(k) + r"\b", re.IGNORECASE), v)
+    for k, v in PRONOUNCE.items()
+]
+
+
+def pronounce(text: str) -> str:
+    for pat, rep in PRONOUNCE_RES:
+        text = pat.sub(rep, text)
+    return text
+
+
 SENT_RE = re.compile(r"[^.!?]+[.!?]+[\"')\]]*\s*|[^.!?]+$")
 
 
@@ -207,7 +242,7 @@ def render(kokoro: Kokoro, blocks: list[str], voice: str, narrator: str,
             cursor += secs
             continue
         manifest_blocks.append({"t": round(cursor, 2), "text": text})
-        for piece in synth_pieces(text):
+        for piece in synth_pieces(pronounce(text)):
             samples, sr = kokoro.create(piece, voice=voice, speed=1.0)
             if sr != SAMPLE_RATE:
                 raise RuntimeError(f"unexpected sample rate {sr}")
@@ -273,6 +308,12 @@ def main() -> None:
         for st_file in sorted((book_dir / "stories").glob("*.md")) if (book_dir / "stories").is_dir() else []:
             n = int(st_file.stem)
             name = f"story-{st_file.stem}"
+            if args.item and args.item != name:
+                continue
+            items.append((name, story_blocks(st_file.read_text(), n)))
+        for st_file in sorted((book_dir / "stories-full").glob("*.md")) if (book_dir / "stories-full").is_dir() else []:
+            n = int(st_file.stem)
+            name = f"full-{st_file.stem}"
             if args.item and args.item != name:
                 continue
             items.append((name, story_blocks(st_file.read_text(), n)))

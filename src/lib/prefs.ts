@@ -14,6 +14,8 @@ export interface Prefs {
   ttsVoice: string | null
   /** prefer the storytelling version of a chapter when one exists */
   storyMode: boolean
+  /** prefer the complete "full story" edition when one exists */
+  fullStory: boolean
 }
 
 const systemDark =
@@ -27,6 +29,7 @@ const defaultPrefs: Prefs = {
   ttsRate: 1,
   ttsVoice: null,
   storyMode: true,
+  fullStory: false,
 }
 
 const store = createLocalStore<Prefs>('distill.prefs.v1', defaultPrefs)
